@@ -10,28 +10,28 @@ mod SetWorldEvent {
     use RealmsLastStanding::components::Defence;
     use RealmsLastStanding::components::Name;
     use RealmsLastStanding::components::WorldEvent;
+    use RealmsLastStanding::components::Game;
+
+    use RealmsLastStanding::constants::GAME_CONFIG;
 
     // This should remove lifes and defence from the entity
-    fn execute(ctx: Context) {
-        let mut id = ctx.world.uuid();
+    fn execute(ctx: Context, game_id: u32) {
+        // check game is active
+        let mut game = get!(ctx.world, GAME_CONFIG, Game);
 
-        // TODO: Get random coordinates
-        let (x, y) = getRandomCoordinates(ctx);
+        assert(game.status, 'Game is not active');
+
+        let entity_id = ctx.world.uuid();
 
         // These should be random
         let radius = 100;
         let event_type = 1;
+        let world_event = WorldEvent { entity_id, game_id, radius, event_type };
 
-        set!(
-            ctx.world,
-            (
-                WorldEvent {
-                    entity_id: id, radis: radius, event_type: event_type
-                    }, Position {
-                    entity_id: id, x, y
-                }
-            )
-        );
+        let (x, y) = getRandomCoordinates(ctx);
+        let position = Position { entity_id, game_id, x, y,  };
+
+        set!(ctx.world, (world_event, position));
 
         // Emit World Event
         return ();

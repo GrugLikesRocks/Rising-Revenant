@@ -15,7 +15,7 @@ mod create_settlement {
 
     // this will create a new settlement at random coordinates
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context, game_id: u32) {
+    fn execute(ctx: Context, game_id: u32) -> u128 {
         let mut game = get!(ctx.world, game_id, Game);
 
         assert(game.status, 'game is not running');
@@ -27,7 +27,7 @@ mod create_settlement {
         let mut lifes = Lifes { entity_id, game_id, count: 5 };
 
         // We set the defence of the settlement
-        let mut defence = Defence { entity_id, game_id, plague: 1 };
+        let mut defence = Defence { entity_id, game_id, plague: 0 };
 
         // We set the name of the settlement
         let mut name = Name { entity_id, game_id, value: 'Settlement'.into() };
@@ -45,7 +45,7 @@ mod create_settlement {
 
         set!(ctx.world, (lifes, defence, name, prosperity, position, ownership));
 
-        return ();
+        entity_id
     }
 // fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
 //     // TODO: get random coordinates

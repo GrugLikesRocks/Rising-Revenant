@@ -1,7 +1,7 @@
 mod create_settlement;
 // mod TradeSettlement;
 // mod DestroySettlement;
-// mod ReinforceSettlement;
+mod reinforce_settlement;
 // mod AbandonSettlement;
 mod create;
 // mod SetWorldEvent;

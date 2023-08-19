@@ -26,6 +26,7 @@ mod tests {
     // systems
     use RealmsLastStanding::systems::create::create_game;
     use RealmsLastStanding::systems::create_settlement::create_settlement;
+    use RealmsLastStanding::systems::reinforce_settlement::reinforce_settlement;
 
 
     fn mock_game() -> (IWorldDispatcher, u32, felt252) {
@@ -45,7 +46,7 @@ mod tests {
         ];
 
         // systems
-        let mut systems = array![create_game::TEST_CLASS_HASH, create_settlement::TEST_CLASS_HASH];
+        let mut systems = array![create_game::TEST_CLASS_HASH, create_settlement::TEST_CLASS_HASH, reinforce_settlement::TEST_CLASS_HASH];
 
         // deploy executor, world and register components/systems
         let world = spawn_test_world(components, systems);
@@ -71,7 +72,34 @@ mod tests {
         let (world, game_id, _) = mock_game();
 
         let mut array = array![game_id.into()];
-
         let mut res = world.execute('create_settlement'.into(), array);
+    }
+
+    #[test]
+    #[available_gas(3000000000)]
+    fn test_reinforce_settlement() {
+        let (world, game_id, _) = mock_game();
+
+        let mut array = array![game_id.into()];
+        let mut res = world.execute('create_settlement'.into(), array);
+
+        let settlement_id = serde::Serde::<u128>::deserialize(ref res)
+            .expect('id deserialization fail');
+
+        let reinforce_array = array![settlement_id.into(), game_id.into()];
+        let mut res = world.execute('reinforce_settlement'.into(), reinforce_array);
+
+        let g_id: felt252 = game_id.into();
+        let s_id: felt252 = settlement_id.into();
+        let compound_key_array = array![s_id, g_id];
+
+        // assert plague value increased
+        let mut defence = world.entity('Defence'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Defence>::len());
+        assert(*defence[0] == 1, 'plague value is wrong');
+
+        // assert life value increased
+        let mut life = world.entity('Lifes'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Lifes>::len());
+        assert(*life[0] == 6, 'life value is wrong');
+
     }
 }

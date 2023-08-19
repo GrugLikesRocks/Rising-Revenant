@@ -1,5 +1,5 @@
 #[system]
-mod CreateSettlement {
+mod create_settlement {
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
@@ -21,35 +21,34 @@ mod CreateSettlement {
         assert(game.status, 'game is not running');
 
         // increment entity_id
-        let mut entity_id = ctx.world.uuid();
+        let mut entity_id: u128 = ctx.world.uuid().into();
 
         // We set the lifes of the settlement
-        let lifes = Lifes { entity_id, game_id, count: 5 };
+        let mut lifes = Lifes { entity_id, game_id, count: 5 };
 
         // We set the defence of the settlement
-        let defence = Defence { entity_id, game_id, plague: 1 };
+        let mut defence = Defence { entity_id, game_id, plague: 1 };
 
         // We set the name of the settlement
-        let name = Name { entity_id, game_id, value: 'Settlement'.into() };
+        let mut name = Name { entity_id, game_id, value: 'Settlement'.into() };
 
         // We set a random prosperity for the settlement
-        let prosperity = Prosperity { entity_id, game_id, value: 1000 };
+        let mut prosperity = Prosperity { entity_id, game_id, value: 1000 };
 
-        // We set the position of the settlement
-        // TODO: Get random coordinates
-        let (x, y) = getRandomCoordinates(ctx);
-        let position = Position { entity_id, game_id, x, y };
+        // // // We set the position of the settlement
+        // // // TODO: Get random coordinates
+        // let (x, y) = getRandomCoordinates(ctx);
+        let mut position = Position { entity_id, game_id, x: 1, y: 1 };
 
         // We set the ownership of the settlement to the player who created it
-        let ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };
+        let mut ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };
 
-        set!(ctx.world, (position, lifes, defence, name, prosperity, ownership));
+        set!(ctx.world, (lifes, defence, name, prosperity, position, ownership));
 
         return ();
     }
-
-    fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
-        // TODO: get random coordinates
-        return (1, 1);
-    }
+// fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
+//     // TODO: get random coordinates
+//     (1, 1)
+// }
 }

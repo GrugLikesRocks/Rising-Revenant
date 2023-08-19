@@ -1,8 +1,8 @@
+**WIP**
+
 ***Last Standing – The Ultimate Defense Game***
 
 Embark on a journey into the world of the Atlas, where settlements dot the landscape, each bracing for a series of cataclysmic events. Last Standing isn't just a game; it's a test of your strategy, resilience, and foresight.
-
-**Add section about settlements**
 
 **On-Chain Events**
 

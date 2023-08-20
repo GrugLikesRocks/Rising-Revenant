@@ -61,7 +61,8 @@ struct WorldEvent {
     #[key]
     game_id: u32,
     radius: u32,
-    event_type: u32
+    event_type: u32,
+    block_number: u64
 }
 // TODO: Impl World
 // is x,y within radius?

@@ -27,7 +27,7 @@ mod create_settlement {
         let mut lifes = Lifes { entity_id, game_id, count: 5 };
 
         // We set the defence of the settlement
-        let mut defence = Defence { entity_id, game_id, plague: 0 };
+        let mut defence = Defence { entity_id, game_id, plague: 1 };
 
         // We set the name of the settlement
         let mut name = Name { entity_id, game_id, value: 'Settlement'.into() };

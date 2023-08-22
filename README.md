@@ -6,7 +6,7 @@ Embark on a journey into the world of the Atlas, where explorers establish outpo
 
 On-Chain Events
 
-The precise location of each outpost on the Atlas is stored securely on-chain. Every X (TBC) amount of blocks, a random event strikes, determined transparently via an immutable on-chain method. This is visually represented on the game's tactical map, (and players confirming an event's impact on an outpost earn a reward. TBD)
+The precise location of each outpost on the Atlas is stored securely on-chain. Every X (TBC) amount of blocks, a random event strikes, determined transparently via an immutable on-chain method. This is visually represented on the game's tactical map.
 
 The Atlas Landscape
 
@@ -46,7 +46,7 @@ The proud owner of the last-standing outpost reaps a rich pool of $LORDS, source
 
 Trade and Tact
 
-Each outpost in Last Standing adheres to the ERC721(is it going to be a ERC721?) NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in Atlas's balance of power.
+Each outpost and reinforcement in Last Standing adheres to the ERC721 NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in Atlas's balance of power.
 
 Conclusion
 

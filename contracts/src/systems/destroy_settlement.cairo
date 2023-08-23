@@ -32,11 +32,26 @@ mod destroy_settlement {
         );
 
         // check if within radius of event -> revert if not
-        // TODO:
+        let dx = if event_position.x > position.x {
+            event_position.x - position.x
+        } else {
+            position.x - event_position.x
+        };
+        
+        let dy = if event_position.y > position.y {
+            event_position.y - position.y
+        } else {
+            position.y - event_position.y
+        };
+
+        let distance = dx + dy;
+        if distance > world_event.radius {
+            return ();
+        }
 
         // update lifes and defence
-        // lifes.count -= 1;
-        // defence.plague -= 1;
+        lifes.count -= 1;
+        defence.plague -= 1;
         let _ = set!(ctx.world, (lifes, defence));
 
         // Emit World Event

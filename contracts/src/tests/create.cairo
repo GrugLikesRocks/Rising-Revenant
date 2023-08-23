@@ -144,5 +144,24 @@ mod tests {
                 'destroy_settlement'.into(),
                 array![settlement_id.into(), game_id.into(), world_event.entity_id.into()]
             );
+
+        let g_id: felt252 = game_id.into();
+        let s_id: felt252 = settlement_id.into();
+        let compound_key_array = array![s_id, g_id];
+
+        // assert plague value decreased
+        let mut defence = world
+            .entity(
+                'Defence'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Defence>::len()
+            );
+        assert(*defence[0] == 0, 'plague value is wrong');
+
+        // assert life value decreased
+        let mut life = world
+            .entity('Lifes'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Lifes>::len());
+        assert(*life[0] == 4, 'life value is wrong');
     }
+
+
+    
 }

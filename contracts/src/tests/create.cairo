@@ -14,22 +14,22 @@ mod tests {
     use dojo::test_utils::spawn_test_world;
 
     // components
-    use RealmsLastStanding::components::{game, Game};
-    use RealmsLastStanding::components::{game_tracker, GameTracker};
-    use RealmsLastStanding::components::{position, Position};
-    use RealmsLastStanding::components::{lifes, Lifes};
-    use RealmsLastStanding::components::{defence, Defence};
-    use RealmsLastStanding::components::{name, Name};
-    use RealmsLastStanding::components::{prosperity, Prosperity};
-    use RealmsLastStanding::components::{ownership, Ownership};
-    use RealmsLastStanding::components::{world_event, WorldEvent};
+    use RealmsRisingRevenant::components::{game, Game};
+    use RealmsRisingRevenant::components::{game_tracker, GameTracker};
+    use RealmsRisingRevenant::components::{position, Position};
+    use RealmsRisingRevenant::components::{lifes, Lifes};
+    use RealmsRisingRevenant::components::{defence, Defence};
+    use RealmsRisingRevenant::components::{name, Name};
+    use RealmsRisingRevenant::components::{prosperity, Prosperity};
+    use RealmsRisingRevenant::components::{ownership, Ownership};
+    use RealmsRisingRevenant::components::{world_event, WorldEvent};
 
     // systems
-    use RealmsLastStanding::systems::create::create_game;
-    use RealmsLastStanding::systems::create_settlement::create_settlement;
-    use RealmsLastStanding::systems::reinforce_settlement::reinforce_settlement;
-    use RealmsLastStanding::systems::set_world_event::set_world_event;
-    use RealmsLastStanding::systems::destroy_settlement::destroy_settlement;
+    use RealmsRisingRevenant::systems::create::create_game;
+    use RealmsRisingRevenant::systems::create_outpost::create_outpost;
+    use RealmsRisingRevenant::systems::reinforce_outpost::reinforce_outpost;
+    use RealmsRisingRevenant::systems::set_world_event::set_world_event;
+    use RealmsRisingRevenant::systems::destroy_outpost::destroy_outpost;
 
 
     fn mock_game() -> (IWorldDispatcher, u32, felt252) {
@@ -52,10 +52,10 @@ mod tests {
         // systems
         let mut systems = array![
             create_game::TEST_CLASS_HASH,
-            create_settlement::TEST_CLASS_HASH,
-            reinforce_settlement::TEST_CLASS_HASH,
+            create_outpost::TEST_CLASS_HASH,
+            reinforce_outpost::TEST_CLASS_HASH,
             set_world_event::TEST_CLASS_HASH,
-            destroy_settlement::TEST_CLASS_HASH
+            destroy_outpost::TEST_CLASS_HASH
         ];
 
         // deploy executor, world and register components/systems
@@ -70,15 +70,15 @@ mod tests {
         (world, game_id, caller.into())
     }
 
-    fn create_starter_settlement() -> (IWorldDispatcher, u32, felt252, u128) {
+    fn create_starter_outpost() -> (IWorldDispatcher, u32, felt252, u128) {
         let (world, game_id, caller) = mock_game();
 
         let mut array = array![game_id.into()];
-        let mut res = world.execute('create_settlement'.into(), array);
-        let settlement_id = serde::Serde::<u128>::deserialize(ref res)
+        let mut res = world.execute('create_outpost'.into(), array);
+        let outpost_id = serde::Serde::<u128>::deserialize(ref res)
             .expect('id deserialization fail');
 
-        (world, game_id, caller, settlement_id)
+        (world, game_id, caller, outpost_id)
     }
 
     #[test]
@@ -89,20 +89,20 @@ mod tests {
 
     #[test]
     #[available_gas(3000000000)]
-    fn test_create_settlement() {
-        let (world, game_id, caller, settlement_id) = create_starter_settlement();
+    fn test_create_outpost() {
+        let (world, game_id, caller, outpost_id) = create_starter_outpost();
     }
 
     #[test]
     #[available_gas(3000000000)]
-    fn test_reinforce_settlement() {
-        let (world, game_id, caller, settlement_id) = create_starter_settlement();
+    fn test_reinforce_outpost() {
+        let (world, game_id, caller, outpost_id) = create_starter_outpost();
 
-        let reinforce_array = array![settlement_id.into(), game_id.into()];
-        let mut res = world.execute('reinforce_settlement'.into(), reinforce_array);
+        let reinforce_array = array![outpost_id.into(), game_id.into()];
+        let mut res = world.execute('reinforce_outpost'.into(), reinforce_array);
 
         let g_id: felt252 = game_id.into();
-        let s_id: felt252 = settlement_id.into();
+        let s_id: felt252 = outpost_id.into();
         let compound_key_array = array![s_id, g_id];
 
         // assert plague value increased
@@ -132,8 +132,8 @@ mod tests {
 
     #[test]
     #[available_gas(3000000000)]
-    fn test_destroy_settlement() {
-        let (world, game_id, caller, settlement_id) = create_starter_settlement();
+    fn test_destroy_outpost() {
+        let (world, game_id, caller, outpost_id) = create_starter_outpost();
         let mut event = world.execute('set_world_event'.into(), array![game_id.into()]);
         let (world_event, position) = serde::Serde::<(WorldEvent, Position)>::deserialize(ref event)
             .expect('W event deserialization fail');
@@ -141,12 +141,12 @@ mod tests {
 
         let mut destroy = world
             .execute(
-                'destroy_settlement'.into(),
-                array![settlement_id.into(), game_id.into(), world_event.entity_id.into()]
+                'destroy_outpost'.into(),
+                array![outpost_id.into(), game_id.into(), world_event.entity_id.into()]
             );
 
         let g_id: felt252 = game_id.into();
-        let s_id: felt252 = settlement_id.into();
+        let s_id: felt252 = outpost_id.into();
         let compound_key_array = array![s_id, g_id];
 
         // assert plague value decreased

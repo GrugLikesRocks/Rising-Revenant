@@ -1,8 +1,8 @@
-mod create_settlement;
-// mod TradeSettlement;
-mod destroy_settlement;
-mod reinforce_settlement;
-// mod AbandonSettlement;
+mod create_outpost;
+// mod TradeOutpost;
+mod destroy_outpost;
+mod reinforce_outpost;
+// mod AbandonOutpost;
 mod create;
 mod set_world_event;
 

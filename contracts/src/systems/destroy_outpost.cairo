@@ -1,22 +1,22 @@
 #[system]
-mod destroy_settlement {
+mod destroy_outpost{
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsLastStanding::components::Position;
-    use RealmsLastStanding::components::Lifes;
-    use RealmsLastStanding::components::Defence;
-    use RealmsLastStanding::components::Name;
-    use RealmsLastStanding::components::Prosperity;
-    use RealmsLastStanding::components::Game;
-    use RealmsLastStanding::components::WorldEvent;
+    use RealmsRisingRevenant::components::Position;
+    use RealmsRisingRevenant::components::Lifes;
+    use RealmsRisingRevenant::components::Defence;
+    use RealmsRisingRevenant::components::Name;
+    use RealmsRisingRevenant::components::Prosperity;
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::WorldEvent;
 
     // This should remove lifes and defence from the entity
     // TODO: Check if the entity is within the radius of the current event
-    // TODO: Send reward to destroy of settlement
-    fn execute(ctx: Context, settlement_id: u128, game_id: u32, event_id: u128) {
+    // TODO: Send reward to destroy of outpost
+    fn execute(ctx: Context, outpost_id: u128, game_id: u32, event_id: u128) {
         // Check if the game is active
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
@@ -26,9 +26,9 @@ mod destroy_settlement {
             ctx.world, (event_id, game_id), (WorldEvent, Position)
         );
 
-        // Get the settlement
+        // Get the outpost
         let (mut lifes, mut defence, position) = get!(
-            ctx.world, (settlement_id, game_id), (Lifes, Defence, Position)
+            ctx.world, (outpost_id, game_id), (Lifes, Defence, Position)
         );
 
         // check if within radius of event -> revert if not

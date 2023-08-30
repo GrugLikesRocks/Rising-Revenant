@@ -5,14 +5,14 @@ mod set_world_event {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsLastStanding::components::Position;
-    use RealmsLastStanding::components::Lifes;
-    use RealmsLastStanding::components::Defence;
-    use RealmsLastStanding::components::Name;
-    use RealmsLastStanding::components::WorldEvent;
-    use RealmsLastStanding::components::Game;
+    use RealmsRisingRevenant::components::Position;
+    use RealmsRisingRevenant::components::Lifes;
+    use RealmsRisingRevenant::components::Defence;
+    use RealmsRisingRevenant::components::Name;
+    use RealmsRisingRevenant::components::WorldEvent;
+    use RealmsRisingRevenant::components::Game;
 
-    use RealmsLastStanding::constants::GAME_CONFIG;
+    use RealmsRisingRevenant::constants::GAME_CONFIG;
 
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked

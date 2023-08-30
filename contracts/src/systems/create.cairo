@@ -6,10 +6,10 @@ mod create_game {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsLastStanding::components::Game;
-    use RealmsLastStanding::components::GameTracker;
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::GameTracker;
 
-    use RealmsLastStanding::constants::GAME_CONFIG;
+    use RealmsRisingRevenant::constants::GAME_CONFIG;
 
 
     // Creates a new game

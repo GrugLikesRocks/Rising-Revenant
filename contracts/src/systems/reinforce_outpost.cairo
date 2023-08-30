@@ -1,19 +1,19 @@
 #[system]
-mod reinforce_settlement {
+mod reinforce_outpost{
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsLastStanding::components::Position;
-    use RealmsLastStanding::components::Lifes;
-    use RealmsLastStanding::components::Defence;
-    use RealmsLastStanding::components::Name;
-    use RealmsLastStanding::components::Prosperity;
-    use RealmsLastStanding::components::Game;
-    use RealmsLastStanding::components::Ownership;
+    use RealmsRisingRevenant::components::Position;
+    use RealmsRisingRevenant::components::Lifes;
+    use RealmsRisingRevenant::components::Defence;
+    use RealmsRisingRevenant::components::Name;
+    use RealmsRisingRevenant::components::Prosperity;
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::Ownership;
 
-    // this will create a new settlement at random coordinates
+    // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, entity_id: u128, game_id: u32) {
         let mut game = get!(ctx.world, game_id, Game);

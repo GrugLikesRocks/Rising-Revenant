@@ -12,6 +12,7 @@ mod destroy_outpost{
     use RealmsRisingRevenant::components::Prosperity;
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::WorldEvent;
+    use RealmsRisingRevenant::utils;
 
     // This should remove lifes and defence from the entity
     // TODO: Check if the entity is within the radius of the current event
@@ -30,21 +31,9 @@ mod destroy_outpost{
         let (mut lifes, mut defence, position) = get!(
             ctx.world, (outpost_id, game_id), (Lifes, Defence, Position)
         );
-
-        // check if within radius of event -> revert if not
-        let dx = if event_position.x > position.x {
-            event_position.x - position.x
-        } else {
-            position.x - event_position.x
-        };
         
-        let dy = if event_position.y > position.y {
-            event_position.y - position.y
-        } else {
-            position.y - event_position.y
-        };
-
-        let distance = dx + dy;
+        // check if within radius of event -> revert if not
+        let distance = utils::calculate_distance(event_position.x, event_position.y, position.x, position.y, 100);
         if distance > world_event.radius {
             return ();
         }

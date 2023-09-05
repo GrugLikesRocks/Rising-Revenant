@@ -9,7 +9,6 @@ import {
 import { PhaserLayer } from "../phaser";
 import "../App.css";
 import { GAME_ID, OUTPOST_ID } from "../phaser/constants";
-import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
 
 
@@ -26,14 +25,6 @@ export const OutpostList = ({ layer }: Props) => {
 
 
   const {
-    account: {
-        create,
-        list,
-        get,
-        account,
-        select,
-        isDeploying
-    },
     networkLayer: {
         systemCalls: { life_def_increment},
     },
@@ -49,19 +40,6 @@ export const OutpostList = ({ layer }: Props) => {
   return (
     
     <div className="defence-container">
-
-
-            <button
-                onClick={() => {
-                    life_def_increment(account);
-                }}
-            >
-                increment
-            </button>
-
-
-
-
       <span className="revenant-title">Your Revenants:</span>
       <div className="data-container">
         <div className="fields-container">

@@ -7,9 +7,7 @@ import {
   getComponentValueStrict,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../phaser";
-import { Game } from "phaser";
 import { useDojo } from "../hooks/useDojo";
-import { ClickWrapper } from "./clickWrapper";
 import { GAME_ID } from "../phaser/constants";
 
 import "../App.css";
@@ -29,7 +27,7 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
   const {
     account: { create, list, get, account, select, isDeploying },
     networkLayer: {
-      systemCalls: { create_game, create_outpost },
+      systemCalls: { create_game, create_outpost,life_def_increment },
     },
   } = useDojo();
 
@@ -47,7 +45,8 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
         create the game
       </button>
     );
-  } else if (outpostEntities.length === 0) {
+  } 
+  else if (outpostEntities.length === 0) {
     content = (
       <button
         className="button-buy-revenant"
@@ -56,8 +55,16 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
         buy revenant
       </button>
     );
-  } else {
-    content = <button className="button-buy-revenant">no more</button>;
+  } 
+  else {
+    content = (
+      <button
+        className="button-buy-revenant"
+        onClick={() => life_def_increment(account)}
+      >
+        increment
+      </button>
+    );
   }
 
   return <div>{content}</div>;

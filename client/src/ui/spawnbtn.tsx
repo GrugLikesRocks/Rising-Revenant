@@ -13,7 +13,7 @@ export const SpawnBtn = () => {
             isDeploying
         },
         networkLayer: {
-            systemCalls: { create_outpost, defence_spawn,life_def_increment,lifes_spawn, create_game},
+            systemCalls: {life_def_increment},
         },
     } = useDojo();
 
@@ -41,7 +41,7 @@ export const SpawnBtn = () => {
                     life_def_increment(account);
                 }}
             >
-                incr
+                increment
             </button>
 
 

@@ -5,7 +5,6 @@ import { ProfilePage } from './profilePage';
 import { ClickWrapper } from './clickWrapper';
 import "../App.css"
 import { PhaserLayer } from "../phaser";
-import { set } from 'mobx';
 
 enum MenuState {
   MAIN,
@@ -21,8 +20,6 @@ interface NavbarProps {
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
   layer: PhaserLayer;
 }
-
-
 
 const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer }) => {
   const [isNavbarVisible, setNavbarVisible] = useState(true);
@@ -52,11 +49,11 @@ const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer }) => {
   }, []);
 
 
+  
+
   return (
     <div>
-      
         <div className={`navbar-container ${!isNavbarVisible ? 'fade-out' : ''}`}>
-          {/* <div className="navbar-background"> */}
             <ClickWrapper shouldUnmount={!isNavbarVisible} className="navbar-background">
             <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>Rules</button>
             <div className="navbar-divider"></div>
@@ -78,7 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer }) => {
           {menuState === MenuState.TRADES && <Page2 />}
           {menuState === MenuState.PROFILE && <ProfilePage layer={layer} />}
 
-          {/* ... other pages */}
+         
         </div>
     </div>
   );

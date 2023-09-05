@@ -55,18 +55,14 @@ export function updatePositionWithDirection(direction: Direction, value: { x: nu
 
 
 
-
-// Converts to a felt representation
 export const toFelt = (num: number | bigint): bigint => BigInt(num);
 
-// Converts to Cairo 64.61 representation
 export const toFixed = (num: number | bigint): bigint => {
     const res: bigint = BigInt(num) * ONE;
     if (res > FIXED_SIZE || res <= FIXED_SIZE * -1n) throw new Error('Number is out of valid range');
     return toFelt(res);
 };
 
-// Negative values are returned by Starknet so no need to wrap
 export const fromFixed = (num: bigint): number => {
     let res: bigint = BigInt(num);
     res = res > PRIME_HALF ? res - PRIME : res;

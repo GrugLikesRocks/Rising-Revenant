@@ -58,12 +58,12 @@ After cloning the project:
 
 1. **Terminal 1 - Katana:**
 
-''' cd contracts && katana --disable-fee '''
+``` cd contracts && katana --disable-fee ```
 
 2. **Terminal 2 - Contracts:**
 
-''' cd contracts && sozo build && sozo migrate && torii --world  0x3f23569fa8121b52ea2f3ae32173befc30a6feefb2342c77b27ef679d8f5343 '''
+``` cd contracts && sozo build && sozo migrate && torii --world  0x3f23569fa8121b52ea2f3ae32173befc30a6feefb2342c77b27ef679d8f5343 ```
 
 3. **Terminal 3 - Client:**
 
-''' cd contracts && yarn && yarn dev '''
+``` cd contracts && yarn && yarn dev ```

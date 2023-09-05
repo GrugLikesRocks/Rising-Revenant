@@ -48,11 +48,11 @@ The proud owner of the last-standing outpost reaps a rich pool of $LORDS, source
 
 **Trade and Tact**
 
-Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in Atlas's balance of power.
+Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in the map's balance of power.
 
 **Conclusion**
 
-Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of the Atlas?
+Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of this adventure?
 
 <img width="6737" alt="Rising Revenant (1)" src="https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/13038196-65ed-4acc-a4d6-a017581e75ae">
 

@@ -21,7 +21,9 @@ mod create_outpost{
         assert(game.status, 'game is not running');
 
         // increment entity_id
-        let mut entity_id: u128 = ctx.world.uuid().into();
+        //let mut entity_id: u128 = ctx.world.uuid().into();
+
+        let mut entity_id: u128 = 9;
 
         // We set the lifes of the outpost
         let mut lifes = Lifes { entity_id, game_id, count: 5 };

@@ -18,12 +18,10 @@ mod reinforce_outpost{
     fn execute(ctx: Context, entity_id: u128, game_id: u32) {
         let mut game = get!(ctx.world, game_id, Game);
 
-        // assert game is running
         assert(game.status, 'game is not running');
 
         let (mut lifes, mut defence, ownership) = get!(ctx.world, (entity_id, game_id), (Lifes, Defence, Ownership));
         
-        // check caller is owner
         assert(ctx.origin.into() == ownership.address, 'not owner');
 
         lifes.count += 1;

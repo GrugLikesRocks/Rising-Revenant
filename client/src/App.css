@@ -1,0 +1,238 @@
+.navbar-container {
+
+    justify-content: center;
+    background: rgb(216, 68, 68);
+    margin-top: 50px;
+    transition: opacity 1s;
+    z-index: 2;
+    position: relative;
+    display: flex;
+}
+
+.navbar-background {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    width: 40%;
+
+    background-color: aquamarine;
+    padding: 5px;
+}
+
+
+.navbar-button {
+    background-color: rgb(238, 153, 153);
+    border: none;
+    color: white;
+    /* width: ; */
+    /* width: 10%; */
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.5s;
+}
+
+
+.navbar-button:hover {
+    background-color: rgb(238, 22, 153)
+}
+
+.selected {
+    background-color: rgb(255, 255, 255);
+    color: rgb(216, 68, 68);
+}
+
+
+.navbar-divider {
+    background-color: rgb(216, 68, 68);
+    width: 2px;
+    height: calc(100% - 10px);
+    margin: 5px;
+}
+
+
+
+.fade-out {
+    opacity: 0;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    transition: opacity 1s;
+}
+
+.background-fade-out {
+    opacity: 0;
+}
+
+
+
+.game-title-main-menu {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 2rem;
+    z-index: 3;
+}
+
+.game-initial-main-menu {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    font-size: 1.5rem;
+    z-index: 3;
+}
+
+.connect-button {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    z-index: 3;
+}
+
+.button-buy-revenant {
+    position: absolute;
+    bottom: 2%;
+    /* Adjust as needed */
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 3;
+}
+
+
+
+/* Main container */
+.defence-container {
+    z-index: 3;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Layout vertically */
+    width: 50%; /* Width */
+    height: 100%; /* Height */
+    background-color: antiquewhite;
+    margin: auto;  /* Center the container */
+    position: relative;  /* Needed for left offset */
+    left: -10%;  /* Offset half of its width */
+  }
+  
+  
+/* Title on the top of main container */
+.revenant-title {
+    font-size: 24px;
+    margin-bottom: 20px; /* Space below the title */
+    background-color: aqua;
+    text-align: center; /* Center the text */
+  }
+ 
+  
+  .data-container {
+    display: flex;
+    flex-direction: column;  /* Stack child containers vertically */
+    justify-content: center;
+    width: 100%;
+    background-color: rgb(241, 58, 34);
+  }
+
+
+  .fields-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgb(60, 28, 241);
+  }
+
+
+.fields-name
+{
+    border: 1px solid black;
+    width: 33.33%;
+    /* height: 100px; */
+    text-align: center;
+    background-color: rgb(30, 255, 79);
+}
+
+.elements-container {
+    display: flex;
+    justify-content: space-between; /* Changed from center to space-between */
+    width: 99.99%;
+    background-color: aquamarine;
+    flex-direction: column;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+
+.sub-element-container
+{
+    flex-direction: row; 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgb(168, 153, 18);
+}
+
+
+.sub-element-container:hover
+{
+    background-color: rgb(168, 153, 18);
+}
+
+.element-data
+{   
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+    /* height: 100px; */
+    text-align: center;
+    background-color: rgb(4, 92, 25);
+    /* border: 1px solid black; Added a border */
+}
+
+
+
+/* .defence-container {
+    height: 100%; 
+    overflow-y: auto; 
+}
+
+.revenant-title {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.defence-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.defence-item {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fields, .values {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.outpost-id, .revenant-id, .defence-value {
+    flex: 1;
+    text-align: center;
+} */

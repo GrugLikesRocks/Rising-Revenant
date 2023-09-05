@@ -1,8 +1,12 @@
+<img width="4453" alt="Rising Revenant (2)" src="https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/f6be7bb9-9a49-49c7-b4db-a24dcc46fc55">
+
 ***An Introduction to Rising Revenant - The Ultimate Defense Game*** 
+
 
 Embark on a journey into a new world, where revenants establish outposts amidst the untamed wilds, each bracing for a series of cataclysmic events. Rising Revenant isn't just a game; it's a test of your strategy, resilience, and foresight.
 
 **On-Chain Events**
+
 
 The precise location of each outpost is stored securely on-chain. Every X (TBC) amount of blocks, a random event strikes, determined transparently via an immutable on-chain method. This is visually represented on the game's tactical map.
 
@@ -49,6 +53,8 @@ Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT stan
 **Conclusion**
 
 Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of the Atlas?
+
+<img width="6737" alt="Rising Revenant (1)" src="https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/13038196-65ed-4acc-a4d6-a017581e75ae">
 
 --------------------------------------------
 

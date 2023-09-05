@@ -67,3 +67,5 @@ After cloning the project:
 3. **Terminal 3 - Client:**
 
 ``` cd contracts && yarn && yarn dev ```
+
+Upon completion, launch your browser and navigate to http://localhost:5147/

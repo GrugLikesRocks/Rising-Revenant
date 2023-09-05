@@ -1,8 +1,8 @@
 **WIP**
 
-Last Standing – The Ultimate Defense Game
+Rising Revenant – The Ultimate Defense Game
 
-Embark on a journey into the world of the Atlas, where explorers establish outposts amidst the untamed wilds, each bracing for a series of cataclysmic events. Last Standing isn't just a game; it's a test of your strategy, resilience, and foresight.
+Embark on a journey into the world of the Atlas, where revenants establish outposts amidst the untamed wilds, each bracing for a series of cataclysmic events. Rising Revenant isn't just a game; it's a test of your strategy, resilience, and foresight.
 
 On-Chain Events
 
@@ -12,7 +12,7 @@ The Atlas Landscape
 
 The Atlas is a vibrant realm of burgeoning outposts. While these outposts thrive, they are constantly under threat from five looming perils:
 
-Plague: A virulent disease that can wipe out your explorers.
+Plague: A virulent disease that can wipe out your revenants.
 
 Goblin Attack: Mischief-makers that emerge from the shadows to raid and plunder.
 
@@ -26,7 +26,7 @@ Defend Your Outpost
 
 To safeguard your outpost, you have multiple defense mechanisms to choose from:
 
-Food Storage: Vital to keep your explorers nourished and resilient against the plague.
+Food Storage: Vital to keep your revenants nourished and resilient against the plague.
 
 Barricade: A stronghold against the marauding goblin invaders.
 
@@ -46,8 +46,24 @@ The proud owner of the last-standing outpost reaps a rich pool of $LORDS, source
 
 Trade and Tact
 
-Each outpost and reinforcement in Last Standing adheres to the ERC721 NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in Atlas's balance of power.
+Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT standards. Players can trade their outposts and their defences at any game phase, facilitating strategic maneuvers and potential shifts in Atlas's balance of power.
 
 Conclusion
 
-Last Standing offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of the Atlas?
+Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of the Atlas?
+
+**How to launch the game**
+
+After cloning the project:
+
+1. **Terminal 1 - Katana:**
+
+''' cd contracts && katana --disable-fee '''
+
+2. **Terminal 2 - Contracts:**
+
+''' cd contracts && sozo build && sozo migrate && torii --world  0x3f23569fa8121b52ea2f3ae32173befc30a6feefb2342c77b27ef679d8f5343 '''
+
+3. **Terminal 3 - Client:**
+
+''' cd contracts && yarn && yarn dev '''

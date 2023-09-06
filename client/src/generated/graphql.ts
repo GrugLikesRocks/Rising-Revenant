@@ -34,11 +34,11 @@ export type Scalars = {
   felt252: { input: any; output: any };
   u8: { input: any; output: any };
   u32: { input: any; output: any };
-  u128: { input: any; output: any };
   u64: { input: any; output: any };
+  u128: { input: any; output: any };
 };
 
-export type ComponentUnion =  Position | Defence | Lifes | Name | Balance | Prosperity | WorldEvent | Game | Ownership;
+export type ComponentUnion =  Position | Defence | Lifes | Name | Balance | Prosperity | WorldEvent | Game | Ownership | GameData | OutpostEntity;
 
 export type Entity = {
   __typename?: "Entity";
@@ -297,6 +297,46 @@ export type OwnershipEdge = {
 
 
 
+export type GameData = {
+  __typename?: "GameData";
+  entity?: Maybe<Entity>;
+  count_outpost?: Maybe<Scalars["u32"]["output"]>;
+};
+
+export type GameDataConnection = {
+  __typename?: "GameDataConnection";
+  edges?: Maybe<Array<Maybe<GameDataEdge>>>;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type GameDataEdge = {
+  __typename?: "GameDataEdge";
+  cursor: Scalars["Cursor"]["output"];
+  node?: Maybe<GameData>;
+};
+
+
+
+
+export type OutpostEntity = {
+  __typename?: "OutpostEntity";
+  entity?: Maybe<Entity>;
+  entity_id?: Maybe<Scalars["u32"]["output"]>;
+};
+
+export type OutpostEntityConnection = {
+  __typename?: "GameDataOutpostEntityConnection";
+  edges?: Maybe<Array<Maybe<OutpostEntityEdge>>>;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type OutpostEntityEdge = {
+  __typename?: "OutpostEntityEdge";
+  cursor: Scalars["Cursor"]["output"];
+  node?: Maybe<OutpostEntity>;
+};
+
+
 
 
 
@@ -316,6 +356,8 @@ export type Query = {
   prosperityComponents?: Maybe<ProsperityConnection>;
   worldEventComponents?: Maybe<WorldEventConnection>;
   ownershipComponents?: Maybe<OwnershipConnection>;
+  gameDataComponents?: Maybe<GameDataConnection>;
+  outpostEntityComponents?: Maybe<OutpostEntityConnection>;
 
   system: System;
   systemCall: SystemCall;
@@ -386,6 +428,22 @@ export type QueryGameComponentsArgs = {
 
 
 export type QueryWorldEventComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QueryOwnershipComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+
+export type QueryProsperityComponentsArgs = {
   after?: InputMaybe<Scalars["Cursor"]["input"]>;
   before?: InputMaybe<Scalars["Cursor"]["input"]>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
@@ -469,6 +527,8 @@ export type GetEntitiesQuery = {
           | { __typename: "WorldEvent"; radius?: any | null; event_type?: any | null; block_number?: any | null }
           | { __typename: "Game"; start_time?: any | null; prize?: any | null; status?: any | null }
           | { __typename: "Ownership"; address?: any | null}
+          | {__typename: "GameData"; count_outpost?: any | null}
+          | {__typename: "OutpostEntity"; entity_id?: any | null}
           | null
         > | null;
       } | null;
@@ -515,6 +575,13 @@ export const GetEntitiesDocument = gql`
             }
             ... on Prosperity {
               address
+            }
+            ... on GameData {
+              count_outpost
+            }
+
+            ... on OutpostEntity {
+              entity_id
             }
           }
         }

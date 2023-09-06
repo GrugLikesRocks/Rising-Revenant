@@ -8,7 +8,6 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
     return {
         ...contractComponents,
         Position: overridableComponent(contractComponents.Position),
-        // Moves: overridableComponent(contractComponents.Moves),
         Defence: overridableComponent(contractComponents.Defence),
         Lifes: overridableComponent(contractComponents.Lifes),
         Prosperity : overridableComponent(contractComponents.Prosperity),
@@ -18,5 +17,7 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
         Ownership: overridableComponent(contractComponents.Ownership),
         GameTracker: overridableComponent(contractComponents.GameTracker),
+        GameData : overridableComponent(contractComponents.GameData),
+        OutpostEntity : overridableComponent(contractComponents.OutpostEntity),
     };
 }

@@ -8,9 +8,11 @@ import {
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../phaser";
 import "../App.css";
-import { GAME_ID, OUTPOST_ID } from "../phaser/constants";
+import { GAME_ID } from "../phaser/constants";
 import { useDojo } from "../hooks/useDojo";
-
+import { getEntityIdFromKeys } from "../dojo/createSystemCalls";
+import { useComponentValue } from "@dojoengine/react";
+import { ClickWrapper } from "./clickWrapper";
 
 type Props = {
   layer: PhaserLayer;
@@ -19,17 +21,16 @@ type Props = {
 export const OutpostList = ({ layer }: Props) => {
   const {
     networkLayer: {
-      components: { Defence },
+      components: { Defence, OutpostEntity },
     },
   } = layer;
 
-
   const {
+    account: { account },
     networkLayer: {
-        systemCalls: { life_def_increment},
+      systemCalls: { life_def_increment },
     },
-} = useDojo();
-
+  } = useDojo();
 
   const entities = useEntityQuery([Has(Defence)]);
 
@@ -38,8 +39,7 @@ export const OutpostList = ({ layer }: Props) => {
   }
 
   return (
-    
-    <div className="defence-container">
+    <div className="profile-datatable-container ">
       <span className="revenant-title">Your Revenants:</span>
       <div className="data-container">
         <div className="fields-container">
@@ -50,37 +50,30 @@ export const OutpostList = ({ layer }: Props) => {
         <div className="elements-container">
           {entities.map((entity, index) => (
             <div className="sub-element-container" key={index}>
-              <div className="element-data">{OUTPOST_ID}</div>
-              <div className="element-data">{GAME_ID}</div>
+              <div className="element-data">{entity}</div>
+              <div className="element-data">
+                {getComponentValue(OutpostEntity, entity)?.entity_id || 0}
+              </div>
               <div className="element-data">
                 {getComponentValue(Defence, entity)?.plague || 0}
               </div>
+              <ClickWrapper>
+              <button
+                onClick={() =>
+                  life_def_increment(
+                    account,
+                    getComponentValue(OutpostEntity, entity)!.entity_id
+                  )
+                }
+              >
+                reinforce
+              </button>
+                </ClickWrapper>
+
             </div>
           ))}
         </div>
       </div>
     </div>
   );
-
-//   return (
-//       <div className="defence-container">
-//         <span className="revenant-title">Your Revenants:</span>
-//         <ul className="defence-list">
-//           {entities.map((entity, index) => (
-//             <li className="defence-item" key={index}>
-//               <div className="fields">
-//                 <span className="outpost-id">Outpost ID</span>
-//                 <span className="revenant-id">Revenant ID</span>
-//                 <span className="defence-value">Reinforcements</span>
-//               </div>
-//               <div className="values">
-//                 <span>{OUTPOST_ID}</span>
-//                 <span>{GAME_ID}</span>
-//                 <span>{getComponentValue(Defence, entity)?.plague || 0}</span>
-//               </div>
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//     );
 };

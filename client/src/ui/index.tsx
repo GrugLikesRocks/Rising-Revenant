@@ -14,6 +14,16 @@ import React, { useState } from 'react';
 
 import {BuyRevenantButton} from "./buyRevenantButton";
 
+
+
+import { MainReactComp } from "./pages/mainPage";
+import { RulesReactComp } from "./pages/rulesPage";
+import { StatsReactComp } from "./pages/statsPage";
+import { TradesReactComp } from "./pages/tradesPage";
+import { ProfilePage } from "./pages/profilePage";
+import { MapReactComp } from "./pages/mapPage";
+
+
 enum MenuState {
     MAIN,
     RULES,
@@ -36,41 +46,27 @@ enum MenuState {
   
     return (
         <Wrapper>
-          <ClickWrapper>  
-            {/* Only render these elements when not in MenuState.MAP */}
-            {menuState !== MenuState.MAP && (
-              <>
-                <div className="game-title-main-menu">Game Title</div>
-                <div className="game-initial-main-menu">GI</div>
-                <button className="connect-button">Connect</button>
-              </>
-            )}
-    
-            {menuState === MenuState.MAIN && <BuyRevenantButton layer={layers.phaserLayer} />}
-          
-
-          <Navbar menuState={menuState} setMenuState={setMenuState} layer={layers.phaserLayer}/>
-                </ClickWrapper>
+                <div className="main_menu_container">
+                  <div className="top_menu_container">
+                    <div className="game_initials_menu">GI</div>
+                    <div className="game_title_menu">CLICK ON THE SELECTED MENU TO RETURN BACK TO THE MAIN MENU</div>
+                    <button className="connect_button_menu">Connect</button>
+                  </div>
+                  <div className = "navbar_container">
+                    
+                    <Navbar menuState={menuState} setMenuState={setMenuState} layer={layers.phaserLayer}/>
+                    
+                  </div>
+                  <div className = "page_container">
+                    {menuState === MenuState.MAIN && <MainReactComp  layer={layers.phaserLayer}/>}  
+                    {menuState === MenuState.MAP && <MapReactComp/>}
+                    {menuState === MenuState.TRADES && <TradesReactComp/>}
+                    {menuState === MenuState.PROFILE && <ProfilePage layer={layers.phaserLayer}/>}
+                    {menuState === MenuState.STATS && <StatsReactComp/>}
+                    {menuState === MenuState.RULES && <RulesReactComp/>}
+                  </div>
+                </div>
         </Wrapper>
       );
   };
 
-// const HeaderContainer = styled.div`
-//   position: absolute;
-//   top: 5%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   color: white;
-//   display: flex;
-//   flex-direaction: row;
-//   gap: 20px;
-// `;
-
-//  {/* <HeaderContainer>
-//                 <SpawnBtn />
-//                 <DefenceComponent layer={layers.phaserLayer} />
-//                 {/* <NameComponent layer={layers.phaserLayer} /> */}
-//                 <LifeComponent layer={layers.phaserLayer} />
-//                 {/* <ProsperityComponent layer={layers.phaserLayer} /> */}
-//                 <GetOutpostsReact layer={layers.phaserLayer} />
-//             </HeaderContainer> */}

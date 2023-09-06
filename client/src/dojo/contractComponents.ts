@@ -5,9 +5,6 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-
-
-
     Position: (() => {
       const name = "Position";
       return defineComponent(
@@ -24,13 +21,12 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-
     Defence: (() => {
       const name = "Defence";
       return defineComponent(
         world,
         {
-          plague: RecsType.Number
+          plague: RecsType.Number,
         },
         {
           metadata: {
@@ -39,14 +35,13 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
 
     Lifes: (() => {
       const name = "Lifes";
       return defineComponent(
         world,
         {
-          count: RecsType.Number
+          count: RecsType.Number,
         },
         {
           metadata: {
@@ -55,15 +50,13 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-
 
     Name: (() => {
       const name = "Name";
       return defineComponent(
         world,
         {
-          value: RecsType.String
+          value: RecsType.String,
         },
         {
           metadata: {
@@ -72,16 +65,13 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-
-
 
     Prosperity: (() => {
       const name = "Prosperity";
       return defineComponent(
         world,
         {
-          value: RecsType.Number
+          value: RecsType.Number,
         },
         {
           metadata: {
@@ -91,14 +81,42 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
+    GameData: (() => {
+      const name = "Prosperity";
+      return defineComponent(
+        world,
+        {
+          count_outposts: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
 
+    OutpostEntity: (() => {
+      const name = "Prosperity";
+      return defineComponent(
+        world,
+        {
+          entity_id: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
 
     Balance: (() => {
       const name = "Balance";
       return defineComponent(
         world,
         {
-          value: RecsType.Number
+          value: RecsType.Number,
         },
         {
           metadata: {
@@ -107,9 +125,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-
-
 
     WorldEvent: (() => {
       const name = "WorldEvent";
@@ -128,7 +143,6 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-
     Game: (() => {
       const name = "Game";
       return defineComponent(
@@ -146,7 +160,6 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-
     GameTracker: (() => {
       const name = "GameTracker";
       return defineComponent(
@@ -162,13 +175,12 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-
     Ownership: (() => {
       const name = "Ownership";
       return defineComponent(
         world,
         {
-          address: RecsType.String
+          address: RecsType.String,
         },
         {
           metadata: {
@@ -177,10 +189,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-
-
-
 
     AuthStatus: (() => {
       const name = "AuthStatus";
@@ -196,6 +204,7 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    
     AuthRole: (() => {
       const name = "AuthRole";
       return defineComponent(

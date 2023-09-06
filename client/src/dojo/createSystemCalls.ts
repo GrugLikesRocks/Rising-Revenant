@@ -4,14 +4,17 @@ import {
   InvokeTransactionReceiptResponse,
   shortString,
 } from "starknet";
-import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
+import {
+  EntityIndex,
+  getComponentValue,
+  setComponent
+} from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
-import { fromFixed } from "../utils";
 import { ClientComponents } from "./createClientComponents";
-import { updatePositionWithDirection } from "../utils";
-import { GAME_ID, OUTPOST_ID, POSITION_OFFSET } from "../phaser/constants";
-import { DefenceEdge } from "../generated/graphql";
+import { GAME_ID, POSITION_OFFSET } from "../phaser/constants";
 import { poseidonHashMany } from "micro-starknet";
+
+import { GAME_DATA_ID } from "../phaser/constants";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -28,11 +31,20 @@ export function createSystemCalls(
     Balance,
     Ownership,
     GameTracker,
+    GameData,
+    OutpostEntity,
   }: ClientComponents
 ) {
+  const life_def_increment = async (signer: Account, entity_id: number) => {
+    // const entityId = getEntityIdFromKeys([
+    //   BigInt(entity_id),
+    //   BigInt(signer.address),
+    //   BigInt(GAME_ID),
+    // ]) as EntityIndex;
 
-  const life_def_increment = async (signer: Account) => {
-    const entityId = OUTPOST_ID as EntityIndex;
+    const entityId = entity_id as EntityIndex;
+
+    console.log("this is the entity id for the life increment", entityId);
 
     const defenceId = uuid();
     Defence.addOverride(defenceId, {
@@ -51,8 +63,8 @@ export function createSystemCalls(
     });
 
     try {
-      const tx = await execute(signer, "life_def_increment", [
-        OUTPOST_ID,
+      const tx = await execute(signer, "reinforce_outpost", [
+        entity_id,
         GAME_ID,
       ]);
 
@@ -62,8 +74,10 @@ export function createSystemCalls(
 
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-
-      console.log(events);
+      console.log("this si the entity", entity);
+      console.log("events for the reinforcing of an outpost" , events);
+      console.log(receipt);
+      console.log("\n\n\n");
 
       const defenceEvent = events[0] as Defence;
       setComponent(contractComponents.Defence, entity, {
@@ -84,8 +98,53 @@ export function createSystemCalls(
     }
   };
 
-  const create_outpost = async (signer: Account, game_id: number) => {
-    const entityId = OUTPOST_ID as EntityIndex;
+  const register_player = async (signer: Account) => {
+    const entityId = GAME_DATA_ID as EntityIndex;
+
+    const gameDataId = uuid();
+    GameData.addOverride(gameDataId, {
+      entity: entityId,
+      value: {},
+    });
+
+    try {
+      const tx = await execute(signer, "register_player", [GAME_ID]);
+
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      const events = parseEvent(receipt);
+      const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+
+      console.log("this is the entity id when registering player", entity);
+      console.log(receipt);
+      console.log("\n\n\n");
+
+      const gamesDataEvent = events[0] as GameData;
+      setComponent(contractComponents.GameData, entity, {
+        count_outposts: gamesDataEvent.count_outpost,
+      });
+
+    } catch (e) {
+      console.log(e);
+      GameData.removeOverride(gameDataId);
+    } finally {
+      GameData.removeOverride(gameDataId);
+    }
+  };
+
+  const create_outpost = async (
+    signer: Account,
+    game_id: number,
+    outpost_num: number
+  ) => {
+    
+    const entityId = outpost_num as EntityIndex;
+
+
+    console.log("this is the entity id for the create outpost", entityId);
+
 
     const lifesId = uuid();
     Lifes.addOverride(lifesId, {
@@ -123,21 +182,25 @@ export function createSystemCalls(
       value: {},
     });
 
+    const outpostEntityId = uuid();
+    OutpostEntity.addOverride(outpostEntityId, {
+      entity: entityId,
+      value: {},
+    });
+
     try {
       const tx: any = await execute(signer, "create_outpost", [game_id]);
 
-      console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
 
-      // console.log(fromFixed(tx[0]))
-      console.log(tx[0])
-
-      console.log("this is for the outpost", receipt);
-
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+      console.log("this si the entity", entity);
+      console.log("events for the creation of an outpost" , events);
+      console.log(receipt);
+      console.log("\n\n\n");
 
       const lifesEvent = events[0] as Lifes;
       setComponent(contractComponents.Lifes, entity, {
@@ -169,6 +232,17 @@ export function createSystemCalls(
       setComponent(contractComponents.Ownership, entity, {
         address: ownershipEvent.address,
       });
+
+      const outpostEntityEvent = events[6] as OutpostEntity;
+      setComponent(contractComponents.OutpostEntity, entity, {
+        entity_id: outpostEntityEvent.entity_id,
+      });
+
+      const gameDataEvent = events[7] as GameData;
+      setComponent(contractComponents.GameData, GAME_DATA_ID as EntityIndex, {
+        count_outposts: gameDataEvent.count_outpost,
+      });
+
     } catch (e) {
       console.log(e);
       Lifes.removeOverride(lifesId);
@@ -177,6 +251,7 @@ export function createSystemCalls(
       Prosperity.removeOverride(prosperityId);
       Position.removeOverride(positionId);
       Ownership.removeOverride(ownershipId);
+      OutpostEntity.removeOverride(outpostEntityId);
     } finally {
       Lifes.removeOverride(lifesId);
       Defence.removeOverride(defenceId);
@@ -184,6 +259,7 @@ export function createSystemCalls(
       Prosperity.removeOverride(prosperityId);
       Position.removeOverride(positionId);
       Ownership.removeOverride(ownershipId);
+      OutpostEntity.removeOverride(outpostEntityId);
     }
   };
 
@@ -201,7 +277,7 @@ export function createSystemCalls(
     const gameTrackerId = uuid();
     GameTracker.addOverride(gameTrackerId, {
       entity: entityId,
-      value: { },
+      value: {},
     });
 
     try {
@@ -217,18 +293,17 @@ export function createSystemCalls(
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
-        const gameEvent = events[0] as Game;
-        setComponent(contractComponents.Game, entity, {
-            start_time: gameEvent.start_time,
-            prize: gameEvent.prize,
-            status: gameEvent.status,
-        });
+      const gameEvent = events[0] as Game;
+      setComponent(contractComponents.Game, entity, {
+        start_time: gameEvent.start_time,
+        prize: gameEvent.prize,
+        status: gameEvent.status,
+      });
 
-        const gameTrackerEvent = events[1] as GameTracker;
-        setComponent(contractComponents.GameTracker, entity, {
-            count: gameTrackerEvent.count,
-        });
-
+      const gameTrackerEvent = events[1] as GameTracker;
+      setComponent(contractComponents.GameTracker, entity, {
+        count: gameTrackerEvent.count,
+      });
     } catch (e) {
       console.log(e);
       Game.removeOverride(gameId);
@@ -243,16 +318,8 @@ export function createSystemCalls(
     life_def_increment,
     create_game,
     create_outpost,
+    register_player,
   };
-}
-
-// TODO: Move types and generalise this
-
-export enum Direction {
-  Left = 0,
-  Right = 1,
-  Up = 2,
-  Down = 3,
 }
 
 export enum ComponentEvents {
@@ -266,6 +333,8 @@ export enum ComponentEvents {
   Game = "Game",
   Ownership = "Ownership",
   GameTracker = "GameTracker",
+  GameData = "GameData",
+  OutpostEntity = "OutpostEntity",
 }
 
 export interface BaseEvent {
@@ -318,6 +387,14 @@ export interface GameTracker extends BaseEvent {
   count: number;
 }
 
+export interface GameData extends BaseEvent {
+  count_outpost: number;
+}
+
+export interface OutpostEntity extends BaseEvent {
+  entity_id: number;
+}
+
 export const parseEvent = (
   receipt: InvokeTransactionReceiptResponse
 ): Array<
@@ -331,6 +408,8 @@ export const parseEvent = (
   | Game
   | Ownership
   | GameTracker
+  | GameData
+  | OutpostEntity
 > => {
   if (!receipt.events) {
     throw new Error(`No events found`);
@@ -347,6 +426,8 @@ export const parseEvent = (
     | Game
     | Ownership
     | GameTracker
+    | GameData
+    | OutpostEntity
   > = [];
 
   for (let raw of receipt.events) {
@@ -497,6 +578,33 @@ export const parseEvent = (
         events.push(gameTrackerData);
         break;
 
+      case ComponentEvents.GameData:
+        if (raw.data.length < 6) {
+          throw new Error("Insufficient data for GameData event.");
+        }
+        const gameDataData: GameData = {
+          type: ComponentEvents.GameData,
+          entity: raw.data[2],
+          count_outpost: Number(raw.data[6]),
+        };
+
+        events.push(gameDataData);
+        break;
+
+      case ComponentEvents.OutpostEntity:
+        if (raw.data.length < 7) {
+          throw new Error("Insufficient data for Entity_id event.");
+        }
+
+        const outpostEntityEvent: OutpostEntity = {
+          type: ComponentEvents.OutpostEntity,
+          entity: raw.data[2],     // this is very wrong
+          entity_id: Number(raw.data[7]),
+        };
+
+        events.push(outpostEntityEvent);
+        break;
+
       default:
         throw new Error("Unsupported event type.");
     }
@@ -508,7 +616,7 @@ export const parseEvent = (
 
 export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
   if (keys.length === 1) {
-      return parseInt(keys[0].toString()) as EntityIndex;
+    return parseInt(keys[0].toString()) as EntityIndex;
   }
   // calculate the poseidon hash of the keys
   let poseidon = poseidonHashMany([BigInt(keys.length), ...keys]);

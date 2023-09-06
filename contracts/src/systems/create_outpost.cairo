@@ -1,5 +1,5 @@
 #[system]
-mod create_outpost{
+mod create_outpost {
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
@@ -13,17 +13,35 @@ mod create_outpost{
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::Ownership;
 
+    use RealmsRisingRevenant::components::GameData;
+    use RealmsRisingRevenant::components::OutpostEntity;
+
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, game_id: u32) -> u128 {
-        let mut game = get!(ctx.world, game_id, Game);
+        let mut game = get !(ctx.world, game_id, Game);
+
+        // // this gets the amount of outposts the user should have 
+
+        let mut gameData = get !(
+            ctx.world, (game_id, ctx.origin), GameData
+        ); //check if this exists first?
 
         assert(game.status, 'game is not running');
+        // check if the game has started
 
-        // increment entity_id
-        //let mut entity_id: u128 = ctx.world.uuid().into();
+        gameData.count_outposts+=1;
 
-        let mut entity_id: u128 = 9;
+        let outpost_count: u32 = gameData.count_outposts;
+
+        let mut entity_id: u128 = ctx.world.uuid().into();
+
+        let mut outpostdata: OutpostEntity = OutpostEntity {
+            count_outposts: outpost_count,
+            address: ctx.origin.into(),
+            game_id: game_id,
+            entity_id: entity_id
+        };
 
         // We set the lifes of the outpost
         let mut lifes = Lifes { entity_id, game_id, count: 5 };
@@ -45,7 +63,15 @@ mod create_outpost{
         // We set the ownership of theoutpostto the player who created it
         let mut ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };
 
-        set!(ctx.world, (lifes, defence, name, prosperity, position, ownership));
+        set !(
+            ctx.world,
+            (lifes, defence, name, prosperity, position, ownership, outpostdata,gameData)
+        );
+
+        //   set !(
+        //     ctx.world,
+        //     ( gameData)
+        // );
 
         entity_id
     }
@@ -54,3 +80,44 @@ mod create_outpost{
 //     (1, 1)
 // }
 }
+
+
+
+
+
+
+
+#[system]
+mod register_player {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::Into;
+    use dojo::world::Context;
+
+    use RealmsRisingRevenant::components::Game;
+
+    use RealmsRisingRevenant::components::GameData;
+
+    fn execute(ctx: Context, game_id: u32) {
+        let mut game = get !(ctx.world, game_id, Game);
+
+        assert(game.status, 'game is not running');
+
+        let mut game_data = GameData { game_id: game_id, address: ctx.origin.into(), count_outposts: 0 };
+
+        set !(
+            ctx.world,
+            (game_data)
+        );
+    }
+
+}
+
+
+
+
+
+
+
+
+

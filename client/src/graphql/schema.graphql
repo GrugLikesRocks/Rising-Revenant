@@ -37,6 +37,12 @@
             ... on Prosperity {
               address
             }
+            ... on GameData {
+              count_outpost
+            }
+            ... on OutpostEntity {
+              entity_id
+            }
           }
         }
       }

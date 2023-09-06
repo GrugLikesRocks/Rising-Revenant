@@ -3,6 +3,10 @@ import { PhaserLayer } from "..";
 import { createNoise2D } from "simplex-noise";
 
 export function mapSystem(layer: PhaserLayer) {
+
+    // this needs ot be used to gen the map
+
+
     const {
         scenes: {
             Main: {

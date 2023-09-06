@@ -94,3 +94,31 @@ struct Ownership {
     game_id: u32, // increment
     address: felt252
 }
+
+// Components to check ---------------------------------------------------------------------
+
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct GameData
+{
+    #[key]
+    game_id: u32, // increment
+    #[key]
+    address: felt252 ,// FIXED
+
+    count_outposts: u32, // increment
+}
+
+
+// this could also hold a state on the current outpost if necessary
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct OutpostEntity {
+    #[key]
+    count_outposts: u32, // increment
+    #[key]
+    address: felt252 ,// FIXED
+    #[key]
+    game_id: u32, // increment
+    
+    entity_id: u128
+}

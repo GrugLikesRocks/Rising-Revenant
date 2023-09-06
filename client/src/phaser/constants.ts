@@ -33,4 +33,5 @@ export const TILE_WIDTH = 32;
 export const POSITION_OFFSET = 1000;
 
 export const GAME_ID = 1;
-export const OUTPOST_ID = 9;
+export const GAME_DATA_ID =9; 
+// export const OUTPOST_ID = 9;

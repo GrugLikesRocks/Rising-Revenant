@@ -5,12 +5,12 @@ import { ClickWrapper } from "./clickWrapper";
 export const SpawnBtn = () => {
     const {
         account: {
-            create,
-            list,
-            get,
-            account,
-            select,
-            isDeploying
+            // create,
+            // list,
+            // get,
+            // account,
+            // select,
+            // isDeploying
         },
         networkLayer: {
             systemCalls: {life_def_increment},
@@ -38,7 +38,7 @@ export const SpawnBtn = () => {
 
             <button
                 onClick={() => {
-                    life_def_increment(account);
+                    // life_def_increment(account);
                 }}
             >
                 increment

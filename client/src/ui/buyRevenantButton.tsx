@@ -38,6 +38,8 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
 
   const gameDataEntities = useEntityQuery([Has(GameData)]);
 
+  const entityId = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(account.address)])
+  
   let content;
 
   if (gameEntities.length === 0) {
@@ -76,12 +78,14 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
   } 
   else {
 
+
+
     content = (
       <button
         className="cool-button"
-        onClick={() => create_outpost(account, GAME_ID, getComponentValue(GameData, gameDataEntities[0])?.count_outposts || 0)}
+        onClick={() => create_outpost(account, GAME_ID, getComponentValue(GameData, entityId)?.count_outposts || 0)}
       >
-        buy revenaada
+        buy revenaada, amount of outposts:{getComponentValue(GameData, entityId)?.count_outposts || 0}
       </button>
     );
   

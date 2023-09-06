@@ -51,8 +51,6 @@ const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer }) => {
   }, []);
 
 
-  
-
   return (
       <ClickWrapper shouldUnmount={false} className="main_menu_navbar_container">
       <button className={`navbar_button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>Rules</button>

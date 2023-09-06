@@ -24,8 +24,6 @@ mod reinforce_outpost{
         
         assert(ctx.origin.into() == ownership.address, 'not owner');
 
-
-
         lifes.count += 1;
 
         defence.plague += 1;

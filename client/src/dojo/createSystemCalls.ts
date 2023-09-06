@@ -42,7 +42,11 @@ export function createSystemCalls(
     //   BigInt(GAME_ID),
     // ]) as EntityIndex;
 
-    const entityId = entity_id as EntityIndex;
+    const entityId = getEntityIdFromKeys([BigInt(entity_id), BigInt(signer.address),BigInt(GAME_ID)])
+
+
+
+    // const entityId = entity_id as EntityIndex;
 
     console.log("this is the entity id for the life increment", entityId);
 
@@ -73,19 +77,21 @@ export function createSystemCalls(
       });
 
       const events = parseEvent(receipt);
-      const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-      console.log("this si the entity", entity);
+      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+      console.log("this si the entity", entityId);
       console.log("events for the reinforcing of an outpost" , events);
       console.log(receipt);
       console.log("\n\n\n");
 
       const defenceEvent = events[0] as Defence;
-      setComponent(contractComponents.Defence, entity, {
+      setComponent(contractComponents.Defence, entityId, {
         plague: defenceEvent.plague,
       });
 
+      console.log("this is the defence event", defenceEvent.plague);
+
       const lifeEvent = events[1] as Lifes;
-      setComponent(contractComponents.Lifes, entity, {
+      setComponent(contractComponents.Lifes, entityId, {
         count: lifeEvent.count,
       });
     } catch (e) {
@@ -99,13 +105,19 @@ export function createSystemCalls(
   };
 
   const register_player = async (signer: Account) => {
-    const entityId = GAME_DATA_ID as EntityIndex;
+    // const entityId = GAME_DATA_ID as EntityIndex;
+
+    const entityId = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(signer.address)])
+    
+    console.log(entityId);
 
     const gameDataId = uuid();
     GameData.addOverride(gameDataId, {
       entity: entityId,
-      value: {},
+      value: {count_outposts: 10},
     });
+
+    console.log(getComponentValue(GameData, entityId)?.count_outposts);
 
     try {
       const tx = await execute(signer, "register_player", [GAME_ID]);
@@ -117,16 +129,12 @@ export function createSystemCalls(
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
-      console.log("this is the entity id when registering player", entity);
-      console.log(receipt);
-      console.log("\n\n\n");
-
       const gamesDataEvent = events[0] as GameData;
       setComponent(contractComponents.GameData, entity, {
         count_outposts: gamesDataEvent.count_outpost,
       });
-
-    } catch (e) {
+    } 
+    catch (e) {
       console.log(e);
       GameData.removeOverride(gameDataId);
     } finally {
@@ -140,8 +148,11 @@ export function createSystemCalls(
     outpost_num: number
   ) => {
     
-    const entityId = outpost_num as EntityIndex;
+    // const entityId = outpost_num as EntityIndex;
 
+    const entityId = getEntityIdFromKeys([BigInt(outpost_num), BigInt(signer.address),BigInt(GAME_ID)])
+  
+    
 
     console.log("this is the entity id for the create outpost", entityId);
 
@@ -197,7 +208,8 @@ export function createSystemCalls(
 
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-      console.log("this si the entity", entity);
+      console.log("this is the entity", entityId);
+      console.log("this is the entity", entity);
       console.log("events for the creation of an outpost" , events);
       console.log(receipt);
       console.log("\n\n\n");
@@ -238,8 +250,11 @@ export function createSystemCalls(
         entity_id: outpostEntityEvent.entity_id,
       });
 
+
+      const entityIdD = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(signer.address)])
+
       const gameDataEvent = events[7] as GameData;
-      setComponent(contractComponents.GameData, GAME_DATA_ID as EntityIndex, {
+      setComponent(contractComponents.GameData, entityIdD as EntityIndex, {
         count_outposts: gameDataEvent.count_outpost,
       });
 

@@ -127,6 +127,8 @@ mod tests {
         let (world_event, position) = serde::Serde::<(WorldEvent, Position)>::deserialize(ref event)
             .expect('W event deserialization fail');
 
+        assert(world_event.event_type != 1,position.x.into());
+
         assert(world_event.event_type == 1, 'event type is wrong');
     }
 

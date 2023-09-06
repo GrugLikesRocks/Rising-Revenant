@@ -2,8 +2,9 @@
 mod set_world_event {
     use array::ArrayTrait;
     use box::BoxTrait;
-    use traits::Into;
+    use traits::{Into, TryInto};
     use dojo::world::Context;
+    use option::OptionTrait;
 
     use RealmsRisingRevenant::components::Position;
     use RealmsRisingRevenant::components::Lifes;
@@ -13,8 +14,9 @@ mod set_world_event {
     use RealmsRisingRevenant::components::Game;
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
-
- //   use xoroshiro::xoroshiro::{IXoroshiro,IXoroshiroDispatcher};
+    use RealmsRisingRevenant::utils;
+    use RealmsRisingRevenant::events::{emit, SetWorldEvent};
+    
 
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked
@@ -32,20 +34,29 @@ mod set_world_event {
         let world_event = WorldEvent { entity_id, game_id, radius, event_type, block_number };
 
         // TODO: Get Random coordinates
-        let (x, y) = getRandomCoordinates(ctx);
-        let position = Position { entity_id, game_id, x: 0, y: 0 };
+
+        let seed = starknet::get_tx_info().unbox().transaction_hash;
+        
+        let x = utils::getRandomNum(seed,0,100);
+        let y = utils::getRandomNum(seed,0,100);
+        let position = Position { entity_id, game_id, x: x, y: y };
 
         set!(ctx.world, (world_event, position));
+
+        
+
+        let mut values = array::ArrayTrait::new();
+        serde::Serde::serialize(
+            @SetWorldEvent {
+                world_event ,  position
+            },
+            ref values
+        );
+        emit(ctx, 'SetWorldEvent', values.span());
 
         // TODO: Emit this as event
         (world_event, position)
     }
 
- fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
-     // TODO: get random coordinates
-       // let seed = starknet::get_tx_info().unbox().transaction_hash;
-     //   assert(1 != 1, seed);
-       // let xoroshiro = IXoroshiroDispatcher { seed };
-        return (1, 1);
- }
+
 }

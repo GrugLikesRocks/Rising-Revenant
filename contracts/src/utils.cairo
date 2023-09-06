@@ -1,3 +1,7 @@
+use dojo::world::Context;
+use box::BoxTrait;
+use traits::{Into,TryInto};
+use option::OptionTrait;
 // Calculate the distance between two points (x1, y1) and (x2, y2)
 // Inputs are u32 type coordinates and a scale factor for improved precision in the sqrt function
 fn calculate_distance(x1: u32, y1: u32, x2: u32, y2: u32, scale: u32) -> u32 {
@@ -47,6 +51,16 @@ fn sqrt(n: u32, scale: u32) -> u32 {
     };
 
     return x / scale;
+}
+
+fn getRandomNum(seed: felt252, min: u128, max: u128) -> u32 {
+    let seed: u256 = seed.into();
+ 
+    let range = max - min;
+
+    let random = (seed.low % range) + min;
+
+    random.try_into().unwrap()
 }
 
 #[test]

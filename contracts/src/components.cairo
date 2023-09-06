@@ -73,7 +73,7 @@ struct Game {
     game_id: u32, // increment
     start_time: u64,
     prize: u32,
-    status: bool // TODO: ENUM
+    status: bool 
 }
 
 // Config Components ---------------------------------------------------------------------

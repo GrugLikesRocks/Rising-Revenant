@@ -14,6 +14,8 @@ mod set_world_event {
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
 
+ //   use xoroshiro::xoroshiro::{IXoroshiro,IXoroshiroDispatcher};
+
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked
     fn execute(ctx: Context, game_id: u32) -> (WorldEvent, Position) {
@@ -30,7 +32,7 @@ mod set_world_event {
         let world_event = WorldEvent { entity_id, game_id, radius, event_type, block_number };
 
         // TODO: Get Random coordinates
-        // let (x, y) = getRandomCoordinates(ctx);
+        let (x, y) = getRandomCoordinates(ctx);
         let position = Position { entity_id, game_id, x: 0, y: 0 };
 
         set!(ctx.world, (world_event, position));
@@ -38,8 +40,12 @@ mod set_world_event {
         // TODO: Emit this as event
         (world_event, position)
     }
-// fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
-//     // TODO: get random coordinates
-//     return (1, 1);
-// }
+
+ fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
+     // TODO: get random coordinates
+       // let seed = starknet::get_tx_info().unbox().transaction_hash;
+     //   assert(1 != 1, seed);
+       // let xoroshiro = IXoroshiroDispatcher { seed };
+        return (1, 1);
+ }
 }

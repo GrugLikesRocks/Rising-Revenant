@@ -8,6 +8,7 @@ sierra-replace-ids = true
 
 [dependencies]
 dojo = { git = "https://github.com/dojoengine/dojo" }
+xoroshiro = { git = "https://github.com/milancermak/xoroshiro-cairo" }
 
 [[target.dojo]]
 

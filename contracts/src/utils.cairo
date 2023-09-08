@@ -1,3 +1,5 @@
+mod random;
+
 // Calculate the distance between two points (x1, y1) and (x2, y2)
 // Inputs are u32 type coordinates and a scale factor for improved precision in the sqrt function
 fn calculate_distance(x1: u32, y1: u32, x2: u32, y2: u32, scale: u32) -> u32 {
@@ -22,17 +24,18 @@ fn calculate_distance(x1: u32, y1: u32, x2: u32, y2: u32, scale: u32) -> u32 {
 #[test]
 #[available_gas(3000000000)]
 fn test_calculate_distance() {
-    let pointX1 = 4;
-    let pointY1 = 7;
-    let pointX2 = 8;
-    let pointY2 = 3;
+    assert(calculate_distance(4, 7, 8, 3, 100) == 5, 'invalid result');
 
-    assert(calculate_distance(pointX1, pointY1, pointX2, pointY2, 100) == 5, 'invalid result');
+    assert(calculate_distance(1, 1, 1, 1, 100) == 0, 'invalid result');
 }
 
 // Calculates the integer square root of n using Newton's iterative method
 // Multiplies and divides by the scale factor to improve precision during integer division
 fn sqrt(n: u32, scale: u32) -> u32 {
+    if (n == 0) {
+        return 0;
+    }
+    
     let n_scaled = n * scale * scale;
     let mut x = n_scaled;
     let mut y = 0;

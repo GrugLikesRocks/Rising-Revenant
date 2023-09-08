@@ -68,14 +68,7 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
         className="cool-button"
         onClick={() => create_outpost(account, GAME_ID, getComponentValue(GameData, entityId)?.count_outposts || 0)}
       >
-        buy revenant, 1 amount of outposts:{getComponentValue(GameData, entityId)?.count_outposts || 0}
-      </button>
-
-      <button
-        className="cool-button"
-        onClick={() => create_outpost(account, GAME_ID, getComponentValue(GameData, entityId)?.count_outposts || 0)}
-      >
-        buy revenant 2
+        buy revenant, amount of outposts:{getComponentValue(GameData, entityId)?.count_outposts || 0}
       </button>
 
       <button

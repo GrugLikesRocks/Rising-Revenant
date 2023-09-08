@@ -108,13 +108,13 @@ mod tests {
         // assert plague value increased
         let mut defence = world
             .entity(
-                'Defence'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Defence>::len()
+                'Defence'.into(), compound_key_array.span(), 0, dojo::StorageSize::<Defence>::unpacked_size()
             );
         assert(*defence[0] == 2, 'plague value is wrong');
 
         // assert life value increased
         let mut life = world
-            .entity('Lifes'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Lifes>::len());
+            .entity('Lifes'.into(), compound_key_array.span(), 0, dojo::StorageSize::<Lifes>::unpacked_size());
         assert(*life[0] == 6, 'life value is wrong');
     }
 
@@ -126,7 +126,6 @@ mod tests {
 
         let (world_event, position) = serde::Serde::<(WorldEvent, Position)>::deserialize(ref event)
             .expect('W event deserialization fail');
-
 
         assert(world_event.event_type == 1, 'event type is wrong');
     }
@@ -153,13 +152,13 @@ mod tests {
         // assert plague value decreased
         let mut defence = world
             .entity(
-                'Defence'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Defence>::len()
+                'Defence'.into(), compound_key_array.span(), 0, dojo::StorageSize::<Defence>::unpacked_size()
             );
         assert(*defence[0] == 0, 'plague value is wrong');
 
         // assert life value decreased
         let mut life = world
-            .entity('Lifes'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Lifes>::len());
+            .entity('Lifes'.into(), compound_key_array.span(), 0, dojo::StorageSize::<Lifes>::unpacked_size());
         assert(*life[0] == 4, 'life value is wrong');
     }
 

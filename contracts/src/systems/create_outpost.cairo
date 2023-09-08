@@ -30,7 +30,7 @@ mod create_outpost {
         assert(game.status, 'game is not running');
         // check if the game has started
 
-        gameData.count_outposts+=1;
+        gameData.count_outposts += 1;
 
         let outpost_count: u32 = gameData.count_outposts;
 
@@ -65,7 +65,7 @@ mod create_outpost {
 
         set !(
             ctx.world,
-            (lifes, defence, name, prosperity, position, ownership, outpostdata,gameData)
+            (lifes, defence, name, prosperity, position, ownership, outpostdata, gameData)
         );
 
         entity_id
@@ -75,7 +75,6 @@ mod create_outpost {
 //     (1, 1)
 // }
 }
-
 
 
 #[system] // this can be implemented in the above system to make only one, the thing is that if i do get! and it was never set what happens? // i need it to return 0 if the user has no outposts
@@ -94,21 +93,11 @@ mod register_player {
 
         assert(game.status, 'game is not running');
 
-        let mut game_data = GameData { game_id: game_id, address: ctx.origin.into(), count_outposts: 0 };
+        let mut game_data = GameData {
+            game_id: game_id, address: ctx.origin.into(), count_outposts: 0
+        };
 
-        set !(
-            ctx.world,
-            (game_data)
-        );
+        set !(ctx.world, (game_data));
     }
-
 }
-
-
-
-
-
-
-
-
 

@@ -1,5 +1,5 @@
 
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
 
 /*

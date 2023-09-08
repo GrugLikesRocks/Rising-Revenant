@@ -7,7 +7,7 @@ import {
   getComponentValueStrict,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { gameEvents } from "./eventEmitter"; // Update with your actual file path
+import { gameEvents } from "./eventEmitter";// Update with your actual file path
 
 export const testSystem = (layer: PhaserLayer) => {
   let entities: EntityIndex[] = [];

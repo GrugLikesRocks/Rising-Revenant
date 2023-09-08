@@ -23,5 +23,6 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         //should not be here
         ClientCameraComponent : overridableComponent(contractComponents.ClientCameraComponent),
         ClickComponent : overridableComponent(contractComponents.ClickComponent),
+        OutpostState: overridableComponent(contractComponents.OutpostState),
     };
 }

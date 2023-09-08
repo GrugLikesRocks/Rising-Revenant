@@ -34,7 +34,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
     if (actualMenuState === MenuState.MAP) {
       setOpacity(0);
     } else {
-      setOpacity(1);
+      setOpacity(0.85);
     }
   }, [actualMenuState]);
 

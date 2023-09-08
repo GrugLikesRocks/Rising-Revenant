@@ -16,8 +16,7 @@ import { poseidonHashMany } from "micro-starknet";
 
 import { Event } from "starknet";
 
-
-
+// IMPLEMENT THE BEER BARRON FUNCTION
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -36,8 +35,10 @@ export function createSystemCalls(
     GameTracker,
     GameData,
     OutpostEntity,
+
     ClientCameraComponent,
     ClickComponent,
+    OutpostState,
   }: ClientComponents
 ) {
 
@@ -255,6 +256,12 @@ export function createSystemCalls(
     OutpostEntity.addOverride(outpostEntityId, {
       entity: entityId,
       value: {},
+    });
+
+    const outpostStateId = uuid();
+    OutpostState.addOverride(outpostStateId, {
+      entity: entityId,
+      value: { state: 1},
     });
 
     try {

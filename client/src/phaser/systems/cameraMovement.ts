@@ -1,15 +1,4 @@
-import {
-  Has,
-  defineEnterSystem,
-  defineSystem,
-  getComponentValueStrict,
-} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-
-import { useEntityQuery } from "@latticexyz/react";
-
-import { useDojo } from "../../hooks/useDojo";
 
 const CAMERA_SPEED = 20;
 const MINIMUM_DISTANCE = 20;
@@ -66,6 +55,9 @@ export const controlCamera = (layer: PhaserLayer) => {
       camera.centerOn(xPositionCamera, yPositionCamera);
     }
   );
+
+
+  // this is to recheck and redo
 
   input.pointerdown$.subscribe(({ pointer, event }) => {
 

@@ -5,7 +5,6 @@ import {
   defineMapConfig,
   defineCameraConfig,
 } from "@latticexyz/phaserx";
-import worldTileset from "../assets/tilesets/world.png";
 import { TileAnimations, Tileset } from "../artTypes/world";
 import { Sprites, Assets, Maps, Scenes } from "./constants";
 
@@ -20,6 +19,11 @@ export const phaserConfig = {
                     type: AssetType.Image,
                     key: Assets.CastleHealthyAsset,
                     path: "src/assets/castleHealthy.png",
+                },
+                [Assets.CastleDamagedAsset]: {
+                    type: AssetType.Image,
+                    key: Assets.CastleDamagedAsset,
+                    path: "src/assets/castleDamaged.png",
                 },
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
@@ -57,5 +61,5 @@ export const phaserConfig = {
     //     minZoom: 1,
     // }),
 
-    cullingChunkSize: 16 * 16,
+    cullingChunkSize: 10000*4000,
 };

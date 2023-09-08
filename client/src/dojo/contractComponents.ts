@@ -230,6 +230,22 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
+        // this should not be here
+        OutpostState: (() => {
+          const name = "OutpostState";
+          return defineComponent(
+            world,
+            {
+              state: RecsType.Number
+            },
+            {
+              metadata: {
+                name: name,
+              },
+            }
+          );
+        })(),
+    
 
 
 

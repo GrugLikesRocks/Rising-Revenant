@@ -8,7 +8,6 @@ import {
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
-import { GAME_ID } from "../../phaser/constants";
 import { useDojo } from "../../hooks/useDojo";
 import { ClickWrapper } from "../clickWrapper";
 

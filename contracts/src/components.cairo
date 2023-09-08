@@ -1,4 +1,4 @@
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Position {
     #[key]
     entity_id: u128,
@@ -8,7 +8,7 @@ struct Position {
     y: u32
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Lifes {
     #[key]
     entity_id: u128,
@@ -17,7 +17,7 @@ struct Lifes {
     count: u32
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Defence {
     #[key]
     entity_id: u128,
@@ -26,7 +26,7 @@ struct Defence {
     plague: u32
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Name {
     #[key]
     entity_id: u128,
@@ -35,7 +35,7 @@ struct Name {
     value: felt252
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Prosperity {
     #[key]
     entity_id: u128,
@@ -44,7 +44,7 @@ struct Prosperity {
     value: felt252
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Balance {
     #[key]
     entity_id: u128,
@@ -54,7 +54,7 @@ struct Balance {
 }
 
 // TODO: Could be ENUM
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct WorldEvent {
     #[key]
     entity_id: u128,
@@ -67,7 +67,7 @@ struct WorldEvent {
 // TODO: Impl World
 // is x,y within radius?
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Game {
     #[key]
     game_id: u32, // increment
@@ -79,14 +79,14 @@ struct Game {
 // Config Components ---------------------------------------------------------------------
 
 // This will track the number of games played
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct GameTracker {
     #[key]
     entity_id: u128, // FIXED
     count: u32
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct Ownership {
     #[key]
     entity_id: u128, // FIXED
@@ -94,3 +94,4 @@ struct Ownership {
     game_id: u32, // increment
     address: felt252
 }
+

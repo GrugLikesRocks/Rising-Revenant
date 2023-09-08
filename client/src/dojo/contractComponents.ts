@@ -190,6 +190,50 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
+
+
+
+
+
+
+    // this should not be here
+    ClientCameraComponent: (() => {
+      const name = "ClickCameraComp";
+      return defineComponent(
+        world,
+        {
+          x: RecsType.Number,
+          y: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+
+    // this should not be here
+    ClickComponent: (() => {
+      const name = "ClickCameraComp";
+      return defineComponent(
+        world,
+        {
+          x: RecsType.Number,
+          y: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+
+
+
+
+
     AuthStatus: (() => {
       const name = "AuthStatus";
       return defineComponent(
@@ -204,7 +248,7 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    
+
     AuthRole: (() => {
       const name = "AuthRole";
       return defineComponent(

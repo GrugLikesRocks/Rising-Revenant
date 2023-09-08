@@ -2,6 +2,8 @@ import { useDojo } from "../hooks/useDojo";
 import { GAME_ID } from "../phaser/constants";
 import { ClickWrapper } from "./clickWrapper";
 
+// ALL TO DELETE
+
 export const SpawnBtn = () => {
     const {
         account: {
@@ -13,7 +15,7 @@ export const SpawnBtn = () => {
             // isDeploying
         },
         networkLayer: {
-            systemCalls: {life_def_increment},
+            systemCalls: {},
         },
     } = useDojo();
 

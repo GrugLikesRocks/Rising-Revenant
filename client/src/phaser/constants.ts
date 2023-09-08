@@ -6,32 +6,15 @@ export enum Maps {
     Main = "Main",
 }
 
-export enum Animations {
-    SwordsmanIdle = "SwordsmanIdle",
-}
 export enum Sprites {
-    Soldier,
+    Map,
+    Castle
 }
 
 export enum Assets {
-    MainAtlas = "MainAtlas",
-    Tileset = "Tileset",
+    MapPicture = "MapPicture",
+    CastleAsset = "CastleAsset",
 }
-
-export enum Direction {
-    Unknown,
-    Up,
-    Down,
-    Left,
-    Right
-}
-
-export const TILE_HEIGHT = 32;
-export const TILE_WIDTH = 32;
-
-// contract offset so we don't overflow
-export const POSITION_OFFSET = 1000;
 
 export const GAME_ID = 1;
 export const GAME_DATA_ID =9; 
-// export const OUTPOST_ID = 9;

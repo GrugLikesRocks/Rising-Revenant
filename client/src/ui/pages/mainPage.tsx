@@ -1,8 +1,9 @@
 import React from 'react';
-import { BuyRevenantButton } from '../buyRevenantButton';
+import { BuyRevenantButton } from '../components/buyRevenantButton';
 import { PhaserLayer } from '../../phaser';
 import "../../App.css"
 import { ClickWrapper } from '../clickWrapper';
+import "../styles/MainPageStyle.css";
 
 export const MainReactComp: React.FC <{ layer: PhaserLayer }> = ({ layer })=> {
 

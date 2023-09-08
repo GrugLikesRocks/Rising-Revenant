@@ -19,5 +19,9 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         GameTracker: overridableComponent(contractComponents.GameTracker),
         GameData : overridableComponent(contractComponents.GameData),
         OutpostEntity : overridableComponent(contractComponents.OutpostEntity),
+
+        //should not be here
+        ClientCameraComponent : overridableComponent(contractComponents.ClientCameraComponent),
+        ClickComponent : overridableComponent(contractComponents.ClickComponent),
     };
 }

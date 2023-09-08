@@ -68,11 +68,6 @@ mod create_outpost {
             (lifes, defence, name, prosperity, position, ownership, outpostdata,gameData)
         );
 
-        //   set !(
-        //     ctx.world,
-        //     ( gameData)
-        // );
-
         entity_id
     }
 // fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
@@ -83,11 +78,7 @@ mod create_outpost {
 
 
 
-
-
-
-
-#[system]
+#[system] // this can be implemented in the above system to make only one, the thing is that if i do get! and it was never set what happens? // i need it to return 0 if the user has no outposts
 mod register_player {
     use array::ArrayTrait;
     use box::BoxTrait;

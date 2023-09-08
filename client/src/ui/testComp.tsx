@@ -6,6 +6,7 @@ type ExampleComponentProps = {
     layer: PhaserLayer;
 };
 
+// ALL TO DELETE
 
 export const DefenceComponent = ({ layer }: ExampleComponentProps) => {
     const {

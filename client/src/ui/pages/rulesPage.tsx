@@ -1,5 +1,6 @@
-// Page1.tsx
 import React from 'react';
+import "../styles/RulesPageStyle.css";
+
 export const RulesReactComp: React.FC = () => {
     return (
       <div className='rules-page-container'>

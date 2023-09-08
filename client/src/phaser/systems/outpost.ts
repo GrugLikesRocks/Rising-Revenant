@@ -2,7 +2,6 @@ import { Has, defineEnterSystem, defineSystem,  getComponentValueStrict } from "
 import { PhaserLayer } from "..";
 import {  Assets } from "../constants";
 
-
 export const spawnOutposts = (layer: PhaserLayer) => {
 
     const {
@@ -23,7 +22,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
         outpostObj.setComponent({
             id: 'texture',
             once: (sprite) => {
-                sprite.setTexture(Assets.CastleAsset);  // Assuming "outpost" is the key for the outpost texture.
+                sprite.setTexture(Assets.CastleHealthyAsset);  // Assuming "outpost" is the key for the outpost texture.
                 sprite.setPosition(position?.x, position?.y);
                 sprite.scale = 0.25;
             },

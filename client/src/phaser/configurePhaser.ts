@@ -16,10 +16,10 @@ export const phaserConfig = {
         [Scenes.Main]: defineSceneConfig({
 
             assets: {
-                [Assets.CastleAsset]: {
+                [Assets.CastleHealthyAsset]: {
                     type: AssetType.Image,
-                    key: Assets.CastleAsset,
-                    path: "src/assets/castle.png",
+                    key: Assets.CastleHealthyAsset,
+                    path: "src/assets/castleHealthy.png",
                 },
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
@@ -28,11 +28,10 @@ export const phaserConfig = {
                 }
             },
             maps: {
-                //[Maps.Main]: mainMap,
             },
             sprites: {
                 [Sprites.Castle]: {
-                    assetKey: Assets.CastleAsset,
+                    assetKey: Assets.CastleHealthyAsset,
                 },
                 [Sprites.Map]: {
                     assetKey: Assets.MapPicture,

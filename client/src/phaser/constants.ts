@@ -13,7 +13,8 @@ export enum Sprites {
 
 export enum Assets {
     MapPicture = "MapPicture",
-    CastleAsset = "CastleAsset",
+    CastleHealthyAsset = "CastleHealthyAsset",
+    CastleDamagedAsset = "CastleDamagedAsset",
 }
 
 export const GAME_ID = 1;

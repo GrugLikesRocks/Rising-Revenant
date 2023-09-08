@@ -402,6 +402,73 @@ export function createSystemCalls(
     }
   };
 
+
+
+
+  const set_world_event = async (signer: Account) => {
+    
+    const entityId = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(signer.address), BigInt(50)])
+    
+    const worldEventId = uuid(); 
+    WorldEvent.addOverride(worldEventId, {
+      entity: entityId,
+      value: { radius: 1 , event_type: 1, block_number: 1},
+    });
+
+    const positionId = uuid();
+    Position.addOverride(positionId, {
+      entity: entityId,
+      value: { x: 1, y: 1 },
+    });
+
+    try {
+      const tx = await execute(signer, "set_world_event", [GAME_ID]);
+
+      console.log(tx);
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      // setComponentsFromEvents(contractComponents, getEvents(receipt));
+      console.log(receipt);
+      const events = parseEvent(receipt);
+      const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+
+      const gameEvent = events[0] as WorldEvent;
+      setComponent(contractComponents.WorldEvent, entity, {
+        radius: gameEvent.radius,
+        event_type: gameEvent.event_type,
+        block_number: gameEvent.block_number,
+      });
+
+      const positionEvent = events[1] as Position;
+      setComponent(contractComponents.Position, entity, {
+        x: positionEvent.x,
+        y: positionEvent.y,
+      });
+
+    } catch (e) {
+      console.log(e);
+      WorldEvent.removeOverride(worldEventId);
+    } finally {
+      WorldEvent.removeOverride(worldEventId);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const click_component_call = async (x: number, y: number) => 
   {
     const entityId = GAME_ID as EntityIndex;
@@ -439,6 +506,7 @@ export function createSystemCalls(
     create_outpost,
     register_player,
     destroy_outpost,
+    set_world_event,
 
     camera_component_call,
     click_component_call
@@ -798,8 +866,6 @@ function hexToAscii(hex: string) {
   }
   return str;
 }
-
-
 
 export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
   if (keys.length === 1) {

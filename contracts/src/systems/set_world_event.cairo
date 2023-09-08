@@ -14,10 +14,8 @@ mod set_world_event {
     use RealmsRisingRevenant::components::Game;
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
-    use RealmsRisingRevenant::utils;
-    use RealmsRisingRevenant::events::{emit, SetWorldEvent};
-    
-
+    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+  
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked
     fn execute(ctx: Context, game_id: u32) -> (WorldEvent, Position) {
@@ -32,31 +30,16 @@ mod set_world_event {
         let event_type = 1; // TOOD: Make enum of event types
         let block_number = 100; // TODO: Get block number
         let world_event = WorldEvent { entity_id, game_id, radius, event_type, block_number };
-
-        // TODO: Get Random coordinates
-
-        let seed = starknet::get_tx_info().unbox().transaction_hash;
         
-        let x = utils::getRandomNum(seed,0,100);
-        let y = utils::getRandomNum(seed,0,100);
-        let position = Position { entity_id, game_id, x: x, y: y };
+        let seed = starknet::get_tx_info().unbox().transaction_hash;
+	    let mut random = RandomImpl::new(seed);
+        let x = random.next_u32(0, 100);
+        let y = random.next_u32(0, 100);
+        let position = Position { entity_id, game_id, x, y };
 
         set!(ctx.world, (world_event, position));
-
-        
-
-        let mut values = array::ArrayTrait::new();
-        serde::Serde::serialize(
-            @SetWorldEvent {
-                world_event ,  position
-            },
-            ref values
-        );
-        emit(ctx, 'SetWorldEvent', values.span());
 
         // TODO: Emit this as event
         (world_event, position)
     }
-
-
 }

@@ -1,0 +1,79 @@
+.profile-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-datatable-container {
+    padding: 20px;
+    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    background-color: antiquewhite;
+
+    /* margin: auto;   */
+    position: relative;
+    /* left: -10%; */
+}
+
+.revenant-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    background-color: aqua;
+    text-align: center;
+}
+
+.data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    background-color: rgb(241, 58, 34);
+}
+
+.fields-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgb(60, 28, 241);
+}
+
+.fields-name {
+    border: 1px solid black;
+    width: 33.33%;
+    text-align: center;
+    background-color: rgb(30, 255, 79);
+}
+
+.elements-container {
+    display: flex;
+    justify-content: space-between;
+    width: 99.99%;
+    background-color: aquamarine;
+    flex-direction: column;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.sub-element-container {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgb(168, 153, 18);
+}
+
+.sub-element-container:hover {
+    background-color: rgb(168, 153, 18);
+}
+
+.element-data {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+    text-align: center;
+    background-color: rgb(4, 92, 25);
+}

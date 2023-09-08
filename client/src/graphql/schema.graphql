@@ -1,0 +1,50 @@
+  query getEntities {
+    entities(keys: ["%"]) {
+      edges {
+        node {
+          keys
+          components {
+            __typename
+            ... on Lifes {
+              count
+            }
+            ... on Position {
+              x
+              y
+            }
+            ... on Defence {
+              plague
+            }
+            ... on Name {
+              value
+            }
+            ... on Balance {
+              value
+            }
+            ... on Prosperity {
+              value
+            }
+            ... on WorldEvent {
+              radius
+              event_type
+              block_number
+            }
+            ... on Game {
+              start_time
+              prize
+              status
+            }
+            ... on Prosperity {
+              address
+            }
+            ... on GameData {
+              count_outpost
+            }
+            ... on OutpostEntity {
+              entity_id
+            }
+          }
+        }
+      }
+    }
+  }

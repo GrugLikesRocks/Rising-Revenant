@@ -1,7 +1,6 @@
 
 import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
-
 /*
  * Wrap any piece of UI that needs to receive click events with this.
  * Make sure it is unmounted when the click events are no longer needed.
@@ -17,7 +16,6 @@ export const ClickWrapper = (props: Props) => {
     //console.log("Click event in ClickWrapper:", e);
   };
 
-  // Do not render children if shouldUnmount is true
   if (shouldUnmount) return null;
 
   return (

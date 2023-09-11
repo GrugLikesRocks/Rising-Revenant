@@ -192,13 +192,9 @@ export function defineContractComponents(world: World) {
 
 
 
-
-
-
-
-    // this should not be here
-    ClientCameraComponent: (() => {
-      const name = "ClickCameraComp";
+    // this is to change
+    ClientCameraPosition: (() => {
+      const name = "ClientCameraPosition";
       return defineComponent(
         world,
         {
@@ -213,14 +209,16 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    // this should not be here
-    ClickComponent: (() => {
-      const name = "ClickCameraComp";
+    ClientClickPosition: (() => {
+      const name = "ClientClickPosition";
       return defineComponent(
         world,
         {
-          x: RecsType.Number,
-          y: RecsType.Number,
+          xFromOrigin: RecsType.Number,
+          yFromOrigin: RecsType.Number,
+
+          xFromMiddle: RecsType.Number,
+          yFromMiddle: RecsType.Number,
         },
         {
           metadata: {
@@ -229,23 +227,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-        // this should not be here
-        OutpostState: (() => {
-          const name = "OutpostState";
-          return defineComponent(
-            world,
-            {
-              state: RecsType.Number
-            },
-            {
-              metadata: {
-                name: name,
-              },
-            }
-          );
-        })(),
-    
 
 
 

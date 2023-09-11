@@ -13,7 +13,7 @@ type Props = {
 
 // TODO: this is where we need to set the burner account from local storage.
 
-export const PhaserLayer = ({ networkLayer, menuState }: Props) => {
+export const PhaserLayer = ({ networkLayer }: Props) => {
   const { phaserLayer, ref } = usePhaserLayer({ networkLayer });
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const PhaserLayer = ({ networkLayer, menuState }: Props) => {
       />
 
         {/* this should take in the current state and and only render if in map state */}
-        {phaserLayer && <ToolTipData layer={phaserLayer} />}
+        {/* {phaserLayer && } */}
 
     </div>
   );

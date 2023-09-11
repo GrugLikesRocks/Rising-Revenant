@@ -11,6 +11,8 @@ import React from "react";
 
 import "../../App.css";
 
+// ALL DEBUG TO DELETE ONCE DONE  
+
 type ExampleComponentProps = {
   layer: PhaserLayer;
 };
@@ -42,7 +44,7 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
     {
       content = (
         <button
-          className="cool-button"
+          className="buy-revenant-button"
           onClick={() => create_game(account)}
         >
           create the game
@@ -53,7 +55,7 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
     {
       content = (
         <button
-          className="cool-button"
+        className="buy-revenant-button"
           onClick={() => register_player(account)}
         >
           register player
@@ -65,14 +67,14 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
   else {
     content = (<div>
       <button
-        className="cool-button"
+        className="buy-revenant-button"
         onClick={() => create_outpost(account, GAME_ID, getComponentValue(GameData, entityId)?.count_outposts || 0)}
       >
         buy revenant, amount of outposts:{getComponentValue(GameData, entityId)?.count_outposts || 0}
       </button>
 
       <button
-        className="cool-button"
+        className="buy-revenant-button"
         onClick={() => set_world_event(account)}
       >
         generate Event

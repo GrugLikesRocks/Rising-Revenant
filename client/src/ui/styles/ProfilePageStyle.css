@@ -12,18 +12,16 @@
     flex-direction: column;
     width: 50%;
     height: 100%;
-    background-color: antiquewhite;
-
-    /* margin: auto;   */
+    /* background-color: antiquewhite; */
     position: relative;
-    /* left: -10%; */
 }
 
 .revenant-title {
     font-size: 24px;
     margin-bottom: 20px;
-    background-color: aqua;
+    /* background-color: aqua; */
     text-align: center;
+    color: white;
 }
 
 .data-container {
@@ -31,49 +29,59 @@
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    background-color: rgb(241, 58, 34);
+    /* background-color: rgb(241, 58, 34); */
 }
 
 .fields-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    background-color: rgb(60, 28, 241);
+    background-color: rgb(30, 30, 30);
 }
 
 .fields-name {
     border: 1px solid black;
     width: 33.33%;
-    text-align: center;
-    background-color: rgb(30, 255, 79);
+    /* text-align: center; */
+    color: white;
+    /* pretty sure you are not allowed to do this */
+    padding: 1%;   
+    padding-left: 4%;
+    /* background-color: rgb(30, 255, 79); */
 }
 
 .elements-container {
     display: flex;
     justify-content: space-between;
     width: 99.99%;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
     flex-direction: column;
     max-height: 400px;
     overflow-y: auto;
 }
 
 .sub-element-container {
+    padding-top: 2%;
+    padding-bottom: 2%;
     flex-direction: row;
     display: flex;
     justify-content: space-between;
     width: 100%;
-    background-color: rgb(168, 153, 18);
+    /* background-color: rgb(168, 153, 18); */
+    background-color: rgb(30, 30, 30);
 }
 
-.sub-element-container:hover {
-    background-color: rgb(168, 153, 18);
-}
-
-.element-data {
+/* there is an issue where the boarder doesnt go fully to the top, solution could be to do somehting similar to the navbar */
+.element-data, .center-element-data{
     padding-top: 2px;
     padding-bottom: 2px;
     width: 100%;
+    color: white;
     text-align: center;
-    background-color: rgb(4, 92, 25);
+}
+
+.center-element-data
+{
+    border-left: 2px solid black;
+    border-right: 2px solid black;
 }

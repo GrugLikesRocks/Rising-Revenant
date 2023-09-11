@@ -1,8 +1,6 @@
 import { Has, defineEnterSystem} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
-import { Assets } from "../constants";
-
 export const mapSpawn = (layer: PhaserLayer) => {
 
     const {
@@ -14,7 +12,6 @@ export const mapSpawn = (layer: PhaserLayer) => {
             components: { WorldEvent }
         },
     } = layer;
-
 
     defineEnterSystem(world, [Has(WorldEvent)], ({ entity }) => {
         
@@ -30,5 +27,4 @@ export const mapSpawn = (layer: PhaserLayer) => {
 
         // spawn the graphics here
     });
-
 };

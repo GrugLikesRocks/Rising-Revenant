@@ -11,7 +11,7 @@ import {
 } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
-import { GAME_ID} from "../phaser/constants";
+import { CAMERA_ID, GAME_ID} from "../phaser/constants";
 import { poseidonHashMany } from "micro-starknet";
 
 import { Event } from "starknet";
@@ -36,9 +36,8 @@ export function createSystemCalls(
     GameData,
     OutpostEntity,
 
-    ClientCameraComponent,
-    ClickComponent,
-    OutpostState,
+    ClientCameraPosition,
+    ClientClickPosition
   }: ClientComponents
 ) {
 
@@ -108,6 +107,8 @@ export function createSystemCalls(
     }
   };
 
+
+  // THIS IS TO REDO
   const destroy_outpost = async (signer: Account, entity_id: number) => {
 
     const entityId = getEntityIdFromKeys([BigInt(entity_id), BigInt(signer.address),BigInt(GAME_ID)]);
@@ -258,12 +259,6 @@ export function createSystemCalls(
       value: {},
     });
 
-    const outpostStateId = uuid();
-    OutpostState.addOverride(outpostStateId, {
-      entity: entityId,
-      value: { state: 1},
-    });
-
     try {
       const tx: any = await execute(signer, "create_outpost", [game_id]);
 
@@ -345,25 +340,41 @@ export function createSystemCalls(
   };
 
   const create_game = async (signer: Account) => {
-    const GameId = GAME_ID as EntityIndex;
 
-    const gameId = uuid();
-    Game.addOverride(gameId, {
-      entity: GameId,
-      value: { start_time: 999, prize: 100, status: true },
-    });
+
+    const cameraId = CAMERA_ID as EntityIndex;
 
     const clientCamCompId = uuid();
-    ClientCameraComponent.addOverride(clientCamCompId, {
-      entity: GameId,
+    ClientCameraPosition.addOverride(clientCamCompId, {
+      entity: cameraId,
       value: { x:0,y:0 },
     });
 
     const clickCompId = uuid();
-    ClickComponent.addOverride(clickCompId, {
-      entity: GameId,
-      value: { x:0,y:0},
+    ClientClickPosition.addOverride(clickCompId, {
+      entity: cameraId,
+      value: { 
+        xFromMiddle: 0, 
+        yFromMiddle: 0,
+        
+        yFromOrigin: 0, 
+        xFromOrigin: 0 
+      },
     });
+
+
+
+
+    const gameId = GAME_ID as EntityIndex;
+
+    const gameCompId = uuid();
+    Game.addOverride(gameCompId, {
+      entity: gameId,
+      value: { start_time: 999, prize: 100, status: true },
+    });
+
+
+
 
     const entityId = 999999999999999 as EntityIndex;
 
@@ -401,16 +412,17 @@ export function createSystemCalls(
 
     } catch (e) {
       console.log(e);
-      Game.removeOverride(gameId);
+      Game.removeOverride(gameCompId);
       GameTracker.removeOverride(gameTrackerId);
+      ClientClickPosition.removeOverride(clickCompId);
+      ClientCameraPosition.removeOverride(clientCamCompId);
     } finally {
-      Game.removeOverride(gameId);
+      Game.removeOverride(gameCompId);
+      ClientClickPosition.removeOverride(clickCompId);
+      ClientCameraPosition.removeOverride(clientCamCompId);
       GameTracker.removeOverride(gameTrackerId);
     }
   };
-
-
-
 
   const set_world_event = async (signer: Account) => {
     
@@ -476,31 +488,33 @@ export function createSystemCalls(
 
 
 
-  const click_component_call = async (x: number, y: number) => 
+  const set_click_component = async (xOrigin: number, yOrigin: number, xMiddle: number, yMiddle:number) => 
   {
-    const entityId = GAME_ID as EntityIndex;
+    const entityId = CAMERA_ID as EntityIndex;
 
-    // console.log("this is the entity id for the life increment", entityId);
     const defenceId = uuid();
-    ClickComponent.addOverride(defenceId, {
+    ClientClickPosition.addOverride(defenceId, {
       entity: entityId,
       value: {
-        x: x,  y: y, 
+        xFromMiddle: xMiddle, 
+        yFromMiddle: yMiddle,
+        
+        yFromOrigin: yOrigin, 
+        xFromOrigin: xOrigin 
       },
     });
   }
 
 
-
-  const camera_component_call = async (x: number, y: number) => 
+  const set_camera_position_component = async (x: number, y: number) => 
   {
-    const entityId = GAME_ID as EntityIndex;
+    const entityId = CAMERA_ID as EntityIndex;
 
     const defenceId = uuid();
-    ClientCameraComponent.addOverride(defenceId, {
+    ClientCameraPosition.addOverride(defenceId, {
       entity: entityId,
       value: {
-        x: x,  y:y, 
+        x: x, y: y, 
       },
     });
   }
@@ -515,8 +529,8 @@ export function createSystemCalls(
     destroy_outpost,
     set_world_event,
 
-    camera_component_call,
-    click_component_call
+    set_camera_position_component,
+    set_click_component
   };
 }
 

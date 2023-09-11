@@ -8,7 +8,6 @@ import {
 import { TileAnimations, Tileset } from "../artTypes/world";
 import { Sprites, Assets, Maps, Scenes } from "./constants";
 
-const ANIMATION_INTERVAL = 200;
 
 export const phaserConfig = {
     sceneConfig: {

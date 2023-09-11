@@ -1,10 +1,7 @@
 import { useEntityQuery } from "@latticexyz/react";
 import {
-  EntityID,
-  EntityIndex,
   Has,
   getComponentValue,
-  getComponentValueStrict,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
@@ -32,11 +29,8 @@ export const OutpostList = ({ layer }: Props) => {
   const entities = useEntityQuery([Has(Defence)]);
 
   if (entities.length === 0) {
-    return <div>No entities found.</div>;
-  }
-
-  return (
-    <div className="profile-datatable-container ">
+    return (
+      <div className="profile-datatable-container ">
       <span className="revenant-title">Your Revenants:</span>
       <div className="data-container">
         <div className="fields-container">
@@ -45,28 +39,43 @@ export const OutpostList = ({ layer }: Props) => {
           <div className="fields-name">Reinforcements</div>
         </div>
         <div className="elements-container">
+          
+            <div className="sub-element-container">
+              <div className="element-data">
+                No data available
+              </div>
+              <div className="center-element-data">
+                No data available
+              </div>
+              <div className="element-data">
+                No data available
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    )
+  }
+
+  return (
+    <div className="profile-datatable-container ">
+      <span className="revenant-title">Your Revenants</span>
+      <div className="data-container">
+        <div className="fields-container">
+          <div className="fields-name">Revenant ID</div>
+          <div className="fields-name">OUTPOST ID</div>
+          <div className="fields-name">Reinforcements</div>
+        </div>
+        <div className="elements-container">
           {entities.map((entity, index) => (
             <div className="sub-element-container" key={index}>
               <div className="element-data">{entity}</div>
-              <div className="element-data">
+              <div className="center-element-data">
                 {getComponentValue(OutpostEntity, entity)?.entity_id || 0}
               </div>
               <div className="element-data">
                 {getComponentValue(Defence, entity)?.plague || 0}
               </div>
-              <ClickWrapper>
-              <button
-                onClick={() =>
-                  reinforce_outpost(
-                    account,
-                    getComponentValue(OutpostEntity, entity)!.entity_id,
-                  )
-                }
-              >
-                reinforce
-              </button>
-                </ClickWrapper>
-
             </div>
           ))}
         </div>

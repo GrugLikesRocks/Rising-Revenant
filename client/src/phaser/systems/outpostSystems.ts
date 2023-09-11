@@ -11,8 +11,6 @@ import { PhaserLayer } from "..";
 import { Assets } from "../constants";
 import { gameEvents } from "./eventEmitter";
 
-import { StateOutpost } from "../constants";
-
 export const spawnOutposts = (layer: PhaserLayer) => {
   let entities: EntityIndex[] = []; // this will need to be changed
 
@@ -26,9 +24,8 @@ export const spawnOutposts = (layer: PhaserLayer) => {
         Position,
         Defence,
         WorldEvent,
-        ClickComponent,
-        ClientCameraComponent,
-        OutpostState
+        ClientClickPosition,
+        ClientCameraPosition
       },
     },
   } = layer;
@@ -89,7 +86,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       const entityId = entities[index];
       const playerObj = objectPool.get(entityId, "Sprite");
 
-      let change : boolean = false;
+      // let change : boolean = false;
 
       playerObj.setComponent({
         id: "texture",
@@ -102,32 +99,14 @@ export const spawnOutposts = (layer: PhaserLayer) => {
             (spriteCenterX - positionX) ** 2 + (spriteCenterY - positionY) ** 2
           );
 
-          let change : boolean = false;
-
           if (distance <= radius) {
-            sprite.setTexture(Assets.CastleDamagedAsset); 
-            change = true;
-
+            sprite.setTexture(Assets.CastleDamagedAsset);
           } else {
             sprite.setTexture(Assets.CastleHealthyAsset); 
-            
-            change = false;
           }
         },
       });
 
-      if (change)
-      {
-        setComponent(OutpostState, entityId, {
-            state: StateOutpost.Damaged as number,
-          });
-      }
-      else
-      {
-        setComponent(OutpostState, entityId, {
-            state: StateOutpost.Healthy as number,
-          });
-      }
     }
   });
 
@@ -135,17 +114,18 @@ export const spawnOutposts = (layer: PhaserLayer) => {
   // click checks for the ui tooltip
   defineSystem(
     world,
-    [Has(ClickComponent), Has(ClientCameraComponent)],
+    [Has(ClientClickPosition), Has(ClientCameraPosition)],
     ({ entity }) => {
 
       if (entities.length === 0) {
         return;
       }
 
-      const positionClick = getComponentValueStrict(ClickComponent, entity);
-    //   const positionCenterCam = getComponentValueStrict(ClientCameraComponent, entity);
-      let positionX = positionClick.x - camera.phaserCamera.width / 2 ;   //shoudlnt be calculated here
-      let positionY = positionClick.y - camera.phaserCamera.height / 2 ;
+      const positionClick = getComponentValueStrict(ClientClickPosition, entity);
+      const positionCenterCam = getComponentValueStrict(ClientCameraPosition, entity);
+      
+      let positionX = positionClick.xFromMiddle + positionCenterCam.x;
+      let positionY = positionClick.yFromMiddle + positionCenterCam.y;
 
       let foundEntity: EntityIndex | null = null; // To store the found entity
 
@@ -153,6 +133,8 @@ export const spawnOutposts = (layer: PhaserLayer) => {
         const element = entities[index];
         const playerObj = objectPool.get(element, "Sprite");
 
+
+        // this should no be like this 
         playerObj.setComponent({
           id: "texture",
           once: (sprite) => {
@@ -168,6 +150,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
               positionY <= maxY
             ) {
               foundEntity = element;
+              console.log("this has dected an enitty ")
             }
           },
         });
@@ -178,7 +161,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       }
 
       if (foundEntity) {
-        gameEvents.emit("spawnTooltip", positionClick.x, positionClick.y, foundEntity);
+        gameEvents.emit("spawnTooltip", positionClick.xFromOrigin, positionClick.yFromOrigin, foundEntity);
       }
     }
   );

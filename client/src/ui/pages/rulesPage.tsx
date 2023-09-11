@@ -1,17 +1,60 @@
-import React from 'react';
+import React from "react";
 import "../styles/RulesPageStyle.css";
 
+import { ClickWrapper } from "../clickWrapper";
+
 export const RulesReactComp: React.FC = () => {
-    return (
-      <div className='rules-page-container'>
-        <div className='rules-page-title'> This should be a title</div>
-        <div className='rules-page-text-container'>
-          <p className='rules-paragraph'>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
-          <p className='rules-paragraph'>Doloremque asperiores consequuntur ipsum?</p>
-          <p className='rules-paragraph'>Explicabo totam deleniti maiores?</p>
+  return (
+    <div className="rules-page-container">
+      <div className="rules-page-title">Title</div>
+      <ClickWrapper className="rules-page-text-container">
+        
+          <p className="rules-paragraph">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+          </p>
+          <p className="rules-paragraph">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+          </p>
+          <p className="rules-paragraph">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+          </p>
+          <p className="rules-paragraph">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+          </p>
          
-        </div>
-      </div>
-    );
-  };
-  
+      </ClickWrapper>
+    </div>
+  );
+};

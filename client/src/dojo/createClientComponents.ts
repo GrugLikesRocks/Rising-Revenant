@@ -21,8 +21,8 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         OutpostEntity : overridableComponent(contractComponents.OutpostEntity),
 
         //should not be here
-        ClientCameraComponent : overridableComponent(contractComponents.ClientCameraComponent),
-        ClickComponent : overridableComponent(contractComponents.ClickComponent),
-        OutpostState: overridableComponent(contractComponents.OutpostState),
+        ClientClickPosition : overridableComponent(contractComponents.ClientClickPosition),
+        ClientCameraPosition : overridableComponent(contractComponents.ClientCameraPosition),
+        
     };
 }

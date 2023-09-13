@@ -12,6 +12,9 @@ import { ProfilePage } from "./pages/profilePage";
 import { MapReactComp } from "./pages/mapPage";
 
 import { ToolTipData } from "./components/gameToolTip";
+import {EventCircle} from "./components/eventCircle";
+
+import { gameEvents } from "../phaser/systems/eventSystems/eventEmitter";
 
 interface UIProps {
   menuState?: MenuState;
@@ -23,6 +26,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   const [internalMenuState, internalSetMenuState] = useState<MenuState>(MenuState.MAIN);
   const [opacity, setOpacity] = useState(1); // New State for opacity
   
+
   useEffect(() => {
     if (externalMenuState !== undefined) {
       internalSetMenuState(externalMenuState);
@@ -33,12 +37,21 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   const actualMenuState = externalMenuState !== undefined ? externalMenuState : internalMenuState;
   
   useEffect(() => {
-    if (actualMenuState === MenuState.MAP) {
-      setOpacity(0);
-    } else {
+    const closeTooltip = () => {
+      gameEvents.emit("closeTooltip");
+    };
+    
+    if (actualMenuState !== MenuState.MAP) {
       setOpacity(0.85);
+      
+      // this doesnt work
+      closeTooltip();
+
+    } else {
+      setOpacity(0);
     }
   }, [actualMenuState]);
+  
 
   const layers = store((state) => {
     return {
@@ -55,7 +68,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
       <div className="main-menu-container">
         <div className="top-menu-container">
           <div className="game-initials-menu">
-          <div className="game-initials-menu-text">RR</div>
+          <div className="game-initials-menu-text"></div>
           </div>
           <div className="game-title-menu">
             <div className="game-title-menu-text">RISING REVENANT</div>
@@ -83,6 +96,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
         </div>
 
         <ToolTipData layer={layers.phaserLayer} />
+        <EventCircle layer={layers.phaserLayer} />
 
       </div>
     </Wrapper>

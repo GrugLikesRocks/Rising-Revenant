@@ -4,12 +4,13 @@ import {
   defineSystem,
   getComponentValueStrict,
   getComponentValue,
-  EntityIndex,
-  setComponent
+  EntityIndex
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { Assets } from "../constants";
-import { gameEvents } from "./eventEmitter";
+import { gameEvents,circleEvents } from "./eventSystems/eventEmitter";
+
+
 
 export const spawnOutposts = (layer: PhaserLayer) => {
   let entities: EntityIndex[] = []; // this will need to be changed
@@ -17,7 +18,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
   const {
     world,
     scenes: {
-      Main: { objectPool,camera },
+      Main: { objectPool },
     },
     networkLayer: {
       components: {
@@ -72,7 +73,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
   defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
     // const playerObj = objectPool.get(entity, "Sprite");
-    // Your existing setup
+    
     const dataEvent = getComponentValue(WorldEvent, entity);
     let radius = dataEvent?.radius  || 0 ;
 
@@ -81,6 +82,15 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     const dataEventPosition = getComponentValue(Position, entity);
     let positionX = dataEventPosition?.x  || 0;
     let positionY = dataEventPosition?.y  || 0;
+
+    console.log("should spawn circle");
+
+    const worldEvent = getComponentValueStrict(WorldEvent, entity);
+    const positionEvent = getComponentValueStrict(Position, entity);
+
+    // emits the event to the be received
+    circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
+
     
     for (let index = 0; index < entities.length; index++) {
       const entityId = entities[index];
@@ -150,7 +160,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
               positionY <= maxY
             ) {
               foundEntity = element;
-              console.log("this has dected an enitty ")
+              //console.log("this has dected an enitty ")
             }
           },
         });

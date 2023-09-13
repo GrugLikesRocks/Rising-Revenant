@@ -8,7 +8,6 @@ export const RulesReactComp: React.FC = () => {
     <div className="rules-page-container">
       <div className="rules-page-title">Title</div>
       <ClickWrapper className="rules-page-text-container">
-        
           <p className="rules-paragraph">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text

@@ -6,7 +6,6 @@ import {
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
 import { useDojo } from "../../hooks/useDojo";
-import { ClickWrapper } from "../clickWrapper";
 
 type Props = {
   layer: PhaserLayer;
@@ -19,12 +18,12 @@ export const OutpostList = ({ layer }: Props) => {
     },
   } = layer;
 
-  const {
-    account: { account },
-    networkLayer: {
-      systemCalls: { reinforce_outpost },
-    },
-  } = useDojo();
+  // const {
+  //   account: { account },
+  //   networkLayer: {
+  //     systemCalls: { reinforce_outpost },
+  //   },
+  // } = useDojo();
 
   const entities = useEntityQuery([Has(Defence)]);
 

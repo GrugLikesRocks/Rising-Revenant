@@ -11,10 +11,9 @@ import {
 } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
-import { CAMERA_ID, GAME_ID} from "../phaser/constants";
+import { CAMERA_ID, GAME_ID, MAP_HEIGHT, MAP_WIDTH} from "../phaser/constants";
 import { poseidonHashMany } from "micro-starknet";
 
-import { Event } from "starknet";
 
 // IMPLEMENT THE BEER BARRON FUNCTION
 
@@ -78,10 +77,10 @@ export function createSystemCalls(
 
       const events = parseEvent(receipt);
       // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-      console.log("this si the entity", entityId);
-      console.log("events for the reinforcing of an outpost" , events);
-      console.log(receipt);
-      console.log("\n\n\n");
+      // console.log("this si the entity", entityId);
+      // console.log("events for the reinforcing of an outpost" , events);
+      // console.log(receipt);
+      // console.log("\n\n\n");
 
       const defenceEvent = events[1] as Defence;
       setComponent(contractComponents.Defence, entityId, {
@@ -176,6 +175,8 @@ export function createSystemCalls(
   
     const entityId = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(signer.address)])
 
+    console.log("this is the signer address", signer.address);
+
     const gameDataId = uuid();
     GameData.addOverride(gameDataId, {
       entity: entityId,
@@ -190,6 +191,8 @@ export function createSystemCalls(
       });
 
       // setComponentsFromEvents(contractComponents, getEvents(receipt));
+
+      console.log(receipt);
 
       const events = parseEvent(receipt);
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
@@ -347,7 +350,7 @@ export function createSystemCalls(
     const clientCamCompId = uuid();
     ClientCameraPosition.addOverride(clientCamCompId, {
       entity: cameraId,
-      value: { x:0,y:0 },
+      value: { x:MAP_WIDTH/2,y:MAP_HEIGHT/2 },
     });
 
     const clickCompId = uuid();
@@ -451,17 +454,17 @@ export function createSystemCalls(
       // setComponentsFromEvents(contractComponents, getEvents(receipt));
       console.log(receipt);
       const events = parseEvent(receipt);
-      const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
       const gameEvent = events[0] as WorldEvent;
-      setComponent(contractComponents.WorldEvent, entity, {
+      setComponent(contractComponents.WorldEvent, entityId, {
         radius: gameEvent.radius,
         event_type: gameEvent.event_type,
         block_number: gameEvent.block_number,
       });
 
       const positionEvent = events[1] as Position;
-      setComponent(contractComponents.Position, entity, {
+      setComponent(contractComponents.Position, entityId, {
         x: positionEvent.x,
         y: positionEvent.y,
       });
@@ -469,8 +472,10 @@ export function createSystemCalls(
     } catch (e) {
       console.log(e);
       WorldEvent.removeOverride(worldEventId);
+      Position.removeOverride(positionId);
     } finally {
       WorldEvent.removeOverride(worldEventId);
+      Position.removeOverride(positionId);
     }
   };
 
@@ -518,8 +523,6 @@ export function createSystemCalls(
       },
     });
   }
-
-
 
   return {
     reinforce_outpost,

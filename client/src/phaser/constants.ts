@@ -17,6 +17,9 @@ export enum Assets {
     CastleDamagedAsset = "CastleDamagedAsset",
 }
 
+export const MAP_WIDTH = 10240;
+export const MAP_HEIGHT = 5164;
+
 export const GAME_ID = 1;
 export const GAME_DATA_ID =9; 
 export const CAMERA_ID = 19999999999; // the camera could prob share the same id as the game its no big deal

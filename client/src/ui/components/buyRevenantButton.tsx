@@ -7,7 +7,6 @@ import { PhaserLayer } from "../../phaser";
 import { useDojo } from "../../hooks/useDojo";
 import { GAME_ID } from "../../phaser/constants";
 import { getEntityIdFromKeys } from "../../dojo/createSystemCalls";
-import React from "react";
 
 import "../../App.css";
 

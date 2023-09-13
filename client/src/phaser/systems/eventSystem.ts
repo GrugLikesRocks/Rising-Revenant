@@ -1,30 +1,27 @@
-import { Has, defineEnterSystem} from "@latticexyz/recs";
+import { Has, getComponentValueStrict,defineSystem} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
+
+import { circleEvents } from "./eventSystems/eventEmitter";
 
 export const mapSpawn = (layer: PhaserLayer) => {
 
     const {
         world,
-        scenes: {
-            Main: { objectPool},
-        },
+        
         networkLayer: {
-            components: { WorldEvent }
+            components: { WorldEvent, Position }
         },
     } = layer;
 
-    defineEnterSystem(world, [Has(WorldEvent)], ({ entity }) => {
-        
-        // const playerObj = objectPool.get(entity, "Sprite");
+    // this should be on update
+    defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
 
-        // playerObj.setComponent({
-        //     id: 'animation',
-        //     once: (sprite) => {
-        //         sprite.setTexture(Assets.MapPicture);
-        //         sprite.setPosition(-sprite.width/2,-sprite.height/2);
-        //     }
-        // });
+        console.log("should spawn circle");
 
-        // spawn the graphics here
+        const worldEvent = getComponentValueStrict(WorldEvent, entity);
+        const positionEvent = getComponentValueStrict(Position, entity);
+
+        // emits the event to the be received
+        circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
     });
 };

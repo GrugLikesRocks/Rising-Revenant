@@ -26,4 +26,14 @@
   /* .optional-button:hover {
     background-color: #0056b3;
   } */
+
+  .close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    cursor: pointer;
+  }
+  
   

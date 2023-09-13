@@ -17,7 +17,7 @@
 }
 
 .revenant-title {
-    font-size: 24px;
+    font-size: 2vw;
     margin-bottom: 20px;
     /* background-color: aqua; */
     text-align: center;
@@ -44,9 +44,9 @@
     width: 33.33%;
     /* text-align: center; */
     color: white;
-    /* pretty sure you are not allowed to do this */
     padding: 1%;   
     padding-left: 4%;
+    font-size: 1.7vw;
     /* background-color: rgb(30, 255, 79); */
 }
 
@@ -78,6 +78,7 @@
     width: 100%;
     color: white;
     text-align: center;
+    font-size: 1.2vw;
 }
 
 .center-element-data

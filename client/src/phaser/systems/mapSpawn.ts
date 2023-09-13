@@ -24,8 +24,9 @@ export const mapSpawn = (layer: PhaserLayer) => {
             id: 'animation',
             once: (sprite) => {
                 sprite.setTexture(Assets.MapPicture);
-                sprite.setPosition(-sprite.width/2,-sprite.height/2);
-                camera.phaserCamera.setBounds(-sprite.width/2, -sprite.height/2, sprite.width, sprite.height);
+                // sprite.setPosition(-sprite.width/2,-sprite.height/2);
+                camera.phaserCamera.setBounds(0, 0, sprite.width, sprite.height);
+                camera.centerOn(sprite.width/2, sprite.height/2);
             }
         });
     });

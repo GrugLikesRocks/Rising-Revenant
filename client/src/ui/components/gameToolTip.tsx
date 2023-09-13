@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { gameEvents } from "../../phaser/systems/eventEmitter";
+import { gameEvents } from "../../phaser/systems/eventSystems/eventEmitter";
 import "../styles/ToolTipDataStyles.css";
 import { PhaserLayer } from "../../phaser";
 
@@ -40,6 +40,12 @@ export const ToolTipData = ({ layer }: Props) => {
   const [reinforceText, setReinforceText] = useState<any>(null);
   const [outpostEntityVal, setOutpostEntityVal] = useState<any>(null);
   const [currentEntity, setCurrentEntity] = useState<EntityIndex | null>(null);
+  const [shouldClose, setShouldClose] = useState(false);
+
+  const closeTooltip = () => {
+    setIsVisible(false);
+    setShouldClose(true);
+  };
 
   const initialCameraCenterPos = useRef<any>(null);
   const currentTooltipPos = useRef<any>({ x: 0, y: 0 });
@@ -75,7 +81,8 @@ export const ToolTipData = ({ layer }: Props) => {
     }
 
     timer = setTimeout(() => {
-      setIsVisible(false);
+        setIsVisible(false);
+      
     }, 8000);
   };
 
@@ -117,6 +124,14 @@ export const ToolTipData = ({ layer }: Props) => {
     };
   }, []);
 
+
+  useEffect(() => {
+    // Close the tooltip when the menu state changes or when the game state changes
+    if (shouldClose) {
+      closeTooltip();
+    }
+  }, [shouldClose]);
+
   if (!isVisible) return null;
 
   const style = {
@@ -124,11 +139,21 @@ export const ToolTipData = ({ layer }: Props) => {
     top: `${position.y}px`,
   };
 
+
   return (
-    <div className="tooltip-container" style={style}>
-      <div className="text-box">name: {nameText}</div>
-      <div className="text-box">owner add: {addressText}</div>
-      <div className="text-box">reinfoements: {reinforceText}</div>
+    
+    <div
+      className="tooltip-container"
+      style={style}
+    >
+      <ClickWrapper>
+        <button className="close-button" onClick={closeTooltip}>
+          X
+        </button>
+      </ClickWrapper>
+      <div className="text-box">Name: 1234567890 ASDFGHJKL asdfghjkl</div>
+      <div className="text-box">Owner address: {addressText}</div>
+      <div className="text-box">Reinforcement: {reinforceText}</div>
       <ClickWrapper>
         <button
           className="optional-button"
@@ -142,7 +167,7 @@ export const ToolTipData = ({ layer }: Props) => {
             }
           }}
         >
-          destroy WIP
+          Confirm Event
         </button>
         <button
           className="optional-button"
@@ -155,7 +180,7 @@ export const ToolTipData = ({ layer }: Props) => {
             }
           }}
         >
-          reinforcemnt
+          Reinforces
         </button>
       </ClickWrapper>
     </div>

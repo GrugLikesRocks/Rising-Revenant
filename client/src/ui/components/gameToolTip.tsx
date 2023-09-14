@@ -3,11 +3,14 @@ import { gameEvents } from "../../phaser/systems/eventSystems/eventEmitter";
 import "../styles/ToolTipDataStyles.css";
 import { PhaserLayer } from "../../phaser";
 
-import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useDojo } from "../../hooks/useDojo";
 
 import { ClickWrapper } from "../clickWrapper";
 import { CAMERA_ID } from "../../phaser/constants";
+
+// THIS SCRIPT IS TO REDO, ALSO CONTAINS AN ISSUE WHERE IF THE PLAYER HOVER OVER A OUTPOST FOR THE FIRST TIME IT OPENS THE TOOLTIP, THIS ONLY HAPPENS THE FIRST TIME 
+// NEED TO FIND A HEX TO ASCII FUNCTION
 
 type Props = {
   layer: PhaserLayer;
@@ -54,6 +57,7 @@ export const ToolTipData = ({ layer }: Props) => {
 
   const spawnTooltip = (x: number, y: number, entity: EntityIndex) => {
     setCurrentEntity(entity);
+
     const _nameText = getComponentValue(Name, entity)?.value;
     const _addressText = getComponentValue(Ownership, entity)?.address;
     const _reinforceText = getComponentValue(Defence, entity)?.plague;
@@ -151,7 +155,7 @@ export const ToolTipData = ({ layer }: Props) => {
           X
         </button>
       </ClickWrapper>
-      <div className="text-box">Name: 1234567890 ASDFGHJKL asdfghjkl</div>
+      <div className="text-box">Name: {nameText} </div>   
       <div className="text-box">Owner address: {addressText}</div>
       <div className="text-box">Reinforcement: {reinforceText}</div>
       <ClickWrapper>

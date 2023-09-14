@@ -18,7 +18,7 @@ mod set_world_event {
   
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked
-    fn execute(ctx: Context, game_id: u32) -> (WorldEvent, Position) {
+    fn execute(ctx: Context, game_id: u32,x:u32, y:u32, radius:u32) -> (WorldEvent, Position) {
         // check game is active
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
@@ -26,15 +26,15 @@ mod set_world_event {
         let entity_id: u128 = ctx.world.uuid().into();
 
         // These should be random
-        let radius = 100;
+        // let radius = 100;
         let event_type = 1; // TOOD: Make enum of event types
         let block_number = 100; // TODO: Get block number
         let world_event = WorldEvent { entity_id, game_id, radius, event_type, block_number };
         
         let seed = starknet::get_tx_info().unbox().transaction_hash;
 	    let mut random = RandomImpl::new(seed);
-        let x = random.next_u32(0, 100);
-        let y = random.next_u32(0, 100);
+        // let x = random.next_u32(0, 100);
+        // let y = random.next_u32(0, 100);
         let position = Position { entity_id, game_id, x, y };
 
         set!(ctx.world, (world_event, position));

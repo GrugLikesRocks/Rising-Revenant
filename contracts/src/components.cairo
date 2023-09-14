@@ -122,3 +122,7 @@ struct OutpostEntity {
     
     entity_id: u128
 }
+
+
+
+

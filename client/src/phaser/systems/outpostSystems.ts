@@ -11,6 +11,8 @@ import { Assets } from "../constants";
 import { gameEvents,circleEvents } from "./eventSystems/eventEmitter";
 
 
+const SCALE = 0.05;
+//scale should be a const
 
 export const spawnOutposts = (layer: PhaserLayer) => {
   let entities: EntityIndex[] = []; // this will need to be changed
@@ -42,8 +44,8 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     outpostObj.setComponent({
       id: "texture",
       once: (sprite) => {
-        sprite.setTexture(Assets.CastleHealthyAsset); // Assuming "outpost" is the key for the outpost texture.
-        sprite.scale = 0.25;
+        sprite.setTexture(Assets.CastleHealthySelfAsset); 
+        sprite.scale = SCALE;
       },
     });
   });
@@ -55,24 +57,22 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
         const player = objectPool.get(entity, "Sprite")
 
+        console.log("position for the castle", position)
+
         player.setComponent({
             id: 'position',
             once: (sprite) => {
                 sprite.setPosition(position?.x, position?.y);
             }
         })
-
     });
 
 
 
-
-
-  //comp for the center of the camera could be user here for effects, this is optional fully but is wrong anyway
+  //  comp for the center of the camera could be user here for effects, this is optional fully but is wrong anyway
   //   defineSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {});
 
   defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
-    // const playerObj = objectPool.get(entity, "Sprite");
     
     const dataEvent = getComponentValue(WorldEvent, entity);
     let radius = dataEvent?.radius  || 0 ;
@@ -85,11 +85,12 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
     console.log("should spawn circle");
 
-    const worldEvent = getComponentValueStrict(WorldEvent, entity);
-    const positionEvent = getComponentValueStrict(Position, entity);
+    // const worldEvent = getComponentValueStrict(WorldEvent, entity);
+    // const positionEvent = getComponentValueStrict(Position, entity);
 
     // emits the event to the be received
-    circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
+    // console.log("should spawn circle");
+    // circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
 
     
     for (let index = 0; index < entities.length; index++) {
@@ -112,7 +113,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
           if (distance <= radius) {
             sprite.setTexture(Assets.CastleDamagedAsset);
           } else {
-            sprite.setTexture(Assets.CastleHealthyAsset); 
+            sprite.setTexture(Assets.CastleHealthySelfAsset); 
           }
         },
       });

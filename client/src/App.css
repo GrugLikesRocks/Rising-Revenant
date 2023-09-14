@@ -3,7 +3,7 @@
   font-family: Revenant_font;
   src: url("fonts/Revenant_font.otf") format("opentype");
 }
-
+/* these names are to change, also number one isnt used anymore */
 @font-face {
   font-family: revenant_text_font_one;
   src: url("fonts/Messapia-Regular.otf") format("opentype");
@@ -14,18 +14,26 @@
   src: url("fonts/OrticaLinear-Regular.otf") format("opentype");
 }
 
+/*  this isnt a solution, to change */
+* 
+{
+  overflow: hidden;
+}
+
+/*  the top section with the menu title inital and all of that right now is a bit of a mess and to be re done */
+
 .main-menu-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  /* font-family: Revenant_font; */
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .top-menu-container {
   font-family: Revenant_font;
-
-  height: 5%;
+  height: 8%;
   width: 100%;
   background-color: rgb(0, 0, 0);
   display: flex;
@@ -35,7 +43,7 @@
 }
 
 .navbar-container {
-  height: 5%;
+  height: 6%;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -43,7 +51,7 @@
 
 /*  this is the bottom container where the game should be or all the dedicated ui */
 .page-container {
-  height: 90%;
+  height: 86%;
   width: 100%;
 }
 
@@ -56,29 +64,37 @@
 .game-title-menu-text {
   padding-left: 5px;
   padding-right: 5px;
-  font-size: calc(1em + 1vw + 0.2vh);
-  font-weight: bold;
-  background-color: rgb(255, 255, 255);
-  color: black;
+  width: 100%;
+  height: 72%;
+  background: url('/RisingRevenantLogo.png') center/contain no-repeat;
 }
 
 .game-initials-menu {
   width: 20%;
   height: 100%;
+  padding: 10px;
 }
 
 /* this is to change */
-.game-initials-menu-text {
+.game-initials-menu-image-background {
   height: 70%;
   width: 20%;
-  background: rgb(255, 255, 255) url('/LOGO_BLACK.png') center/contain no-repeat;
+  background: rgb(255, 255, 255) ;
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  border-radius: 6%;
+  margin-bottom: 5% ;
 }
 
-.connect-button-menu {
-  width: 20%;
-  height: 100%;
-  background-color: rgb(0, 0, 0);
+.game-initials-menu-image {
+  height: 80%;
+  width: 80%;
+  justify-self: center;
+  background: url('/LOGO_BLACK.png') center/contain no-repeat;
 }
+
+
 
 .game-initials-menu,
 .game-title-menu,
@@ -97,8 +113,9 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: calc(1em + 0.6vw + 1vh);
+  font-size: calc(1em + 0.5vw);
   color: white;
+  font-family: revenant_text_font_two;
 }
 
 .connect-button-menu:hover {
@@ -131,7 +148,7 @@
   text-decoration: none;
   width: 15%;
   height: 90%;
-  font-size: calc(1em + 0.3vw + 0.3vh);
+  font-size: calc(1em + 0.8vw);
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;

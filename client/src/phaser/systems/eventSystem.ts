@@ -1,27 +1,30 @@
-import { Has, getComponentValueStrict,defineSystem} from "@latticexyz/recs";
+import {
+  Has,
+  getComponentValueStrict,
+  getComponentValue,
+  defineSystem,
+} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
 import { circleEvents } from "./eventSystems/eventEmitter";
 
-export const mapSpawn = (layer: PhaserLayer) => {
+export const eventSystem = (layer: PhaserLayer) => {
+  const {
+    world,
 
-    const {
-        world,
-        
-        networkLayer: {
-            components: { WorldEvent, Position }
-        },
-    } = layer;
+    networkLayer: {
+      components: { WorldEvent, Position },
+    },
+  } = layer;
 
-    // this should be on update
-    defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
+  defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
+    const worldEvent = getComponentValue(WorldEvent, entity);
+    const positionEvent = getComponentValue(Position, entity);
 
-        console.log("should spawn circle");
+    if (worldEvent && positionEvent) {
+      circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius);
 
-        const worldEvent = getComponentValueStrict(WorldEvent, entity);
-        const positionEvent = getComponentValueStrict(Position, entity);
-
-        // emits the event to the be received
-        circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
-    });
+      console.log("this is the spawn circle event", worldEvent.radius, positionEvent.x, positionEvent.y);
+    }
+  });
 };

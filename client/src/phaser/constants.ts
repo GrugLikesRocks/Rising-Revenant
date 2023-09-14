@@ -13,8 +13,9 @@ export enum Sprites {
 
 export enum Assets {
     MapPicture = "MapPicture",
-    CastleHealthyAsset = "CastleHealthyAsset",
+    CastleHealthySelfAsset = "CastleHealthySelfAsset",
     CastleDamagedAsset = "CastleDamagedAsset",
+    CastleHealthyEnemyAsset = "CastleHealthyEnemyAsset",
 }
 
 export const MAP_WIDTH = 10240;

@@ -33,9 +33,9 @@ export const OutpostList = ({ layer }: Props) => {
       <span className="revenant-title">Your Revenants:</span>
       <div className="data-container">
         <div className="fields-container">
-          <div className="fields-name">Revenant_ID</div>
-          <div className="fields-name">OUTPOST_ID</div>
-          <div className="fields-name">Reinforcements</div>
+          <div className="fields-name">revenant id</div>
+          <div className="fields-name">outpost id</div>
+          <div className="fields-name">reinforcement</div>
         </div>
         <div className="elements-container">
           
@@ -61,9 +61,9 @@ export const OutpostList = ({ layer }: Props) => {
       <span className="revenant-title">Your Revenants</span>
       <div className="data-container">
         <div className="fields-container">
-          <div className="fields-name">Revenant ID</div>
-          <div className="fields-name">OUTPOST ID</div>
-          <div className="fields-name">Reinforcements</div>
+          <div className="fields-name">revenant id</div>
+          <div className="fields-name">outpost id</div>
+          <div className="fields-name">reinforcements</div>
         </div>
         <div className="elements-container">
           {entities.map((entity, index) => (

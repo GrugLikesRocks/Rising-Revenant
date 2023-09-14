@@ -13,12 +13,13 @@
   color: white;
   text-align: center;
   margin-top: 1%;
+  font-family: Revenant_font;
 }
 
 .rules-page-text-container {
   width: 50%;
   max-height: 60%; 
-  overflow-y: auto;  
+  overflow-y: hidden;  
 }
 
 .rules-paragraph {
@@ -26,4 +27,5 @@
   color: white;
   line-height: 1.6;
   font-size: 1.2vw; 
+  font-family: revenant_text_font_two;
 }

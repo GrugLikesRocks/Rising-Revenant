@@ -17,11 +17,12 @@
 }
 
 .revenant-title {
-    font-size: 2vw;
+    font-size: 1.4vw;
     margin-bottom: 20px;
     /* background-color: aqua; */
     text-align: center;
     color: white;
+    font-family: revenant_text_font_two;
 }
 
 .data-container {
@@ -46,7 +47,8 @@
     color: white;
     padding: 1%;   
     padding-left: 4%;
-    font-size: 1.7vw;
+    font-size: 2vw;
+    font-family: Revenant_font;
     /* background-color: rgb(30, 255, 79); */
 }
 
@@ -78,7 +80,8 @@
     width: 100%;
     color: white;
     text-align: center;
-    font-size: 1.2vw;
+    font-size: 0.9vw;
+    font-family: revenant_text_font_two;
 }
 
 .center-element-data

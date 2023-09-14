@@ -6,7 +6,7 @@
 }
 
 .middle-image {
-  background: url('/mapReve.png') center/contain no-repeat;
+  background: url('/new_resized_map.png') center/contain no-repeat;
   height: 70%;
   width: 60%;
 }
@@ -39,6 +39,7 @@
 }
 
 .buy-revenant-button {
+  font-family: revenant_text_font_two;
   padding: 10px 20px;
   font-size: 1.2vw;
   color: white;
@@ -60,9 +61,8 @@
 
 .list-main-page-title {
   text-align: center;
-  padding: 3%;
-  font-size:1.2vw;
-  margin-bottom: 5px;
+  font-size:1.8vw;
+  margin: 5px;
   color: white;
   font-family: Revenant_font;
 }
@@ -70,4 +70,38 @@
 .list-element-main-page {
   max-height: 30%;
   overflow-y: auto;
+  font-family: revenant_text_font_one;
+  font-size: 0.7vw;
+}
+
+
+
+
+
+
+
+
+
+/* All to delete once done */
+.debug-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.debug-title {
+  font-size: 1.2vw;
+  margin-bottom: 10px;
+  color: white;
+  font-family: Revenant_font;
+}
+
+.debug-button {
+  font-size: 1vw;
+  margin: 5px;
+  padding: 5px 10px;
+  color: white;
+  background-color: rgb(148, 75, 56);
+  border: none;
+  cursor: pointer;
 }

@@ -18,7 +18,7 @@ mod create_outpost {
 
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context, game_id: u32) -> u128 {
+    fn execute(ctx: Context, game_id: u32,  x: u32, y:u32) -> u128 {
         let mut game = get !(ctx.world, game_id, Game);
 
         // // this gets the amount of outposts the user should have 
@@ -58,7 +58,7 @@ mod create_outpost {
         // // // We set the position of the outpost
         // // // TODO: Get random coordinates
         // let (x, y) = getRandomCoordinates(ctx);
-        let mut position = Position { entity_id, game_id, x: 1, y: 1 };
+        let mut position = Position { entity_id, game_id, x: x, y: y };
 
         // We set the ownership of theoutpostto the player who created it
         let mut ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };

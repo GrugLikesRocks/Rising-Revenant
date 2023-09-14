@@ -30,6 +30,13 @@ export function extractAndCleanKey(entities?: any[] | null | undefined): string 
 }
 
 
+export function hexToAscii(hex: string) {
+    var str = '';
+    for (var n = 2; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  }
 
 
 export const toFelt = (num: number | bigint): bigint => BigInt(num);

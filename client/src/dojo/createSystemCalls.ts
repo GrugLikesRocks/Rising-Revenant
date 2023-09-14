@@ -263,22 +263,20 @@ export function createSystemCalls(
     });
 
     try {
-      const tx: any = await execute(signer, "create_outpost", [game_id]);
+
+      let randomX: number = Math.floor(MAP_WIDTH / 2 + (Math.random() * 2 * 500 - 500));
+      let randomY: number = Math.floor(MAP_HEIGHT / 2 + (Math.random() * 2 * 500 - 500));
+      
+
+      const tx: any = await execute(signer, "create_outpost", [game_id, randomX,randomY]);
 
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
 
-      // setComponentsFromEvents(contractComponents, getEvents(receipt));
-
-      const events = parseEvent(receipt);
-      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-      console.log("this is the entity", entityId);
-      // console.log("this is the entity", entity);
-      console.log("events for the creation of an outpost" , events);
       console.log(receipt);
-      console.log("\n\n\n");
-
+      const events = parseEvent(receipt);
+ 
       const lifesEvent = events[0] as Lifes;
       setComponent(contractComponents.Lifes, entityId as EntityIndex, {
         count: lifesEvent.count,
@@ -434,27 +432,25 @@ export function createSystemCalls(
     const worldEventId = uuid(); 
     WorldEvent.addOverride(worldEventId, {
       entity: entityId,
-      value: { radius: 1 , event_type: 1, block_number: 1},
+      value: {},
     });
 
     const positionId = uuid();
     Position.addOverride(positionId, {
       entity: entityId,
-      value: { x: 1, y: 1 },
+      value: {},
     });
 
     try {
-      const tx = await execute(signer, "set_world_event", [GAME_ID]);
+      const tx = await execute(signer, "set_world_event", [GAME_ID, MAP_WIDTH/2,MAP_HEIGHT/2, 360]);
 
       console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
 
-      // setComponentsFromEvents(contractComponents, getEvents(receipt));
       console.log(receipt);
       const events = parseEvent(receipt);
-      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
       const gameEvent = events[0] as WorldEvent;
       setComponent(contractComponents.WorldEvent, entityId, {
@@ -657,8 +653,8 @@ export const parseEvent = (
         const positionData: Position = {
           type: ComponentEvents.Position,
           entity: raw.data[2],
-          x: Number(raw.data[5]),
-          y: Number(raw.data[6]),
+          x: Number(raw.data[6]),
+          y: Number(raw.data[7]),
         };
 
         events.push(positionData);
@@ -883,13 +879,6 @@ export const parseEvent = (
 
 // }
 
-function hexToAscii(hex: string) {
-  var str = '';
-  for (var n = 2; n < hex.length; n += 2) {
-      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-  }
-  return str;
-}
 
 export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
   if (keys.length === 1) {

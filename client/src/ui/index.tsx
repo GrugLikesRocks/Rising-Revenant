@@ -15,6 +15,7 @@ import { ToolTipData } from "./components/gameToolTip";
 import {EventCircle} from "./components/eventCircle";
 
 import { gameEvents } from "../phaser/systems/eventSystems/eventEmitter";
+// import {CircleOutline} from "./components/eventDrawer";
 
 interface UIProps {
   menuState?: MenuState;
@@ -68,10 +69,12 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
       <div className="main-menu-container">
         <div className="top-menu-container">
           <div className="game-initials-menu">
-          <div className="game-initials-menu-text"></div>
+          <div className="game-initials-menu-image-background">
+            <div className="game-initials-menu-image"></div>
+          </div>
           </div>
           <div className="game-title-menu">
-            <div className="game-title-menu-text">RISING REVENANT</div>
+            <div className="game-title-menu-text"></div>
           </div>
           <button className="connect-button-menu">Connect</button>
         </div>
@@ -97,6 +100,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
 
         <ToolTipData layer={layers.phaserLayer} />
         <EventCircle layer={layers.phaserLayer} />
+        {/* <CircleOutline layer = {layers.phaserLayer} /> */}
 
       </div>
     </Wrapper>

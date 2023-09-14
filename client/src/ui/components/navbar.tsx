@@ -47,16 +47,16 @@ export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer }
   }, []);
 
   return (
-      <ClickWrapper shouldUnmount={false} className="main-menu-navbar-container">
-      <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>Rules</button>
+      <ClickWrapper className="main-menu-navbar-container">
+      <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>rules</button>
       <div className="navbar-divider"></div>
-      <button className={`navbar-button ${menuState === MenuState.MAP ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.MAP)}>Map</button>
+      <button className={`navbar-button ${menuState === MenuState.MAP ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.MAP)}>map</button>
       <div className="navbar-divider"></div>
-      <button className={`navbar-button ${menuState === MenuState.STATS ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.STATS)}>Stats</button>
+      <button className={`navbar-button ${menuState === MenuState.STATS ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.STATS)}>stats</button>
       <div className="navbar-divider"></div>
-      <button className={`navbar-button ${menuState === MenuState.TRADES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.TRADES)}>Trades</button>
+      <button className={`navbar-button ${menuState === MenuState.TRADES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.TRADES)}>trades</button>
       <div className="navbar-divider"></div>
-      <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>Profile</button>
+      <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>profile</button>
       </ClickWrapper>
   );
 };

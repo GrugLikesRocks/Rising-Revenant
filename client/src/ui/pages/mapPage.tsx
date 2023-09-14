@@ -27,6 +27,13 @@ export const MapReactComp: React.FC <{ layer: PhaserLayer }> = ({ layer })=> {
   useEffect(() => {
     let animationFrameId: number;
 
+    let currentZoomValue = 0;
+
+    // Subscribe to zoom$ observable
+    const zoomSubscription = camera.zoom$.subscribe((currentZoom) => {
+      currentZoomValue = currentZoom;  // Update the current zoom value
+    });
+
     const update = () => {
       const current_pos = getComponentValue(ClientCameraPosition, camEntity) || { x: MAP_WIDTH/2, y: MAP_HEIGHT/2 };
 
@@ -53,20 +60,23 @@ export const MapReactComp: React.FC <{ layer: PhaserLayer }> = ({ layer })=> {
         newX =  current_pos.x + CAMERA_SPEED;
       }
 
-      if (newX > MAP_WIDTH - camera.phaserCamera.width/2) {
-        newX = MAP_WIDTH - camera.phaserCamera.width/2;
+      if (newX > MAP_WIDTH - (camera.phaserCamera.width / currentZoomValue)/2) {
+        newX = MAP_WIDTH - (camera.phaserCamera.width / currentZoomValue)/2;
       }
-      if (newX < camera.phaserCamera.width/2) {
-        newX = camera.phaserCamera.width/2;
+      if (newX < (camera.phaserCamera.width / currentZoomValue) /2) {
+        newX = (camera.phaserCamera.width / currentZoomValue)/2;
       }
-      if (newY > MAP_HEIGHT - camera.phaserCamera.height/2) {
-        newY = MAP_HEIGHT - camera.phaserCamera.height/2;
+      if (newY > MAP_HEIGHT - (camera.phaserCamera.height/ currentZoomValue)/2) {
+        newY = MAP_HEIGHT - (camera.phaserCamera.height / currentZoomValue)/2;
       }
-      if (newY < camera.phaserCamera.height/2) {
-        newY = camera.phaserCamera.height/2;
+      if (newY < (camera.phaserCamera.height / currentZoomValue )/2) {
+        newY = (camera.phaserCamera.height / currentZoomValue )/2;
       }
     
       set_camera_position_component(newX, newY);
+      // console.log(newX, newY);
+      // console.log(currentZoomValue);
+      // console.log("this is divided ", 1/currentZoomValue)
     
       animationFrameId = requestAnimationFrame(update);
     };
@@ -78,6 +88,7 @@ export const MapReactComp: React.FC <{ layer: PhaserLayer }> = ({ layer })=> {
     // Cancel the animation frame when the component is unmounted
     return () => {
       cancelAnimationFrame(animationFrameId);
+      zoomSubscription.unsubscribe();
     };
 
   }, [keysDown]);

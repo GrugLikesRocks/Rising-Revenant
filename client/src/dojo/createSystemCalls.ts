@@ -491,6 +491,7 @@ export function createSystemCalls(
 
   const set_click_component = async (xOrigin: number, yOrigin: number, xMiddle: number, yMiddle:number) => 
   {
+
     const entityId = CAMERA_ID as EntityIndex;
 
     const defenceId = uuid();
@@ -509,6 +510,8 @@ export function createSystemCalls(
 
   const set_camera_position_component = async (x: number, y: number) => 
   {
+    console.log("is this gettign called")
+
     const entityId = CAMERA_ID as EntityIndex;
 
     const defenceId = uuid();

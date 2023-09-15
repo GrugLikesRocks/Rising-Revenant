@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
-import { gameEvents } from "../../phaser/systems/eventSystems/eventEmitter";
+import { useEffect, useState, useRef } from "react";
+import { tooltipEvent } from "../../phaser/systems/eventSystems/eventEmitter";
 import "../styles/ToolTipDataStyles.css";
 import { PhaserLayer } from "../../phaser";
 
-import { EntityIndex, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue} from "@latticexyz/recs";
 import { useDojo } from "../../hooks/useDojo";
 
 import { ClickWrapper } from "../clickWrapper";
 import { CAMERA_ID } from "../../phaser/constants";
 
-// THIS SCRIPT IS TO REDO, ALSO CONTAINS AN ISSUE WHERE IF THE PLAYER HOVER OVER A OUTPOST FOR THE FIRST TIME IT OPENS THE TOOLTIP, THIS ONLY HAPPENS THE FIRST TIME 
 // NEED TO FIND A HEX TO ASCII FUNCTION
 
 type Props = {
@@ -36,6 +35,7 @@ export const ToolTipData = ({ layer }: Props) => {
     },
   } = useDojo();
 
+
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [nameText, setNameText] = useState<any>(null);
@@ -43,17 +43,39 @@ export const ToolTipData = ({ layer }: Props) => {
   const [reinforceText, setReinforceText] = useState<any>(null);
   const [outpostEntityVal, setOutpostEntityVal] = useState<any>(null);
   const [currentEntity, setCurrentEntity] = useState<EntityIndex | null>(null);
-  const [shouldClose, setShouldClose] = useState(false);
 
-  const closeTooltip = () => {
-    setIsVisible(false);
-    setShouldClose(true);
-  };
-
+  const tooltipContainerRef = useRef<HTMLDivElement>(null);
   const initialCameraCenterPos = useRef<any>(null);
   const currentTooltipPos = useRef<any>({ x: 0, y: 0 });
 
   let timer: NodeJS.Timeout | null = null;
+
+  const closeTooltip = (shouldCheck: boolean, clickX?: number, clickY?: number) => {
+    if (!shouldCheck) {
+      setIsVisible(false);
+      return;
+    }
+  
+    const tooltipDiv = document.querySelector('.tooltip-container');
+    if (!tooltipDiv) return;
+  
+    const rect = tooltipDiv.getBoundingClientRect();
+
+    console.log(rect);
+    console.log(clickX, clickY);    
+    if (clickX !== undefined && clickY !== undefined) {
+      if (
+        clickX >= rect.left &&
+        clickX <= rect.right &&
+        clickY >= rect.top &&
+        clickY <= rect.bottom
+      ) {
+        return;
+      }
+    }
+    
+    setIsVisible(false);
+  };
 
   const spawnTooltip = (x: number, y: number, entity: EntityIndex) => {
     setCurrentEntity(entity);
@@ -86,12 +108,12 @@ export const ToolTipData = ({ layer }: Props) => {
 
     timer = setTimeout(() => {
         setIsVisible(false);
-      
     }, 8000);
   };
 
   useEffect(() => {
-    gameEvents.on("spawnTooltip", spawnTooltip);
+    tooltipEvent.on("spawnTooltip", spawnTooltip);
+    tooltipEvent.on("closeTooltip", closeTooltip);
 
     const updateTooltipPosition = () => {
       const newCameraCenterPos = getComponentValue(
@@ -120,21 +142,14 @@ export const ToolTipData = ({ layer }: Props) => {
     const intervalID = setInterval(updateTooltipPosition, 1000 / 60);
 
     return () => {
-      gameEvents.off("spawnTooltip", spawnTooltip);
+      tooltipEvent.off("spawnTooltip", spawnTooltip);
+      tooltipEvent.off("closeTooltip", closeTooltip);
       clearInterval(intervalID);
       if (timer) {
         clearTimeout(timer);
       }
     };
   }, []);
-
-
-  useEffect(() => {
-    // Close the tooltip when the menu state changes or when the game state changes
-    if (shouldClose) {
-      closeTooltip();
-    }
-  }, [shouldClose]);
 
   if (!isVisible) return null;
 
@@ -143,18 +158,13 @@ export const ToolTipData = ({ layer }: Props) => {
     top: `${position.y}px`,
   };
 
-
   return (
     
     <div
+      ref={tooltipContainerRef} 
       className="tooltip-container"
       style={style}
     >
-      <ClickWrapper>
-        <button className="close-button" onClick={closeTooltip}>
-          X
-        </button>
-      </ClickWrapper>
       <div className="text-box">Name: {nameText} </div>   
       <div className="text-box">Owner address: {addressText}</div>
       <div className="text-box">Reinforcement: {reinforceText}</div>

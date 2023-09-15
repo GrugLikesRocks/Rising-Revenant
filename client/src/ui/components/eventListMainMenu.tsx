@@ -19,7 +19,7 @@ export const EventList = ({ layer }: Props) => {
   if (entities.length === 0) {
     return (
       <div>
-        <ul className="list-element-main-page">
+        <ul className="main-menu-event-feed-list-element">
           <li>NO EVENTS YET</li>
         </ul>
       </div>
@@ -28,7 +28,7 @@ export const EventList = ({ layer }: Props) => {
 
   return (
     <div>
-      <ul className="list-element-main-page">
+      <ul className="main-menu-event-feed-list-element">
         {entities.map((item, index) => (
           <li key={index}>Event at x:{getComponentValue(Position, item)?.x || "null"} y:{getComponentValue(Position, item)?.y || "null"}, radius: {getComponentValue(WorldEvent, item)?.radius || "null"}</li>
         ))}

@@ -24,7 +24,6 @@ export const eventSystem = (layer: PhaserLayer) => {
     if (worldEvent && positionEvent) {
       circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius);
 
-      console.log("this is the spawn circle event", worldEvent.radius, positionEvent.x, positionEvent.y);
     }
   });
 };

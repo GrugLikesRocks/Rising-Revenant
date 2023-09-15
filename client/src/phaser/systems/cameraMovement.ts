@@ -11,7 +11,7 @@ import {
 } from "@latticexyz/recs";
 
 
-import { circleEvents } from "./eventSystems/eventEmitter";
+import { circleEvents, tooltipEvent } from "./eventSystems/eventEmitter";
 
 export const controlCamera = (layer: PhaserLayer) => {
   const {
@@ -21,18 +21,20 @@ export const controlCamera = (layer: PhaserLayer) => {
     },
     networkLayer: {
       systemCalls: { set_click_component },
-      components: { ClientCameraPosition },
+      components: { ClientCameraPosition,ClientClickPosition },
     },
   } = layer;
 
   // this is to recheck and redo
 
-  input.pointerdown$.subscribe(({ pointer, event }) => {
-    // pointer is the coord of the cursor on the screen
+   input.pointerdown$.subscribe(({ pointer, event }) => {
+    if (!pointer) {
+      
+      return;
+    }
 
-    let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2; // this is the click of the screen relative to the center of the camera
-    let clickRelativeToMiddlePointY =
-      pointer.y - camera.phaserCamera.height / 2;
+    let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
+    let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
     set_click_component(
       pointer.x,
@@ -44,6 +46,7 @@ export const controlCamera = (layer: PhaserLayer) => {
 
   defineSystem(world, [Has(ClientCameraPosition)], ({ entity }) => {
     const newCamPos = getComponentValue(ClientCameraPosition, entity);
+    const position = getComponentValueStrict(ClientClickPosition, entity);
 
     if (newCamPos) {
       camera.centerOn(newCamPos.x, newCamPos.y);
@@ -51,6 +54,7 @@ export const controlCamera = (layer: PhaserLayer) => {
       // console.log("calling updating circle", newCamPos.x, newCamPos.y)
       
       circleEvents.emit("updateCirclePos", newCamPos.x, newCamPos.y);
+      tooltipEvent.emit("updateTooltipPos", newCamPos.x, newCamPos.y);
     }
   });
 };

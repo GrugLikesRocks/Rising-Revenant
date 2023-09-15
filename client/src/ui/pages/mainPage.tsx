@@ -10,8 +10,6 @@ import {EventList} from "../components/eventListMainMenu";
 import {DebugMenuSection} from "../components/debugMenuSection";
 
 export const MainReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
-  // const listItems = ["Item1", "Item2", "Item3", ];
-  // // const listItems = ["Item1", "Item2", "Item3","Item1", "Item2", "Item3","Item1", "Item2", "Item3","Item1", "Item2", "Item3","Item1", "Item2", "Item3","Item1", "Item2", "Item3","Item1", "Item2", "Item3" ]; 
 
   const onDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
     console.log("Div clicked");
@@ -19,27 +17,21 @@ export const MainReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
 
   return (
     <div className="main-page-container">
-      <div className="main-page-middle-container">
-        <div className="side-section-container">
+      <div className="main-page-central-container">
+        <div className="main-menu-side-section-container">
 
           <DebugMenuSection layer={layer} />
 
         </div>
 
 
-        <div className="middle-image" onClick={onDivClick}></div>
+        <div className="main-menu-middle-section-image" onClick={onDivClick}></div>
         
-        
-        <div className="side-section-container">
-          <div className="list-container-main-page">
-            <div className="list-main-page-title">event feed</div>
+        <div className="main-menu-side-section-container">
+          <div className="main-menu-list-container">
+            <div className="main-menu-event-list-title">event feed</div>
             <ClickWrapper> 
             <EventList layer={layer} />
-            {/* <<ul className="list-element-main-page">
-              {listItems.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>> */}
             </ClickWrapper>
           </div>
         </div>
@@ -47,7 +39,7 @@ export const MainReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
 
       </div>
 
-      <div className="bottom-button-container">
+      <div className="main-menu-button-container">
         <ClickWrapper>
           <BuyRevenantButton layer={layer} />
         </ClickWrapper>

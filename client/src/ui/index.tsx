@@ -11,11 +11,10 @@ import { TradesReactComp } from "./pages/tradesPage";
 import { ProfilePage } from "./pages/profilePage";
 import { MapReactComp } from "./pages/mapPage";
 
-import { ToolTipData } from "./components/gameToolTip";
+import { ToolTipData } from "./components/outpostToolTip";
 import {EventCircle} from "./components/eventCircle";
 
-import { gameEvents } from "../phaser/systems/eventSystems/eventEmitter";
-// import {CircleOutline} from "./components/eventDrawer";
+import { tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
 
 interface UIProps {
   menuState?: MenuState;
@@ -38,15 +37,11 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   const actualMenuState = externalMenuState !== undefined ? externalMenuState : internalMenuState;
   
   useEffect(() => {
-    const closeTooltip = () => {
-      gameEvents.emit("closeTooltip");
-    };
     
     if (actualMenuState !== MenuState.MAP) {
       setOpacity(0.85);
       
-      // this doesnt work
-      closeTooltip();
+      tooltipEvent.emit("closeTooltip", false);
 
     } else {
       setOpacity(0);

@@ -5,13 +5,13 @@
   height: 100%;
 }
 
-.middle-image {
+.main-menu-middle-section-image {
   background: url('/new_resized_map.png') center/contain no-repeat;
   height: 70%;
   width: 60%;
 }
 
-.main-page-middle-container
+.main-page-central-container
 {
   display: flex;
   flex-direction: row;
@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-.side-section-container {
+.main-menu-side-section-container {
   position: relative; 
   display: flex;
   justify-content: center;
@@ -29,7 +29,7 @@
   width: 20%;
 }
 
-.bottom-button-container {
+.main-menu-button-container {
   margin-top: auto;
   height: 10%;
   width: 20%;
@@ -49,7 +49,7 @@
   background-color: rgb(148, 75, 56);
 }
 
-.list-container-main-page {
+.main-menu-list-container {
   position: absolute;  
   border-radius: 10px;
   bottom: 5%; 
@@ -59,7 +59,7 @@
   background-color: rgb(227, 205, 168);
 }
 
-.list-main-page-title {
+.main-menu-event-list-title {
   text-align: center;
   font-size:1.8vw;
   margin: 5px;
@@ -67,7 +67,7 @@
   font-family: Revenant_font;
 }
 
-.list-element-main-page {
+.main-menu-event-feed-list-element {
   max-height: 30%;
   overflow-y: auto;
   font-family: revenant_text_font_one;
@@ -75,14 +75,6 @@
 }
 
 
-
-
-
-
-
-
-
-/* All to delete once done */
 .debug-menu {
   display: flex;
   flex-direction: column;

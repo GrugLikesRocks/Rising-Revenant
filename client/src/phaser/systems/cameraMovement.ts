@@ -1,73 +1,60 @@
 import { PhaserLayer } from "..";
 
-const CAMERA_SPEED = 20;
-const MINIMUM_DISTANCE = 20;
+import {
+  EntityIndex,
+  getComponentValueStrict,
+  defineSystem,
+  Has,
+  defineEnterSystem,
+  setComponent,
+  getComponentValue,
+} from "@latticexyz/recs";
+
+
+import { circleEvents, tooltipEvent } from "./eventSystems/eventEmitter";
 
 export const controlCamera = (layer: PhaserLayer) => {
-  let xPositionCamera = 0; // this isnt correct this should be a component in the client side only
-  let yPositionCamera = 0;
-
   const {
+    world,
     scenes: {
-      Main: { camera, input, objectPool },
+      Main: { camera, input },
     },
     networkLayer: {
-      systemCalls: { click_component_call,camera_component_call },
-      account,
+      systemCalls: { set_click_component },
+      components: { ClientCameraPosition,ClientClickPosition },
     },
   } = layer;
 
-
-
-  // need a way to have this not on press but while down
-  input.onKeyPress(
-    (keys) => keys.has("W"),
-    () => {
-      yPositionCamera -= CAMERA_SPEED;
-
-      camera.centerOn(xPositionCamera, yPositionCamera);
-    }
-  );
-
-  input.onKeyPress(
-    (keys) => keys.has("A"),
-    () => {
-      xPositionCamera -= CAMERA_SPEED;
-
-      camera.centerOn(xPositionCamera, yPositionCamera);
-    }
-  );
-
-  input.onKeyPress(
-    (keys) => keys.has("S"),
-    () => {
-      yPositionCamera += CAMERA_SPEED;
-
-      camera.centerOn(xPositionCamera, yPositionCamera);
-    }
-  );
-
-  input.onKeyPress(
-    (keys) => keys.has("D"),
-    () => {
-      xPositionCamera += CAMERA_SPEED;
-
-      camera.centerOn(xPositionCamera, yPositionCamera);
-    }
-  );
-
-
   // this is to recheck and redo
 
-  input.pointerdown$.subscribe(({ pointer, event }) => {
+   input.pointerdown$.subscribe(({ pointer, event }) => {
+    if (!pointer) {
+      
+      return;
+    }
 
-    let screenClickCoordX = pointer.x - camera.phaserCamera.width/2;
-    let screenClickCoordY = pointer.y - camera.phaserCamera.height/2;
+    let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
+    let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
-    let adjustedX = screenClickCoordX - xPositionCamera;    // this is the world position of the click
-    let adjustedY = screenClickCoordY - yPositionCamera;
+    set_click_component(
+      pointer.x,
+      pointer.y,
+      clickRelativeToMiddlePointX,
+      clickRelativeToMiddlePointY
+    );
+  });
 
-    click_component_call(pointer.x , pointer.y);
-    camera_component_call(adjustedX, adjustedY)
+  defineSystem(world, [Has(ClientCameraPosition)], ({ entity }) => {
+    const newCamPos = getComponentValue(ClientCameraPosition, entity);
+   // const position = getComponentValueStrict(ClientClickPosition, entity);
+
+    if (newCamPos) {
+      camera.centerOn(newCamPos.x, newCamPos.y);
+
+      // console.log("calling updating circle", newCamPos.x, newCamPos.y)
+      
+      //circleEvents.emit("updateCirclePos", newCamPos.x, newCamPos.y);
+      tooltipEvent.emit("updateTooltipPos", newCamPos.x, newCamPos.y);
+    }
   });
 };

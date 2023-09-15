@@ -12,8 +12,10 @@ mod set_world_event {
     use RealmsRisingRevenant::components::Name;
     use RealmsRisingRevenant::components::WorldEvent;
     use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::GameEntityCounter;
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
+   
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
   
     // This should remove lifes and defence from the entity
@@ -23,7 +25,13 @@ mod set_world_event {
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
 
-        let entity_id: u128 = ctx.world.uuid().into();
+        let mut gameData = get !(
+            ctx.world, game_id, GameEntityCounter
+        );  
+
+        gameData.event_count += 1;
+
+        let entity_id: u128 = gameData.event_count;
 
         // These should be random
         let radius = 100;
@@ -37,7 +45,8 @@ mod set_world_event {
         let y = random.next_u32(0, 100);
         let position = Position { entity_id, game_id, x, y };
 
-        set!(ctx.world, (world_event, position));
+        set!(ctx.world, (world_event, position, gameData));
+
 
         // TODO: Emit this as event
         (world_event, position)

@@ -81,12 +81,13 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    GameData: (() => {
-      const name = "Prosperity";
+    GameEntityCounter: (() => {
+      const name = "GameEntityCounter";
       return defineComponent(
         world,
         {
-          count_outposts: RecsType.Number,
+          outpost_count: RecsType.Number,
+          event_count: RecsType.Number,
         },
         {
           metadata: {
@@ -96,20 +97,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    OutpostEntity: (() => {
-      const name = "Prosperity";
-      return defineComponent(
-        world,
-        {
-          entity_id: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
+  
 
     Balance: (() => {
       const name = "Balance";
@@ -192,13 +180,9 @@ export function defineContractComponents(world: World) {
 
 
 
-
-
-
-
-    // this should not be here
-    ClientCameraComponent: (() => {
-      const name = "ClickCameraComp";
+    // this is to change
+    ClientCameraPosition: (() => {
+      const name = "ClientCameraPosition";
       return defineComponent(
         world,
         {
@@ -213,14 +197,16 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    // this should not be here
-    ClickComponent: (() => {
-      const name = "ClickCameraComp";
+    ClientClickPosition: (() => {
+      const name = "ClientClickPosition";
       return defineComponent(
         world,
         {
-          x: RecsType.Number,
-          y: RecsType.Number,
+          xFromOrigin: RecsType.Number,
+          yFromOrigin: RecsType.Number,
+
+          xFromMiddle: RecsType.Number,
+          yFromMiddle: RecsType.Number,
         },
         {
           metadata: {
@@ -230,22 +216,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-        // this should not be here
-        OutpostState: (() => {
-          const name = "OutpostState";
-          return defineComponent(
-            world,
-            {
-              state: RecsType.Number
-            },
-            {
-              metadata: {
-                name: name,
-              },
-            }
-          );
-        })(),
-    
+
 
 
 

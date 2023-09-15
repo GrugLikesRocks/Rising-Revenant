@@ -17,12 +17,11 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
         Ownership: overridableComponent(contractComponents.Ownership),
         GameTracker: overridableComponent(contractComponents.GameTracker),
-        GameData : overridableComponent(contractComponents.GameData),
-        OutpostEntity : overridableComponent(contractComponents.OutpostEntity),
+        GameEntityCounter : overridableComponent(contractComponents.GameEntityCounter),
 
         //should not be here
-        ClientCameraComponent : overridableComponent(contractComponents.ClientCameraComponent),
-        ClickComponent : overridableComponent(contractComponents.ClickComponent),
-        OutpostState: overridableComponent(contractComponents.OutpostState),
+        ClientClickPosition : overridableComponent(contractComponents.ClientClickPosition),
+        ClientCameraPosition : overridableComponent(contractComponents.ClientCameraPosition),
+        
     };
 }

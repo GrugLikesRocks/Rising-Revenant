@@ -11,6 +11,11 @@ import { TradesReactComp } from "./pages/tradesPage";
 import { ProfilePage } from "./pages/profilePage";
 import { MapReactComp } from "./pages/mapPage";
 
+import { ToolTipData } from "./components/outpostToolTip";
+//import {CircleShape} from "./components/eventCircle";
+
+import { tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
+
 interface UIProps {
   menuState?: MenuState;
   setMenuState?: React.Dispatch<React.SetStateAction<MenuState>>;
@@ -21,6 +26,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   const [internalMenuState, internalSetMenuState] = useState<MenuState>(MenuState.MAIN);
   const [opacity, setOpacity] = useState(1); // New State for opacity
   
+
   useEffect(() => {
     if (externalMenuState !== undefined) {
       internalSetMenuState(externalMenuState);
@@ -31,12 +37,17 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   const actualMenuState = externalMenuState !== undefined ? externalMenuState : internalMenuState;
   
   useEffect(() => {
-    if (actualMenuState === MenuState.MAP) {
-      setOpacity(0);
-    } else {
+    
+    if (actualMenuState !== MenuState.MAP) {
       setOpacity(0.85);
+      
+      tooltipEvent.emit("closeTooltip", false);
+
+    } else {
+      setOpacity(0);
     }
   }, [actualMenuState]);
+  
 
   const layers = store((state) => {
     return {
@@ -50,26 +61,30 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
   return (
     <Wrapper>
       <div className="phaser-fadeout-background" style={{ opacity: opacity }}></div>
-      <div className="main_menu_container">
-        <div className="top_menu_container">
-          <div className="game_initials_menu">GI</div>
-          <div className="game_title_menu">
-            CLICK ON THE SELECTED MENU TO RETURN BACK TO THE MAIN MENU
+      <div className="main-menu-container">
+        <div className="top-menu-container">
+          <div className="game-initials-menu">
+          <div className="game-initials-menu-image-background">
+            <div className="game-initials-menu-image"></div>
           </div>
-          <button className="connect_button_menu">Connect</button>
+          </div>
+          <div className="game-title-menu">
+            <div className="game-title-menu-text"></div>
+          </div>
+          <button className="connect-button-menu">Connect</button>
         </div>
-        <div className="navbar_container">
+        <div className="navbar-container">
           <Navbar
             menuState={actualMenuState}
             setMenuState={actualSetMenuState}
             layer={layers.phaserLayer}
           />
         </div>
-        <div className="page_container">
+        <div className="page-container">
           {actualMenuState === MenuState.MAIN && (
             <MainReactComp layer={layers.phaserLayer} />
           )}
-          {actualMenuState === MenuState.MAP && <MapReactComp />}
+          {actualMenuState === MenuState.MAP && <MapReactComp layer={layers.phaserLayer} />}
           {actualMenuState === MenuState.TRADES && <TradesReactComp />}
           {actualMenuState === MenuState.PROFILE && (
             <ProfilePage layer={layers.phaserLayer} />
@@ -77,6 +92,11 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
           {actualMenuState === MenuState.STATS && <StatsReactComp />}
           {actualMenuState === MenuState.RULES && <RulesReactComp />}
         </div>
+
+        <ToolTipData layer={layers.phaserLayer} />
+        {/* <EventCircle layer={layers.phaserLayer} /> */}
+        {/* <CircleOutline layer = {layers.phaserLayer} /> */}
+
       </div>
     </Wrapper>
   );

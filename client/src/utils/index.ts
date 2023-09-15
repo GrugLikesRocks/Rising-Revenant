@@ -1,4 +1,3 @@
-import { Direction } from "../dojo/createSystemCalls";
 
 export const FIXED_SIZE: bigint = 42535295865117307932921825928971026432n; // 2^125
 export const ONE: bigint = 18446744073709551616n; // 2^61
@@ -30,29 +29,14 @@ export function extractAndCleanKey(entities?: any[] | null | undefined): string 
     return entities[0].keys.replace(/,/g, '');
 }
 
-export function updatePositionWithDirection(direction: Direction, value: { x: number, y: number }) {
-    switch (direction) {
-        case Direction.Left:
-            value.x--;
-            break;
-        case Direction.Right:
-            value.x++;
-            break;
-        case Direction.Up:
-            value.y--;
-            break;
-        case Direction.Down:
-            value.y++;
-            break;
-        default:
-            throw new Error("Invalid direction provided");
+
+export function hexToAscii(hex: string) {
+    var str = '';
+    for (var n = 2; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
     }
-    return value;
-}
-
-
-
-
+    return str;
+  }
 
 
 export const toFelt = (num: number | bigint): bigint => BigInt(num);

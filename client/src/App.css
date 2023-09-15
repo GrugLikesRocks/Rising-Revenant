@@ -1,60 +1,110 @@
 
-.main_menu_container {
+@font-face {
+  font-family: Revenant_font;
+  src: url("fonts/Revenant_font.otf") format("opentype");
+}
+/* these names are to change, also number one isnt used anymore */
+@font-face {
+  font-family: revenant_text_font_one;
+  src: url("fonts/Messapia-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: revenant_text_font_two;
+  src: url("fonts/OrticaLinear-Regular.otf") format("opentype");
+}
+
+/*  this isnt a solution, to change */
+* 
+{
+  overflow: hidden;
+}
+
+/*  the top section with the menu title inital and all of that right now is a bit of a mess and to be re done */
+
+.main-menu-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
-.top_menu_container {
-  height: 5%;
+.top-menu-container {
+  font-family: Revenant_font;
+  height: 8%;
   width: 100%;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
+  border-bottom-left-radius: 40px; 
+  border-bottom-right-radius: 40px;  
 }
 
-.navbar_container {
-  height: 5%;
+.navbar-container {
+  height: 6%;
   width: 100%;
-  /* background-color: bisque; */
   display: flex;
   justify-content: center;
 }
 
-/*  this si the bottom container where the game should be or all the dedicated ui */
-.page_container {
-  height: 90%;
+/*  this is the bottom container where the game should be or all the dedicated ui */
+.page-container {
+  height: 86%;
   width: 100%;
 }
 
-.game_title_menu {
+.game-title-menu {
   width: 40%;
   height: 100%;
-  background-color: rgb(236, 36, 36);
 }
 
-.game_initials_menu {
+/* THESE ARE THE SAME */
+.game-title-menu-text {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
+  height: 72%;
+  background: url('/RisingRevenantLogo.png') center/contain no-repeat;
+}
+
+.game-initials-menu {
   width: 20%;
   height: 100%;
-  background-color: rgb(236, 36, 36);
+  padding: 10px;
 }
 
-.connect_button_menu {
+/* this is to change */
+.game-initials-menu-image-background {
+  height: 70%;
   width: 20%;
-  height: 100%;
-  background-color: rgb(236, 36, 36);
+  background: rgb(255, 255, 255) ;
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  border-radius: 6%;
+  margin-bottom: 5% ;
 }
 
-.game_initials_menu,
-.game_title_menu,
-.main_menu_navbar_container {
+.game-initials-menu-image {
+  height: 80%;
+  width: 80%;
+  justify-self: center;
+  background: url('/LOGO_BLACK.png') center/contain no-repeat;
+}
+
+
+
+.game-initials-menu,
+.game-title-menu,
+.main-menu-navbar-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.connect_button_menu {
+.connect-button-menu {
   width: 20%;
   height: 100%;
   display: flex;
@@ -63,48 +113,63 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  background-color: brown;
+  font-size: calc(1em + 0.5vw);
+  color: white;
+  font-family: revenant_text_font_two;
 }
 
-.connect_button_menu:hover {
+.connect-button-menu:hover {
   cursor: pointer;
 }
 
-.main_menu_navbar_container {
+.main-menu-navbar-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: auto;
   width: 40%;
   height: 100%;
-  background-color: brown;
+  background-color: rgb(0, 0, 0);
+  border-bottom-left-radius: 10px; 
+  border-bottom-right-radius: 10px;  
 }
 
-.navbar_button {
-  margin-left: 2%;
-  margin-right: 2%;
+.navbar-button {
+  margin-left: 1%;
+  margin-right: 1%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(238, 153, 153);
+  background-color: rgb(0, 0, 0);
   border: none;
   color: white;
   text-align: center;
   text-decoration: none;
+  width: 15%;
+  height: 90%;
+  font-size: calc(1em + 0.8vw);
   cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Revenant_font', fallback-fonts, sans-serif;
+}
+
+.navbar-button:hover {
+  background-color: rgb(255, 255, 255);
+  color: black;
+  cursor: pointer;
 }
 
 .navbar-divider {
-  background-color: rgb(216, 68, 68);
-  width: 2px;
+  background-color: rgb(240, 228, 228);
+  width: 1px;
   height: calc(100% - 10px);
-  margin: 5px;
+  margin: 4px;
 }
 
 .selected {
-  color: rgb(216, 68, 68);
+  background-color: rgb(148, 75, 56);
 }
 
 .phaser-fadeout-background {
@@ -113,9 +178,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(53, 34, 34);
+  background-color: rgb(0, 0, 0);
   z-index: -1;
   transition: opacity 0.3s ease;
-  /* backdrop-filter: blur(30px);     */
-  /* the blur doesnt work :( */
+  backdrop-filter: blur(30px);    
 }

@@ -13,35 +13,26 @@ mod create_outpost {
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::Ownership;
 
-    use RealmsRisingRevenant::components::GameData;
-    use RealmsRisingRevenant::components::OutpostEntity;
+    use RealmsRisingRevenant::components::GameEntityCounter;
 
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, game_id: u32) -> u128 {
+        
         let mut game = get !(ctx.world, game_id, Game);
 
-        // // this gets the amount of outposts the user should have 
-
         let mut gameData = get !(
-            ctx.world, (game_id, ctx.origin), GameData
-        ); //check if this exists first?
+            ctx.world, game_id, GameEntityCounter
+        ); 
 
         assert(game.status, 'game is not running');
         // check if the game has started
 
-        gameData.count_outposts += 1;
+        gameData.outpost_count += 1;
 
-        let outpost_count: u32 = gameData.count_outposts;
+        let mut outpost_count:u128 = gameData.outpost_count;
 
-        let mut entity_id: u128 = ctx.world.uuid().into();
-
-        let mut outpostdata: OutpostEntity = OutpostEntity {
-            count_outposts: outpost_count,
-            address: ctx.origin.into(),
-            game_id: game_id,
-            entity_id: entity_id
-        };
+        let mut entity_id: u128 = outpost_count;
 
         // We set the lifes of the outpost
         let mut lifes = Lifes { entity_id, game_id, count: 5 };
@@ -65,7 +56,7 @@ mod create_outpost {
 
         set !(
             ctx.world,
-            (lifes, defence, name, prosperity, position, ownership, outpostdata, gameData)
+            (lifes, defence, name, prosperity, position, ownership, gameData)
         );
 
         entity_id
@@ -77,27 +68,4 @@ mod create_outpost {
 }
 
 
-#[system] // this can be implemented in the above system to make only one, the thing is that if i do get! and it was never set what happens? // i need it to return 0 if the user has no outposts
-mod register_player {
-    use array::ArrayTrait;
-    use box::BoxTrait;
-    use traits::Into;
-    use dojo::world::Context;
-
-    use RealmsRisingRevenant::components::Game;
-
-    use RealmsRisingRevenant::components::GameData;
-
-    fn execute(ctx: Context, game_id: u32) {
-        let mut game = get !(ctx.world, game_id, Game);
-
-        assert(game.status, 'game is not running');
-
-        let mut game_data = GameData {
-            game_id: game_id, address: ctx.origin.into(), count_outposts: 0
-        };
-
-        set !(ctx.world, (game_data));
-    }
-}
 

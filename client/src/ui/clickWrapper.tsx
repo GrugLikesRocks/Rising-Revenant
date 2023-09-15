@@ -1,27 +1,16 @@
-
 import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
-
-/*
- * Wrap any piece of UI that needs to receive click events with this.
- * Make sure it is unmounted when the click events are no longer needed.
- */
-
-// Modified ClickWrapper with shouldUnmount prop
-type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & { shouldUnmount?: boolean };
+type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 export const ClickWrapper = (props: Props) => {
-  const { children, style, shouldUnmount } = props;
+  const { children, style, ...restProps } = props;
 
   const handleClick = (e: React.MouseEvent) => {
-    //console.log("Click event in ClickWrapper:", e);
+    // Handle click event
   };
 
-  // Do not render children if shouldUnmount is true
-  if (shouldUnmount) return null;
-
   return (
-    <div {...props} style={{ pointerEvents: "all", ...style }} onClick={handleClick}>
+    <div {...restProps} style={{ pointerEvents: "all", ...style }} onClick={handleClick}>
       {children}
     </div>
   );

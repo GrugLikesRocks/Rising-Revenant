@@ -81,12 +81,13 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    GameData: (() => {
-      const name = "Prosperity";
+    GameEntityCounter: (() => {
+      const name = "GameEntityCounter";
       return defineComponent(
         world,
         {
-          count_outposts: RecsType.Number,
+          outpost_count: RecsType.Number,
+          event_count: RecsType.Number,
         },
         {
           metadata: {
@@ -96,20 +97,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    OutpostEntity: (() => {
-      const name = "Prosperity";
-      return defineComponent(
-        world,
-        {
-          entity_id: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
+  
 
     Balance: (() => {
       const name = "Balance";
@@ -227,6 +215,8 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+
+
 
 
 

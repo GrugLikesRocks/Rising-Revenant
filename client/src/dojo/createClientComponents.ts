@@ -17,8 +17,7 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
         Ownership: overridableComponent(contractComponents.Ownership),
         GameTracker: overridableComponent(contractComponents.GameTracker),
-        GameData : overridableComponent(contractComponents.GameData),
-        OutpostEntity : overridableComponent(contractComponents.OutpostEntity),
+        GameEntityCounter : overridableComponent(contractComponents.GameEntityCounter),
 
         //should not be here
         ClientClickPosition : overridableComponent(contractComponents.ClientClickPosition),

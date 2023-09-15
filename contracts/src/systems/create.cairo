@@ -9,6 +9,8 @@ mod create_game {
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::GameTracker;
 
+    use RealmsRisingRevenant::components::GameEntityCounter;
+
     use RealmsRisingRevenant::constants::GAME_CONFIG;
 
 
@@ -31,6 +33,8 @@ mod create_game {
         let status = true; // game status
 
         set!(ctx.world, (Game { game_id, start_time, prize, status }));
+
+        set!(ctx.world, (GameEntityCounter { game_id, outpost_count: 0, event_count: 0 }));
 
         set!(
             ctx.world, (GameTracker { entity_id: GAME_CONFIG.try_into().unwrap(), count: game_id })

@@ -14,10 +14,8 @@ export const RulesReactComp: React.FC = () => {
     }
   };
 
-
-  // THIS DOESNT WORK
-
-
+  // this should have the scroll wheel do its thing but doesnt work
+  
   return (
     <div className="rules-page-container">
       <div className="rules-page-title">title</div>

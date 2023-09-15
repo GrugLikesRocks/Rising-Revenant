@@ -24,7 +24,6 @@ export const MainReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
 
         </div>
 
-
         <div className="main-menu-middle-section-image" onClick={onDivClick}></div>
         
         <div className="main-menu-side-section-container">

@@ -14,7 +14,7 @@ type Props = {
 export const OutpostList = ({ layer }: Props) => {
   const {
     networkLayer: {
-      components: { Defence, OutpostEntity },
+      components: { Defence },
     },
   } = layer;
 
@@ -69,8 +69,8 @@ export const OutpostList = ({ layer }: Props) => {
           {entities.map((entity, index) => (
             <div className="sub-element-container" key={index}>
               <div className="element-data">{entity}</div>
-              <div className="center-element-data">
-                {getComponentValue(OutpostEntity, entity)?.entity_id || 0}
+              <div className="center-element-data"> null
+               
               </div>
               <div className="element-data">
                 {getComponentValue(Defence, entity)?.plague || 0}

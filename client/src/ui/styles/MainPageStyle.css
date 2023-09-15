@@ -5,10 +5,13 @@
   height: 100%;
 }
 
+
+/*  the issue with the shadow is that the image isnt the actual size of the div  */
 .main-menu-middle-section-image {
   background: url('/new_resized_map.png') center/contain no-repeat;
   height: 70%;
   width: 60%;
+  /* box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.75); */
 }
 
 .main-page-central-container

@@ -22,7 +22,6 @@ export const ToolTipData = ({ layer }: Props) => {
         Name,
         Defence,
         Ownership,
-        OutpostEntity,
         ClientCameraPosition,
       },
     },
@@ -83,10 +82,7 @@ export const ToolTipData = ({ layer }: Props) => {
     const _nameText = getComponentValue(Name, entity)?.value;
     const _addressText = getComponentValue(Ownership, entity)?.address;
     const _reinforceText = getComponentValue(Defence, entity)?.plague;
-    const _outpostEntityVal = getComponentValue(
-      OutpostEntity,
-      entity
-    )?.entity_id;
+    const _outpostEntityVal = "null"
 
     setNameText(_nameText);
     setAddressText(_addressText);

@@ -16,7 +16,7 @@ type ExampleComponentProps = {
 export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
   const {
     networkLayer: {
-      components: { Game, GameData },
+      components: { Game, GameEntityCounter },
     },
   } = layer;
 
@@ -26,19 +26,15 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
       systemCalls: {
         create_game,
         create_outpost,
-        register_player,
+        
         set_world_event,
       },
     },
   } = useDojo();
 
   const gameEntities = useEntityQuery([Has(Game)]); // to delete
-  const gameDataEntities = useEntityQuery([Has(GameData)]); // to delete
+  const gameDataEntities = useEntityQuery([Has(GameEntityCounter)]); // to delete
 
-  const entityId = getEntityIdFromKeys([
-    BigInt(GAME_ID),
-    BigInt(account.address),
-  ]);
 
   let content;
 
@@ -61,7 +57,7 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
             create_outpost(
               account,
               GAME_ID,
-              getComponentValue(GameData, entityId)?.count_outposts || 0
+               0
             )
           }
         >

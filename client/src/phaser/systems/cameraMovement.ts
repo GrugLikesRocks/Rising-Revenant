@@ -46,14 +46,14 @@ export const controlCamera = (layer: PhaserLayer) => {
 
   defineSystem(world, [Has(ClientCameraPosition)], ({ entity }) => {
     const newCamPos = getComponentValue(ClientCameraPosition, entity);
-    const position = getComponentValueStrict(ClientClickPosition, entity);
+   // const position = getComponentValueStrict(ClientClickPosition, entity);
 
     if (newCamPos) {
       camera.centerOn(newCamPos.x, newCamPos.y);
 
       // console.log("calling updating circle", newCamPos.x, newCamPos.y)
       
-      circleEvents.emit("updateCirclePos", newCamPos.x, newCamPos.y);
+      //circleEvents.emit("updateCirclePos", newCamPos.x, newCamPos.y);
       tooltipEvent.emit("updateTooltipPos", newCamPos.x, newCamPos.y);
     }
   });

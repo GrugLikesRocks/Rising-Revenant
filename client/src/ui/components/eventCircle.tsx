@@ -1,63 +1,119 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
-type CircleProps = {
-  x: number;
-  y: number;
-  radius: number;
-};
+import { circleEvents } from "../../phaser/systems/eventSystems/eventEmitter";
+
+import { EntityIndex, getComponentValue} from "@latticexyz/recs";
+
+import { CAMERA_ID } from "../../phaser/constants";
+import { PhaserLayer } from "../../phaser";
 
 type Props = {
-  circle: CircleProps;
-  getCameraPosition: () => { x: number; y: number }; // Function to get camera position
+  layer: PhaserLayer;
 };
 
-const CircleShape = ({ circle, getCameraPosition }: Props) => {
-  const [position, setPosition] = useState({ x: circle.x, y: circle.y });
-  const initialCameraPos = useRef<any>(null);
+export const CircleEvent = ({ layer }: Props) =>{
+
+  const {
+    scenes: {
+      Main: {camera},
+    },
+    networkLayer: {
+      components: {
+        ClientCameraPosition,
+      },
+    },
+  } = layer;
+
+  const [worldPos, setWorldPos] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const [radius, setRadius] = useState(0);
+
+  const [currentPos, setCurrentPos] = useState({ x: 0, y: 0 });
+  const [checkDefined, setCheckDefined] = useState(false);
 
   useEffect(() => {
-    initialCameraPos.current = getCameraPosition();
 
-    // Update circle position based on camera movement
     const updateCirclePosition = () => {
-      const newCameraPos = getCameraPosition();
-      if (newCameraPos && initialCameraPos.current) {
-        const dx = newCameraPos.x - initialCameraPos.current.x;
-        const dy = newCameraPos.y - initialCameraPos.current.y;
 
-        setPosition({
-          x: position.x - dx,
-          y: position.y - dy,
+      if (!isVisible) return;
+      
+      const currentCameraPos = getComponentValue(
+        ClientCameraPosition,
+        CAMERA_ID as EntityIndex
+      );  
+      
+      if (!currentCameraPos)
+       {
+        setCheckDefined(false);
+        return;
+       }
+       else 
+       {
+        setCheckDefined(true);
+       }
+
+      if (currentCameraPos)
+      {
+        const cameraWidth = camera.phaserCamera.width;
+        const cameraHeight = camera.phaserCamera.height;
+
+        const cameraWorldOriginPoint = {
+          x: currentCameraPos.x - cameraWidth / 2,
+          y: currentCameraPos.y - cameraHeight / 2,
+        };
+
+        setCurrentPos({
+          x: worldPos.x - cameraWorldOriginPoint.x,
+          y: worldPos.y - cameraWorldOriginPoint.y,
         });
-
-        initialCameraPos.current = newCameraPos;
       }
     };
 
-    const intervalID = setInterval(updateCirclePosition, 1000 / 60);
+    circleEvents.on("spawnCircle", spawnCircle);
+    circleEvents.on("setCircleState", setCircleState);
+
+    const intervalID = setInterval(updateCirclePosition, 1000 / 60);  // this si i think the fps
 
     return () => {
+      circleEvents.off("spawnCircle", spawnCircle);
+      circleEvents.off("setCircleState", setCircleState);
       clearInterval(intervalID);
     };
-  }, [position]);
+  }, [radius, worldPos, isVisible]);
 
-  const style: React.CSSProperties  = {
+  const setCircleState = (state: boolean) => 
+  { 
+    setIsVisible(state) 
+  }
+
+  const spawnCircle = (x: number, y: number, radius:number) => 
+  {
+    setRadius(radius);
+    setWorldPos({ x, y });
+    setIsVisible(true);
+  } 
+
+  if (!isVisible || !checkDefined) {
+    return null;
+  }
+
+  //depends on where the origin is in css might need to do position - radius to center correctly
+
+  const style: React.CSSProperties = {
     position: "absolute",
-    left: `${position.x}px`,
-    top: `${position.y}px`,
-    width: `${circle.radius * 2}px`,
-    height: `${circle.radius * 2}px`,
+    left: `${currentPos.x }px`,
+    top: `${currentPos.y}px`, 
+    width: `${radius * 2}px`,
+    height: `${radius * 2}px`,
     borderRadius: "50%",
-    backgroundColor: "blue",
+    border: '2px solid red', // Outline in red
+    backgroundColor: 'transparent', // No fill
+    zIndex: '-2'
   };
-
+  
   return <div style={style}></div>;
 };
 
-export default CircleShape;
 
 
 
-
-
-// const style: React.CSSProperties 

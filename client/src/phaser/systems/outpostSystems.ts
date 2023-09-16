@@ -68,31 +68,30 @@ export const spawnOutposts = (layer: PhaserLayer) => {
   //   defineSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {});
 
   defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
-    const dataEvent = getComponentValue(WorldEvent, entity);
-    let radius = dataEvent?.radius || 0;
+    const dataEvent = getComponentValueStrict(WorldEvent, entity);
+    const dataEventPosition = getComponentValueStrict(Position, entity);
+
+    if (!dataEvent || !dataEventPosition) {
+      return;
+    }
+
+    let radius = dataEvent.radius;
 
     if (radius === 0) {
       return;
     }
 
-    const dataEventPosition = getComponentValue(Position, entity);
-    let positionX = dataEventPosition?.x || 0;
-    let positionY = dataEventPosition?.y || 0;
+    let positionX = dataEventPosition.x;
+    let positionY = dataEventPosition.y;
 
-    console.log("should spawn circle");
+    console.log("should spawn circle with this data", dataEvent, dataEventPosition);
 
-    // const worldEvent = getComponentValueStrict(WorldEvent, entity);
-    // const positionEvent = getComponentValueStrict(Position, entity);
-
-    // emits the event to the be received
-    // console.log("should spawn circle");
-    // circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius,worldEvent.radius);
+    circleEvents.emit("spawnCircle",dataEventPosition.x,dataEventPosition.y, dataEvent.radius);
+    circleEvents.emit("setCircleState", true);
 
     for (let index = 0; index < entities.length; index++) {
       const entityId = entities[index];
       const playerObj = objectPool.get(entityId, "Sprite");
-
-      // let change : boolean = false;
 
       playerObj.setComponent({
         id: "texture",

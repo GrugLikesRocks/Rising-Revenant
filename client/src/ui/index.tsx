@@ -12,7 +12,7 @@ import { ProfilePage } from "./pages/profilePage";
 import { MapReactComp } from "./pages/mapPage";
 
 import { ToolTipData } from "./components/outpostToolTip";
-//import {CircleShape} from "./components/eventCircle";
+import {CircleEvent} from "./components/eventCircle";
 
 import { tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
 
@@ -94,7 +94,7 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
         </div>
 
         <ToolTipData layer={layers.phaserLayer} />
-        {/* <EventCircle layer={layers.phaserLayer} /> */}
+        <CircleEvent layer={layers.phaserLayer} />
         {/* <CircleOutline layer = {layers.phaserLayer} /> */}
 
       </div>

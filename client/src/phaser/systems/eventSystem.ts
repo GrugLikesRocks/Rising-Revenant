@@ -9,21 +9,21 @@ import { PhaserLayer } from "..";
 import { circleEvents } from "./eventSystems/eventEmitter";
 
 export const eventSystem = (layer: PhaserLayer) => {
-  const {
-    world,
+  // const {
+  //   world,
 
-    networkLayer: {
-      components: { WorldEvent, Position },
-    },
-  } = layer;
+  //   networkLayer: {
+  //     components: { WorldEvent, Position },
+  //   },
+  // } = layer;
 
-  defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
-    const worldEvent = getComponentValue(WorldEvent, entity);
-    const positionEvent = getComponentValue(Position, entity);
+  // defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
+  //   const worldEvent = getComponentValue(WorldEvent, entity);
+  //   const positionEvent = getComponentValue(Position, entity);
 
-    if (worldEvent && positionEvent) {
-      circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius);
+  //   if (worldEvent && positionEvent) {
+  //     circleEvents.emit("spawnCircle",positionEvent.x,positionEvent.y,worldEvent.radius);
 
-    }
-  });
+  //   }
+  // });
 };

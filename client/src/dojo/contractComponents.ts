@@ -97,8 +97,6 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-  
-
     Balance: (() => {
       const name = "Balance";
       return defineComponent(
@@ -178,8 +176,6 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-
-
     // this is to change
     ClientCameraPosition: (() => {
       const name = "ClientCameraPosition";
@@ -215,11 +211,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-
-
-
-
-
 
     AuthStatus: (() => {
       const name = "AuthStatus";

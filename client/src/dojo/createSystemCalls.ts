@@ -7,13 +7,14 @@ import {
 import {
   EntityIndex,
   getComponentValue,
-  setComponent, Components, Schema
+  setComponent,
+  Components,
+  Schema,
 } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
-import { CAMERA_ID, GAME_ID, MAP_HEIGHT, MAP_WIDTH} from "../phaser/constants";
+import { CAMERA_ID, GAME_ID, MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
 import { poseidonHashMany } from "micro-starknet";
-
 
 // IMPLEMENT THE BEER BARRON FUNCTION
 
@@ -35,14 +36,15 @@ export function createSystemCalls(
     GameEntityCounter,
 
     ClientCameraPosition,
-    ClientClickPosition
+    ClientClickPosition,
   }: ClientComponents
 ) {
-
-
   const reinforce_outpost = async (signer: Account, entity_id: number) => {
-
-    const entityId = getEntityIdFromKeys([BigInt(entity_id), BigInt(signer.address),BigInt(GAME_ID)]);
+    const entityId = getEntityIdFromKeys([
+      BigInt(entity_id),
+      BigInt(signer.address),
+      BigInt(GAME_ID),
+    ]);
 
     const defenceId = uuid();
     Defence.addOverride(defenceId, {
@@ -83,7 +85,6 @@ export function createSystemCalls(
       setComponent(contractComponents.Lifes, entityId, {
         count: lifeEvent.count,
       });
-
     } catch (e) {
       console.log(e);
       Defence.removeOverride(defenceId);
@@ -96,8 +97,11 @@ export function createSystemCalls(
 
   // THIS IS TO REDO
   const destroy_outpost = async (signer: Account, entity_id: number) => {
-
-    const entityId = getEntityIdFromKeys([BigInt(entity_id), BigInt(signer.address),BigInt(GAME_ID)]);
+    const entityId = getEntityIdFromKeys([
+      BigInt(entity_id),
+      BigInt(signer.address),
+      BigInt(GAME_ID),
+    ]);
 
     // console.log("this is the entity id for the life increment", entityId);
 
@@ -132,7 +136,7 @@ export function createSystemCalls(
       const events = parseEvent(receipt);
       // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
       console.log("this si the entity", entityId);
-      console.log("events for the reinforcing of an outpost" , events);
+      console.log("events for the reinforcing of an outpost", events);
       console.log(receipt);
       console.log("\n\n\n");
 
@@ -147,7 +151,6 @@ export function createSystemCalls(
       setComponent(contractComponents.Lifes, entityId, {
         count: lifeEvent.count,
       });
-
     } catch (e) {
       console.log(e);
       Defence.removeOverride(defenceId);
@@ -163,9 +166,12 @@ export function createSystemCalls(
     game_id: number,
     outpost_num: number
   ) => {
-    
-    const entityId = getEntityIdFromKeys([BigInt(outpost_num), BigInt(signer.address),BigInt(GAME_ID)])
-  
+    const entityId = getEntityIdFromKeys([
+      BigInt(outpost_num),
+      BigInt(signer.address),
+      BigInt(GAME_ID),
+    ]);
+
     console.log("this is the entity id for the create outpost", entityId);
 
     const lifesId = uuid();
@@ -205,7 +211,6 @@ export function createSystemCalls(
     });
 
     try {
-
       const tx: any = await execute(signer, "create_outpost", [game_id]);
 
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
@@ -214,7 +219,7 @@ export function createSystemCalls(
 
       console.log(receipt);
       const events = parseEvent(receipt);
- 
+
       const lifesEvent = events[0] as Lifes;
       setComponent(contractComponents.Lifes, entityId as EntityIndex, {
         count: lifesEvent.count,
@@ -247,16 +252,16 @@ export function createSystemCalls(
       });
 
       const gameDataEvent = events[6] as GameEntityCounter;
-      setComponent(contractComponents.GameEntityCounter, GAME_ID as EntityIndex, {
-        outpost_count: gameDataEvent.outpost_count,
-        event_count: gameDataEvent.event_count,
-      });
-
+      setComponent(
+        contractComponents.GameEntityCounter,
+        GAME_ID as EntityIndex,
+        {
+          outpost_count: gameDataEvent.outpost_count,
+          event_count: gameDataEvent.event_count,
+        }
+      );
 
       // check for the entity id here
-
-
-
     } catch (e) {
       console.log(e);
       Lifes.removeOverride(lifesId);
@@ -277,30 +282,25 @@ export function createSystemCalls(
 
   // add the counter obj
   const create_game = async (signer: Account) => {
-
-
     const cameraId = CAMERA_ID as EntityIndex;
 
     const clientCamCompId = uuid();
     ClientCameraPosition.addOverride(clientCamCompId, {
       entity: cameraId,
-      value: { x:MAP_WIDTH/2,y:MAP_HEIGHT/2 },
+      value: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 },
     });
 
     const clickCompId = uuid();
     ClientClickPosition.addOverride(clickCompId, {
       entity: cameraId,
-      value: { 
-        xFromMiddle: 0, 
+      value: {
+        xFromMiddle: 0,
         yFromMiddle: 0,
-        
-        yFromOrigin: 0, 
-        xFromOrigin: 0 
+
+        yFromOrigin: 0,
+        xFromOrigin: 0,
       },
     });
-
-
-
 
     const gameId = GAME_ID as EntityIndex;
 
@@ -315,7 +315,6 @@ export function createSystemCalls(
       entity: gameId,
       value: { outpost_count: 0, event_count: 0 },
     });
-
 
     const entityId = 999999999999999 as EntityIndex;
 
@@ -338,7 +337,6 @@ export function createSystemCalls(
       const events = parseEvent(receipt);
       // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
-
       const gameEvent = events[0] as Game;
       setComponent(contractComponents.Game, gameId, {
         start_time: gameEvent.start_time,
@@ -356,7 +354,6 @@ export function createSystemCalls(
       setComponent(contractComponents.GameTracker, entityId, {
         count: gameTrackerEvent.count,
       });
-
     } catch (e) {
       console.log(e);
       Game.removeOverride(gameCompId);
@@ -375,10 +372,13 @@ export function createSystemCalls(
 
   // the world event should also have an id
   const set_world_event = async (signer: Account) => {
-    
-    const entityId = getEntityIdFromKeys([BigInt(GAME_ID), BigInt(signer.address), BigInt(50)])
-    
-    const worldEventId = uuid(); 
+    const entityId = getEntityIdFromKeys([
+      BigInt(GAME_ID),
+      // BigInt(signer.address),
+      BigInt(50),
+    ]);
+
+    const worldEventId = uuid();
     WorldEvent.addOverride(worldEventId, {
       entity: entityId,
       value: {},
@@ -391,9 +391,10 @@ export function createSystemCalls(
     });
 
     try {
-      const tx = await execute(signer, "set_world_event", [GAME_ID]);
+      const tx = await execute(signer, "set_world_event", [
+        GAME_ID
+      ]);
 
-      console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
@@ -414,6 +415,17 @@ export function createSystemCalls(
         y: positionEvent.y,
       });
 
+      const gameDataEvent = events[2] as GameEntityCounter;
+      setComponent(
+        contractComponents.GameEntityCounter,
+        GAME_ID as EntityIndex,
+        {
+          outpost_count: gameDataEvent.outpost_count,
+          event_count: gameDataEvent.event_count,
+        }
+      );
+
+
     } catch (e) {
       console.log(e);
       WorldEvent.removeOverride(worldEventId);
@@ -424,50 +436,43 @@ export function createSystemCalls(
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const set_click_component = async (xOrigin: number, yOrigin: number, xMiddle: number, yMiddle:number) => 
-  {
+  ///////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
+  
+  const set_click_component = async (
+    xOrigin: number,
+    yOrigin: number,
+    xMiddle: number,
+    yMiddle: number
+  ) => {
     const entityId = CAMERA_ID as EntityIndex;
 
     const defenceId = uuid();
     ClientClickPosition.addOverride(defenceId, {
       entity: entityId,
       value: {
-        xFromMiddle: xMiddle, 
+        xFromMiddle: xMiddle,
         yFromMiddle: yMiddle,
-        
-        yFromOrigin: yOrigin, 
-        xFromOrigin: xOrigin 
+
+        yFromOrigin: yOrigin,
+        xFromOrigin: xOrigin,
       },
     });
-  }
+  };
 
-
-  const set_camera_position_component = async (x: number, y: number) => 
-  {
+  const set_camera_position_component = async (x: number, y: number) => {
     const entityId = CAMERA_ID as EntityIndex;
 
     const defenceId = uuid();
     ClientCameraPosition.addOverride(defenceId, {
       entity: entityId,
       value: {
-        x: x, y: y, 
+        x: x,
+        y: y,
       },
     });
-  }
+  };
 
   return {
     reinforce_outpost,
@@ -475,9 +480,9 @@ export function createSystemCalls(
     create_outpost,
     destroy_outpost,
     set_world_event,
-
+    ////////////////////////////////////////////
     set_camera_position_component,
-    set_click_component
+    set_click_component,
   };
 }
 
@@ -550,7 +555,6 @@ export interface GameEntityCounter extends BaseEvent {
   event_count: number;
 }
 
-
 export const parseEvent = (
   receipt: InvokeTransactionReceiptResponse
 ): Array<
@@ -582,7 +586,6 @@ export const parseEvent = (
     | Ownership
     | GameTracker
     | GameEntityCounter
-    
   > = [];
 
   for (let raw of receipt.events) {
@@ -747,7 +750,6 @@ export const parseEvent = (
         events.push(gameDataData);
         break;
 
-
       default:
         throw new Error("Unsupported event type.");
     }
@@ -755,8 +757,6 @@ export const parseEvent = (
 
   return events;
 };
-
-
 
 export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
   if (keys.length === 1) {

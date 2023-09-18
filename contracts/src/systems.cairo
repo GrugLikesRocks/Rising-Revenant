@@ -1,4 +1,5 @@
 mod create_outpost;
+mod create_revenant;
 // mod TradeOutpost;
 mod destroy_outpost;
 mod reinforce_outpost;

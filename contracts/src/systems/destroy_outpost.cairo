@@ -43,6 +43,8 @@ mod destroy_outpost{
         defence.plague -= 1;
         let _ = set!(ctx.world, (lifes, defence));
 
+        // TODO: Should we reduce outpost_count of revenant after outpost has been destroy?
+
         // Emit World Event
         return ();
     }

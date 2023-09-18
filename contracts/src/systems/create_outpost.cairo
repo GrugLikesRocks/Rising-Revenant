@@ -12,6 +12,10 @@ mod create_outpost {
     use RealmsRisingRevenant::components::Prosperity;
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::Ownership;
+    use RealmsRisingRevenant::components::revenant::{
+        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
+    };
+    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
 
     use RealmsRisingRevenant::components::GameEntityCounter;
 
@@ -27,6 +31,10 @@ mod create_outpost {
 
         assert(game.status, 'game is not running');
         // check if the game has started
+
+        let mut revenant = get!(ctx.world, (game_id, ctx.origin), Revenant);
+        revenant.assert_started();
+        // TODO: Check revenant's outpost count reach the limit.
 
         gameData.outpost_count += 1;
 
@@ -47,9 +55,11 @@ mod create_outpost {
         let mut prosperity = Prosperity { entity_id, game_id, value: 1000 };
 
         // // // We set the position of the outpost
-        // // // TODO: Get random coordinates
-        // let (x, y) = getRandomCoordinates(ctx);
-        let mut position = Position { entity_id, game_id, x: 1, y: 1 };
+        let seed = starknet::get_tx_info().unbox().transaction_hash;
+        let mut random = RandomImpl::new(seed);
+        let x = random.next_u32(0, 100);
+        let y = random.next_u32(0, 100);
+        let mut position = Position { entity_id, game_id, x, y };
 
         // We set the ownership of theoutpostto the player who created it
         let mut ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };
@@ -59,12 +69,11 @@ mod create_outpost {
             (lifes, defence, name, prosperity, position, ownership, gameData)
         );
 
+        revenant.outpost_count = revenant.outpost_count + 1;
+        set!(ctx.world, (revenant));
+
         entity_id
     }
-// fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
-//     // TODO: get random coordinates
-//     (1, 1)
-// }
 }
 
 

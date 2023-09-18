@@ -1,3 +1,5 @@
+mod revenant;
+
 #[derive(Component, Copy, Drop, Serde)]
 struct Position {
     #[key]
@@ -73,7 +75,17 @@ struct Game {
     game_id: u32, // increment
     start_time: u64,
     prize: u32,
-    status: bool 
+    status: bool
+}
+
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct OutpostCount {
+    #[key]
+    game_id: u32,
+    #[key]
+    address: felt252,
+    count: u32,
+    name: felt252
 }
 
 // Config Components ---------------------------------------------------------------------

@@ -1,17 +1,14 @@
 #[system]
-mod reinforce_outpost{
+mod reinforce_outpost {
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::Position;
-    use RealmsRisingRevenant::components::Lifes;
-    use RealmsRisingRevenant::components::Defence;
-    use RealmsRisingRevenant::components::Name;
-    use RealmsRisingRevenant::components::Prosperity;
     use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::Ownership;
+    use RealmsRisingRevenant::components::outpost::{
+        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+    };
 
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
@@ -20,15 +17,14 @@ mod reinforce_outpost{
 
         assert(game.status, 'game is not running');
 
-        let (mut lifes, mut defence, ownership) = get!(ctx.world, (entity_id, game_id), (Lifes, Defence, Ownership));
-        
-        assert(ctx.origin.into() == ownership.address, 'not owner');
+        let mut outpost = get!(ctx.world, (game_id, entity_id), (Outpost));
+        outpost.assert_existed();
 
-        lifes.count += 1;
+        assert(ctx.origin == outpost.owner, 'not owner');
 
-        defence.plague += 1;
+        outpost.lifes += 1;
 
-        set!(ctx.world, (lifes, defence));
+        set!(ctx.world, (outpost));
 
         return ();
     }

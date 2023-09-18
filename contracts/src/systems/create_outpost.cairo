@@ -12,6 +12,7 @@ mod create_outpost {
     use RealmsRisingRevenant::components::Prosperity;
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::Ownership;
+    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
 
     use RealmsRisingRevenant::components::GameEntityCounter;
 
@@ -47,9 +48,11 @@ mod create_outpost {
         let mut prosperity = Prosperity { entity_id, game_id, value: 1000 };
 
         // // // We set the position of the outpost
-        // // // TODO: Get random coordinates
-        // let (x, y) = getRandomCoordinates(ctx);
-        let mut position = Position { entity_id, game_id, x: 1, y: 1 };
+        let seed = starknet::get_tx_info().unbox().transaction_hash;
+        let mut random = RandomImpl::new(seed);
+        let x = random.next_u32(0, 100);
+        let y = random.next_u32(0, 100);
+        let mut position = Position { entity_id, game_id, x, y };
 
         // We set the ownership of theoutpostto the player who created it
         let mut ownership = Ownership { entity_id, game_id, address: ctx.origin.into() };
@@ -61,10 +64,6 @@ mod create_outpost {
 
         entity_id
     }
-// fn getRandomCoordinates(ctx: Context) -> (u32, u32) {
-//     // TODO: get random coordinates
-//     (1, 1)
-// }
 }
 
 

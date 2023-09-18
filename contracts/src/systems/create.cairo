@@ -19,14 +19,8 @@ mod create_game {
     // sets game tracker
     // TODO: Add Lords Deposit
     fn execute(ctx: Context) -> u32 {
-        //
-        // TODO: Issue with get! macro
-        //
-        // let mut game_tracker = get!(ctx.world, (GAME_CONFIG), (GameTracker));
-
-        // let game_id = game_tracker.count + 1; // game id increment
-
-        let game_id: u32 = 1; // game id increment
+        let mut game_tracker = get!(ctx.world, (GAME_CONFIG), GameTracker);
+        let game_id = game_tracker.count + 1; // game id increment
 
         let start_time = 0; // blocknumber
         let prize = 0; // total prize

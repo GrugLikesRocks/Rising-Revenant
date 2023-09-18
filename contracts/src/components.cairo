@@ -78,16 +78,6 @@ struct Game {
     status: bool
 }
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
-struct OutpostCount {
-    #[key]
-    game_id: u32,
-    #[key]
-    address: felt252,
-    count: u32,
-    name: felt252
-}
-
 // Config Components ---------------------------------------------------------------------
 
 // This will track the number of games played

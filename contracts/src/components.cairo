@@ -1,3 +1,4 @@
+mod outpost;
 mod revenant;
 
 #[derive(Component, Copy, Drop, Serde)]
@@ -8,51 +9,6 @@ struct Position {
     game_id: u32,
     x: u32,
     y: u32
-}
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Lifes {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    count: u32
-}
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Defence {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    plague: u32
-}
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Name {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    value: felt252
-}
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Prosperity {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    value: felt252
-}
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Balance {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    value: felt252
 }
 
 // TODO: Could be ENUM
@@ -88,23 +44,12 @@ struct GameTracker {
     count: u32
 }
 
-#[derive(Component, Copy, Drop, Serde)]
-struct Ownership {
-    #[key]
-    entity_id: u128, // FIXED
-    #[key]
-    game_id: u32, // increment
-    address: felt252
-}
-
 // Components to check ---------------------------------------------------------------------
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
-struct GameEntityCounter
-{
+struct GameEntityCounter {
     #[key]
     game_id: u32,
-
     outpost_count: u128,
     event_count: u128
 }

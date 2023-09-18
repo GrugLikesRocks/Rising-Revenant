@@ -7,9 +7,6 @@ mod set_world_event {
     use option::OptionTrait;
 
     use RealmsRisingRevenant::components::Position;
-    use RealmsRisingRevenant::components::Lifes;
-    use RealmsRisingRevenant::components::Defence;
-    use RealmsRisingRevenant::components::Name;
     use RealmsRisingRevenant::components::WorldEvent;
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::GameEntityCounter;

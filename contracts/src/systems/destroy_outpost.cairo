@@ -1,17 +1,16 @@
 #[system]
-mod destroy_outpost{
+mod destroy_outpost {
     use array::ArrayTrait;
     use box::BoxTrait;
     use traits::Into;
     use dojo::world::Context;
 
     use RealmsRisingRevenant::components::Position;
-    use RealmsRisingRevenant::components::Lifes;
-    use RealmsRisingRevenant::components::Defence;
-    use RealmsRisingRevenant::components::Name;
-    use RealmsRisingRevenant::components::Prosperity;
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::WorldEvent;
+    use RealmsRisingRevenant::components::outpost::{
+        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+    };
     use RealmsRisingRevenant::utils;
 
     // This should remove lifes and defence from the entity
@@ -28,20 +27,21 @@ mod destroy_outpost{
         );
 
         // Get the outpost
-        let (mut lifes, mut defence, position) = get!(
-            ctx.world, (outpost_id, game_id), (Lifes, Defence, Position)
-        );
-        
+        let mut outpost = get!(ctx.world, (game_id, outpost_id), (Outpost));
+        outpost.assert_existed();
+
         // check if within radius of event -> revert if not
-        let distance = utils::calculate_distance(event_position.x, event_position.y, position.x, position.y, 100);
+        let distance = utils::calculate_distance(
+            event_position.x, event_position.y, outpost.x, outpost.y, 100
+        );
         if distance > world_event.radius {
             return ();
         }
 
-        // update lifes and defence
-        lifes.count -= 1;
-        defence.plague -= 1;
-        let _ = set!(ctx.world, (lifes, defence));
+        // update lifes
+        outpost.lifes -= 1;
+
+        set!(ctx.world, (outpost));
 
         // TODO: Should we reduce outpost_count of revenant after outpost has been destroy?
 

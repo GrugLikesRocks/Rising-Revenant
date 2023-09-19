@@ -5,31 +5,30 @@ mod create_revenant {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::{Game, GameEntityCounter};
     use RealmsRisingRevenant::components::revenant::{Revenant, RevenantStatus};
 
     // this will create a revenant with name
     fn execute(ctx: Context, game_id: u32, name: felt252) -> u128 {
         assert(name != 0, 'name length must larger than 0');
 
-        let game = get!(ctx.world, game_id, Game);
+        let (game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
         assert(game.status, 'game is not running');
 
-        let existed_revenant = get!(ctx.world, (game_id, ctx.origin), (Revenant));
-        assert(
-            existed_revenant.status == RevenantStatus::not_start, 'Revenant has already created'
-        );
+        game_data.revenant_count += 1;
+
+        let entity_id: u128 = game_data.revenant_count.into();
 
         let revenant = Revenant {
             game_id,
-            address: ctx.origin,
+            entity_id,
+            owner: ctx.origin,
             name: name,
             outpost_count: 0,
             status: RevenantStatus::started
         };
         set!(ctx.world, (revenant));
 
-        // TODO: What should return after create revenant successfully 
-        0
+        entity_id
     }
 }

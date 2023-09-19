@@ -23,10 +23,11 @@ struct GameTracker {
 
 // Components to check ---------------------------------------------------------------------
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Component, Copy, Drop, Serde)]
 struct GameEntityCounter {
     #[key]
     game_id: u32,
+    revenant_count: u32,
     outpost_count: u32,
     event_count: u32
 }

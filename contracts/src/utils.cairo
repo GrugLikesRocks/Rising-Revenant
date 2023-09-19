@@ -1,9 +1,10 @@
 mod random;
 
+const MAX_U32: u32 = 2147483647;
+
 // Calculate the distance between two points (x1, y1) and (x2, y2)
 // Inputs are u32 type coordinates and a scale factor for improved precision in the sqrt function
 fn calculate_distance(x1: u32, y1: u32, x2: u32, y2: u32, scale: u32) -> u32 {
-
     let mut diff_x: u32 = 0;
     let mut diff_y: u32 = 0;
     if (x1 > x2) {
@@ -35,7 +36,7 @@ fn sqrt(n: u32, scale: u32) -> u32 {
     if (n == 0) {
         return 0;
     }
-    
+
     let n_scaled = n * scale * scale;
     let mut x = n_scaled;
     let mut y = 0;

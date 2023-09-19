@@ -1,29 +1,6 @@
 mod outpost;
 mod revenant;
-
-#[derive(Component, Copy, Drop, Serde)]
-struct Position {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    x: u32,
-    y: u32
-}
-
-// TODO: Could be ENUM
-#[derive(Component, Copy, Drop, Serde)]
-struct WorldEvent {
-    #[key]
-    entity_id: u128,
-    #[key]
-    game_id: u32,
-    radius: u32,
-    event_type: u32,
-    block_number: u64
-}
-// TODO: Impl World
-// is x,y within radius?
+mod world_event;
 
 #[derive(Component, Copy, Drop, Serde)]
 struct Game {
@@ -50,6 +27,6 @@ struct GameTracker {
 struct GameEntityCounter {
     #[key]
     game_id: u32,
-    outpost_count: u128,
-    event_count: u128
+    outpost_count: u32,
+    event_count: u32
 }

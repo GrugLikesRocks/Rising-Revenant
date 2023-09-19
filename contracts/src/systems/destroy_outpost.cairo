@@ -5,12 +5,11 @@ mod destroy_outpost {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::Position;
     use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::WorldEvent;
     use RealmsRisingRevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
+    use RealmsRisingRevenant::components::world_event::WorldEvent;
     use RealmsRisingRevenant::utils;
 
     // This should remove lifes and defence from the entity
@@ -22,17 +21,15 @@ mod destroy_outpost {
         assert(game.status, 'Game is not active');
 
         // Get the event
-        let (world_event, event_position) = get!(
-            ctx.world, (event_id, game_id), (WorldEvent, Position)
-        );
+        let world_event = get!(ctx.world, (event_id, game_id), WorldEvent);
 
         // Get the outpost
-        let mut outpost = get!(ctx.world, (game_id, outpost_id), (Outpost));
+        let mut outpost = get!(ctx.world, (game_id, outpost_id), Outpost);
         outpost.assert_existed();
 
         // check if within radius of event -> revert if not
         let distance = utils::calculate_distance(
-            event_position.x, event_position.y, outpost.x, outpost.y, 100
+            world_event.x, world_event.y, outpost.x, outpost.y, 100
         );
         if distance > world_event.radius {
             return ();

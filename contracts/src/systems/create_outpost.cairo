@@ -6,7 +6,9 @@ mod create_outpost {
     use dojo::world::Context;
 
     use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::outpost::{Outpost, OutpostStatus, OutpostImpl, OutpostTrait};
+    use RealmsRisingRevenant::components::outpost::{
+        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+    };
     use RealmsRisingRevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
@@ -29,7 +31,7 @@ mod create_outpost {
 
         gameData.outpost_count += 1;
 
-        let outpost_count: u128 = gameData.outpost_count;
+        let outpost_count: u128 = gameData.outpost_count.into();
 
         let entity_id: u128 = outpost_count;
 

@@ -18,22 +18,18 @@ mod create_outpost {
 
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context, game_id: u32) -> u128 {
-        let mut game = get!(ctx.world, game_id, Game);
-
-        let mut gameData = get!(ctx.world, game_id, GameEntityCounter);
+    fn execute(ctx: Context, game_id: u32, revenant_id: u128) -> u128 {
+        let (game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
         // check if the game has started
         assert(game.status, 'game is not running');
 
-        let mut revenant = get!(ctx.world, (game_id, ctx.origin), Revenant);
-        revenant.assert_started();
-        // TODO: Should we check revenant's outpost count reach the limit?
+        let mut revenant = get!(ctx.world, (game_id, revenant_id, ctx.origin), Revenant);
+        revenant.assert_can_create_outpost();
 
-        gameData.outpost_count += 1;
+        game_data.outpost_count += 1;
+        revenant.outpost_count = revenant.outpost_count + 1;
 
-        let outpost_count: u128 = gameData.outpost_count.into();
-
-        let entity_id: u128 = outpost_count;
+        let entity_id: u128 = game_data.outpost_count.into();
 
         // We set the position of the outpost
         let seed = starknet::get_tx_info().unbox().transaction_hash;
@@ -52,8 +48,7 @@ mod create_outpost {
             status: OutpostStatus::created
         };
 
-        revenant.outpost_count = revenant.outpost_count + 1;
-        set!(ctx.world, (revenant, outpost, gameData));
+        set!(ctx.world, (revenant, outpost, game_data));
 
         entity_id
     }

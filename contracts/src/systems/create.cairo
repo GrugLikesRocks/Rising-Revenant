@@ -28,7 +28,10 @@ mod create_game {
 
         set!(ctx.world, (Game { game_id, start_time, prize, status }));
 
-        set!(ctx.world, (GameEntityCounter { game_id, outpost_count: 0, event_count: 0 }));
+        set!(
+            ctx.world,
+            (GameEntityCounter { game_id, revenant_count: 0, outpost_count: 0, event_count: 0 })
+        );
 
         set!(
             ctx.world, (GameTracker { entity_id: GAME_CONFIG.try_into().unwrap(), count: game_id })

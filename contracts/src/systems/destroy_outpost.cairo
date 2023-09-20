@@ -21,7 +21,7 @@ mod destroy_outpost {
         assert(game.status, 'Game is not active');
 
         // Get the event
-        let world_event = get!(ctx.world, (event_id, game_id), WorldEvent);
+        let mut world_event = get!(ctx.world, (game_id, event_id), WorldEvent);
 
         // Get the outpost
         let mut outpost = get!(ctx.world, (game_id, outpost_id), Outpost);
@@ -32,17 +32,18 @@ mod destroy_outpost {
             world_event.x, world_event.y, outpost.x, outpost.y, 100
         );
         if distance > world_event.radius {
-            return ();
+            return false;
         }
 
         // update lifes
         outpost.lifes -= 1;
+        world_event.destroy_count += 1;
 
-        set!(ctx.world, (outpost));
+        set!(ctx.world, (outpost, world_event));
 
         // TODO: Should we reduce outpost_count of revenant after outpost has been destroy?
 
         // Emit World Event
-        ()
+        true
     }
 }

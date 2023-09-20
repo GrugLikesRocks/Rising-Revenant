@@ -22,26 +22,31 @@ mod set_world_event {
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
 
-        let mut gameData = get!(ctx.world, game_id, GameEntityCounter);
-        gameData.event_count += 1;
+        let mut game_data = get!(ctx.world, game_id, GameEntityCounter);
+        game_data.event_count += 1;
 
-        let entity_id: u128 = gameData.event_count.into();
+        let entity_id: u128 = game_data.event_count.into();
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         let mut random = RandomImpl::new(seed);
         let x = random.next_u32(0, 100);
         let y = random.next_u32(0, 100);
 
-        // Radius is auto increment
+        // Radius increases when the previous world event does not cause damage.
         let mut radius: u32 = 0;
-        if gameData.event_count >= MAX_U32 - INIT_RADIUS {
-            radius = MAX_U32;
+        if entity_id <= 1 {
+            radius = INIT_RADIUS;
         } else {
-            radius = INIT_RADIUS + gameData.event_count;
+            let prev_world_event = get!(ctx.world, (game_id, entity_id - 1), WorldEvent);
+            if prev_world_event.destroy_count == 0 && prev_world_event.radius < MAX_U32 {
+                radius = prev_world_event.radius + 1;
+            } else {
+                radius = prev_world_event.radius;
+            }
         }
 
-        let world_event = WorldEvent { game_id, entity_id, x, y, radius };
+        let world_event = WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0 };
 
-        set!(ctx.world, (world_event, gameData));
+        set!(ctx.world, (world_event, game_data));
 
         world_event
     }

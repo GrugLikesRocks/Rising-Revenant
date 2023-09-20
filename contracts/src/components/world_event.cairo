@@ -8,16 +8,14 @@ struct WorldEvent {
     entity_id: u128,
     // TODO: see detail in EventType
     // event_type: u32,
-
-    // TODO: Why we need this?
-    // block_number: u64,
     x: u32,
     y: u32,
-    radius: u32
+    radius: u32,
+    // How many outpost has been destroyed by this event
+    destroy_count: u32
 }
 
 const INIT_RADIUS: u32 = 5;
-
 // mod EventType {
 // const not_defined: u32 = 0;
 // TODO: Define world event 

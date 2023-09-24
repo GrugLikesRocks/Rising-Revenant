@@ -38,7 +38,7 @@ export type Scalars = {
   u128: { input: any; output: any };
 };
 
-export type ComponentUnion =  Position | Defence | Lifes | Name | Balance | Prosperity | WorldEvent | Game | Ownership | GameEntityCounter;
+export type ComponentUnion = GameTracker| Outpost| Revenant | WorldEvent | Game  | GameEntityCounter;
 
 export type Entity = {
   __typename?: "Entity";
@@ -90,150 +90,14 @@ export type EventEdge = {
 
 
 
-export type Position = {
-  __typename?: "Position";
-  entity?: Maybe<Entity>;
-  x?: Maybe<Scalars["u32"]["output"]>;
-  y?: Maybe<Scalars["u32"]["output"]>;
-};
-
-export type PositionConnection = {
-  __typename?: "PositionConnection";
-  edges?: Maybe<Array<Maybe<PositionEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type PositionEdge = {
-  __typename?: "PositionEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Position>;
-};
-
-
-
-
-
-
-export type Defence = {
-  __typename?: "Defence";
-  entity?: Maybe<Entity>;
-  plague?: Maybe<Scalars["u32"]["output"]>;
-};
-
-export type DefenceConnection = {
-  __typename?: "DefenceConnection";
-  edges?: Maybe<Array<Maybe<DefenceEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type DefenceEdge = {
-  __typename?: "DefenceEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Defence>;
-};
-
-
-
-
-
-
-export type Lifes = {
-  __typename?: "Lifes";
-  entity?: Maybe<Entity>;
-  count?: Maybe<Scalars["u32"]["output"]>;
-};
-
-export type LifesConnection = {
-  __typename?: "LifesConnection";
-  edges?: Maybe<Array<Maybe<LifesEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type LifesEdge = {
-  __typename?: "LifesEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Lifes>;
-};
-
-
-
-
-export type Name = {
-  __typename?: "Name";
-  entity?: Maybe<Entity>;
-  value?: Maybe<Scalars["felt252"]["output"]>;
-};
-
-export type NameConnection = {
-  __typename?: "NameConnection";
-  edges?: Maybe<Array<Maybe<NameEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type NameEdge = {
-  __typename?: "NameEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Name>;
-};
-
-
-
-
-
-export type Balance = {
-  __typename?: "Balance";
-  entity?: Maybe<Entity>;
-  value?: Maybe<Scalars["felt252"]["output"]>;
-};
-
-export type BalanceConnection = {
-  __typename?: "NameConnection";
-  edges?: Maybe<Array<Maybe<BalanceEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type BalanceEdge = {
-  __typename?: "BalanceEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Balance>;
-};
-
-
-
-
-
-
-
-export type Prosperity = {
-  __typename?: "Prosperity";
-  entity?: Maybe<Entity>;
-  value?: Maybe<Scalars["felt252"]["output"]>;
-};
-
-export type ProsperityConnection = {
-  __typename?: "ProsperityConnection";
-  edges?: Maybe<Array<Maybe<ProsperityEdge>>>;
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type ProsperityEdge = {
-  __typename?: "ProsperityEdge";
-  cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Prosperity>;
-};
-
-
-
-
-
 
 
 export type WorldEvent = {
   __typename?: "WorldEvent";
   entity?: Maybe<Entity>;
-  radius?: Maybe<Scalars["u32"]["output"]>;
-  event_type?: Maybe<Scalars["u32"]["output"]>;
-  block_number?: Maybe<Scalars["u64"]["output"]>;
+  x?: Maybe<Scalars["u32"]["output"]>;
+  y?: Maybe<Scalars["u32"]["output"]>;
+  radius?: Maybe<Scalars["u64"]["output"]>;
 };
 
 export type WorldEventConnection = {
@@ -274,25 +138,24 @@ export type GameEdge = {
 
 
 
-
-
-export type Ownership = {
-  __typename?: "Ownership";
+export type GameTracker = {
+  __typename?: "GameTracker";
   entity?: Maybe<Entity>;
-  address?: Maybe<Scalars["felt252"]["output"]>;
+  count?: Maybe<Scalars["u32"]["output"]>;
 };
 
-export type OwnershipConnection = {
-  __typename?: "OwnershipConnection";
-  edges?: Maybe<Array<Maybe<OwnershipEdge>>>;
+export type GameTrackerConnection = {
+  __typename?: "GameTrackerConnection";
+  edges?: Maybe<Array<Maybe<GameTrackerEdge>>>;
   totalCount: Scalars["Int"]["output"];
 };
 
-export type OwnershipEdge = {
-  __typename?: "OwnershipEdge";
+export type GameTrackerEdge = {
+  __typename?: "GameTrackerEdge";
   cursor: Scalars["Cursor"]["output"];
-  node?: Maybe<Ownership>;
+  node?: Maybe<GameTracker>;
 };
+
 
 
 
@@ -300,8 +163,9 @@ export type OwnershipEdge = {
 export type GameEntityCounter = {
   __typename?: "GameEntityCounter";
   entity?: Maybe<Entity>;
-  outpost_count?: Maybe<Scalars["u128"]["output"]>;
-  event_count?: Maybe<Scalars["u128"]["output"]>;
+  revenant_count?: Maybe<Scalars["u32"]["output"]>;
+  outpost_count?: Maybe<Scalars["u32"]["output"]>;
+  event_count?: Maybe<Scalars["u32"]["output"]>;
 };
 
 export type GameEntityCounterConnection = {
@@ -319,6 +183,53 @@ export type GameEntityCounterEdge = {
 
 
 
+export type Outpost = {
+  __typename?: "Outpost";
+  entity?: Maybe<Entity>;
+  entity_id?: Maybe<Scalars["u128"]["output"]>;
+  owner? : Maybe<Scalars["felt252"]["output"]>;
+  name?: Maybe<Scalars["felt252"]["output"]>;
+  x?: Maybe<Scalars["u32"]["output"]>;
+  y?: Maybe<Scalars["u32"]["output"]>;
+  lifes?: Maybe<Scalars["u32"]["output"]>;
+  status?: Maybe<Scalars["u32"]["output"]>;
+}
+
+export type OutpostConnection = {
+  __typename?: "OutpostConnection";
+  edges?: Maybe<Array<Maybe<OutpostEdge>>>;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type OutpostEdge = {
+  __typename?: "OutpostEdge";
+  cursor: Scalars["Cursor"]["output"];
+  node?: Maybe<Outpost>;
+};
+
+
+
+export type Revenant = {
+  __typename?: "Revenant";
+  entity?: Maybe<Entity>;
+  owner? : Maybe<Scalars["felt252"]["output"]>;
+  name?: Maybe<Scalars["felt252"]["output"]>;
+  outpost_count? : Maybe<Scalars["u32"]["output"]>;
+  status?: Maybe<Scalars["u32"]["output"]>;
+}
+
+export type RevenantConnection = {
+  __typename?: "RevenantConnection";
+  edges?: Maybe<Array<Maybe<RevenantEdge>>>;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type RevenantEdge = {
+  __typename?: "RevenantEdge";
+  cursor: Scalars["Cursor"]["output"];
+  node?: Maybe<Revenant>;
+};
+
 
 
 export type Query = {
@@ -327,17 +238,16 @@ export type Query = {
   entity: Entity;
   event: Event;
   events?: Maybe<EventConnection>;
-
-  lifesComponents?: Maybe<LifesConnection>;
-  positionComponents?: Maybe<PositionConnection>;
-  defenceComponents?: Maybe<DefenceConnection>;
   gamecomponents?: Maybe<GameConnection>; 
-  nameComponents?: Maybe<NameConnection>;
-  balanceComponents?: Maybe<BalanceConnection>;
-  prosperityComponents?: Maybe<ProsperityConnection>;
+
+  gameEntityCounterComponents?: Maybe<GameEntityCounterConnection>;
+  gameTrackerComponents?: Maybe<GameTrackerConnection>;
+  gameComponents?: Maybe<GameConnection>;
+
+  outpostComponents?: Maybe<OutpostConnection>;
+  revenantComponents?: Maybe<RevenantConnection>;
+
   worldEventComponents?: Maybe<WorldEventConnection>;
-  ownershipComponents?: Maybe<OwnershipConnection>;
-  GameEntityCounterComponents?: Maybe<GameEntityCounterConnection>;
 
   system: System;
   systemCall: SystemCall;
@@ -363,40 +273,7 @@ export type QueryEventArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type QueryLifesComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
 
-export type QueryDefenceComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type QueryPositionComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type QueryNameComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type QueryBalanceComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
 
 export type QueryGameComponentsArgs = {
   after?: InputMaybe<Scalars["Cursor"]["input"]>;
@@ -412,20 +289,6 @@ export type QueryWorldEventComponentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
-export type QueryOwnershipComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type QueryProsperityComponentsArgs = {
-  after?: InputMaybe<Scalars["Cursor"]["input"]>;
-  before?: InputMaybe<Scalars["Cursor"]["input"]>;
-  first?: InputMaybe<Scalars["Int"]["input"]>;
-  last?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
 export type QueryGameEntityCounterComponentsArgs = {
   after?: InputMaybe<Scalars["Cursor"]["input"]>;
   before?: InputMaybe<Scalars["Cursor"]["input"]>;
@@ -433,6 +296,26 @@ export type QueryGameEntityCounterComponentsArgs = {
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type QueryGameTrackerComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QueryOutpostComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QueryRevenantComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 
 
@@ -500,16 +383,15 @@ export type GetEntitiesQuery = {
         __typename?: "Entity";
         keys?: string | null;
         components?: Array<
-          | { __typename: "Lifes"; count?: any | null }
-          | { __typename: "Position"; x?: any | null; y?: any | null }
-          | { __typename: "Defence"; plague?: any | null }
-          | { __typename: "Name"; value?: any | null }
-          | { __typename: "Balance"; value?: any | null }
-          | { __typename: "Prosperity"; value?: any | null }
-          | { __typename: "WorldEvent"; radius?: any | null; event_type?: any | null; block_number?: any | null }
+
+          | { __typename: "Revenant"; owner?: any | null; name?: any | null; outpost_count?: any | null; status?: any | null }
+          | { __typename: "Outpost"; owner?: any | null; name?: any | null; x?: any | null; y?: any | null; lifes?: any | null; status?: any | null }
+
+          | { __typename: "WorldEvent"; x?: any | null; y?: any | null; radius?: any | null }
+
+          | { __typename: "GameTracker"; count?: any | null}
           | { __typename: "Game"; start_time?: any | null; prize?: any | null; status?: any | null }
-          | { __typename: "Ownership"; address?: any | null}
-          | { __typename: "GameEntityCounter"; outpost_count?: any | null; event_count?: any | null}
+          | { __typename: "GameEntityCounter"; revenant_count?: any | null; outpost_count?: any | null; event_count?: any | null}
           | null
         > | null;
       } | null;
@@ -525,39 +407,35 @@ export const GetEntitiesDocument = gql`
           keys
           components {
             __typename
-            ... on Lifes {
-              count
+            ... on Revenant {
+              owner
+              name
+              outpost_count
+              status
             }
-            ... on Position {
+            ... on Outpost {
+              owner
+              name
               x
               y
-            }
-            ... on Defence {
-              plague
-            }
-            ... on Name {
-              value
-            }
-            ... on Balance {
-              value
-            }
-            ... on Prosperity {
-              value
+              lifes
+              status
             }
             ... on WorldEvent {
+              x
+              y
               radius
-              event_type
-              block_number
+            }
+            ... on GameTracker {
+              count
             }
             ... on Game {
               start_time
               prize
               status
             }
-            ... on Prosperity {
-              address
-            }
             ... on GameEntityCounter {
+              revenant_count
               outpost_count
               event_count
             }

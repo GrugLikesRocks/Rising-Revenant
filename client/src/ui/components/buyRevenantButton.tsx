@@ -1,8 +1,8 @@
 import { useEntityQuery } from "@latticexyz/react";
-import { Has, getComponentValue } from "@latticexyz/recs";
+import { Has, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { PhaserLayer } from "../../phaser";
 import { useDojo } from "../../hooks/useDojo";
-import { GAME_ID } from "../../phaser/constants";
+import { GAME_ID, currentGameId } from "../../phaser/constants";
 import { getEntityIdFromKeys } from "../../dojo/createSystemCalls";
 
 import "../../App.css";
@@ -11,12 +11,13 @@ import "../../App.css";
 
 type ExampleComponentProps = {
   layer: PhaserLayer;
+  timerPassed: boolean;
 };
 
-export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
+export const BuyRevenantButton = ({ layer,timerPassed }: ExampleComponentProps) => {
   const {
     networkLayer: {
-      components: { Game, GameEntityCounter },
+      components: {GameEntityCounter },
     },
   } = layer;
 
@@ -24,48 +25,42 @@ export const BuyRevenantButton = ({ layer }: ExampleComponentProps) => {
     account: { account },
     networkLayer: {
       systemCalls: {
-        create_game,
         create_outpost,
-        
-        set_world_event,
+        create_revenant,
       },
     },
   } = useDojo();
 
-  const gameEntities = useEntityQuery([Has(Game)]); // to delete
   const gameDataEntities = useEntityQuery([Has(GameEntityCounter)]); // to delete
 
-
-  let content;
-
-  if (gameDataEntities.length === 0 || gameEntities.length === 0) {
-    content = (
-      <div>
-        <button
-          className="buy-revenant-button"
-        >
-          No Game Detected
-        </button>
-      </div>
-    );
-  } else {
-    content = (
-      <div>
+  return (
+    <div>
+    <div className={` ${timerPassed ? "opaque-on" : "opaque-off"}`}>
         <button
           className="buy-revenant-button"
           onClick={() =>
             create_outpost(
               account,
               GAME_ID,
-               0
+              getComponentValueStrict(GameEntityCounter, gameDataEntities[0]).revenant_count
             )
           }
         >
           Buy an Outpost
         </button>
+        <button
+          className="buy-revenant-button"  
+          onClick={() =>
+            create_revenant(
+              account,
+              GAME_ID,
+              "name" + (1) as string, 
+            )
+          }
+        >
+          Buy a Revenant
+        </button>
       </div>
-    );
-  }
-
-  return <div>{content}</div>;
+    </div>
+  );
 };

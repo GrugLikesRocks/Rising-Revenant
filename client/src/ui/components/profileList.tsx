@@ -1,11 +1,12 @@
 import { useEntityQuery } from "@latticexyz/react";
 import {
   Has,
-  getComponentValue,
+  getComponentValueStrict,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
-import { useDojo } from "../../hooks/useDojo";
+import { userAccountAddress } from "../../phaser/constants";
+import { bigIntToHexWithPrefix } from "../../utils";
 
 type Props = {
   layer: PhaserLayer;
@@ -14,20 +15,21 @@ type Props = {
 export const OutpostList = ({ layer }: Props) => {
   const {
     networkLayer: {
-      components: { Defence },
+      components: { Outpost },
     },
   } = layer;
 
-  // const {
-  //   account: { account },
-  //   networkLayer: {
-  //     systemCalls: { reinforce_outpost },
-  //   },
-  // } = useDojo();
+  const entities = useEntityQuery([Has(Outpost)]);
 
-  const entities = useEntityQuery([Has(Defence)]);
 
-  if (entities.length === 0) {
+
+  const playerOutpostsOnly = entities.filter((entity) => {
+    const ownerAddressOfOutpost = getComponentValueStrict(Outpost, entity)?.owner;
+    console.log(ownerAddressOfOutpost)
+    return bigIntToHexWithPrefix(ownerAddressOfOutpost) === userAccountAddress;
+  });
+
+  if (playerOutpostsOnly.length === 0) {
     return (
       <div className="profile-datatable-container ">
       <span className="revenant-title">Your Revenants:</span>
@@ -66,14 +68,14 @@ export const OutpostList = ({ layer }: Props) => {
           <div className="fields-name">reinforcements</div>
         </div>
         <div className="elements-container">
-          {entities.map((entity, index) => (
+          {playerOutpostsOnly.map((entity, index) => (
             <div className="sub-element-container" key={index}>
               <div className="element-data">{entity}</div>
               <div className="center-element-data"> null
                
               </div>
               <div className="element-data">
-                {getComponentValue(Defence, entity)?.plague || 0}
+                {getComponentValueStrict(Outpost, entity)?.lifes}
               </div>
             </div>
           ))}

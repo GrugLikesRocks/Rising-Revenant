@@ -15,7 +15,7 @@ mod destroy_outpost {
     // This should remove lifes and defence from the entity
     // TODO: Check if the entity is within the radius of the current event
     // TODO: Send reward to destroy of outpost
-    fn execute(ctx: Context, game_id: u32, event_id: u128, outpost_id: u128) -> bool {
+    fn execute(ctx: Context, game_id: u32, event_id: u128, outpost_id: u128) {   //returns a bool here
         // Check if the game is active
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');

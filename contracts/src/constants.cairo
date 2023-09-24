@@ -1,1 +1,4 @@
 const GAME_CONFIG: felt252 = 999999999999999;
+
+const MAP_WIDTH: u32 = 10240;
+const MAP_HEIGHT: u32 = 5164;

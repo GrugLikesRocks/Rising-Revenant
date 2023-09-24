@@ -41,3 +41,65 @@ mod create_game {
         return (game_id);
     }
 }
+
+
+
+
+
+
+
+#[system]
+mod fetch_game_data {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::{Into, TryInto};
+    use dojo::world::Context;
+    use option::OptionTrait;
+
+    use RealmsRisingRevenant::components::Game;
+
+    fn execute(ctx: Context, game_id: u32 ) -> Game {
+        let game = get!(ctx.world, game_id, Game);
+        game
+    }
+}
+
+
+#[system]
+mod fetch_game_tracker_data {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::{Into, TryInto};
+    use dojo::world::Context;
+    use option::OptionTrait;
+
+    use RealmsRisingRevenant::components::GameTracker;
+
+    use RealmsRisingRevenant::constants::GAME_CONFIG;
+
+    fn execute(ctx: Context) -> GameTracker {
+        let game_tracker = get!(ctx.world, GAME_CONFIG, GameTracker);
+        game_tracker
+    }
+}
+
+
+
+#[system]
+mod fetch_game_entity_counter_data {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::{Into, TryInto};
+    use dojo::world::Context;
+    use option::OptionTrait;
+
+    use RealmsRisingRevenant::components::GameEntityCounter;
+
+    fn execute(ctx: Context, game_id: u32) -> GameEntityCounter {
+        let game_entity_counter = get!(ctx.world, game_id, GameEntityCounter);
+        game_entity_counter
+    }
+}
+
+
+

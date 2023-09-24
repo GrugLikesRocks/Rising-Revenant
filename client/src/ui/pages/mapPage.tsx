@@ -79,29 +79,23 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
       }
 
       if (newX !== prevX || newY !== prevY) {
-        // Call the function to set the new camera position
+
         set_camera_position_component(newX, newY);
 
-        // Update previous positions with the new ones
         prevX = newX;
         prevY = newY;
       }
-      // console.log(newX, newY);
-      // console.log(currentZoomValue);
-      // console.log("this is divided ", 1/currentZoomValue)
 
       animationFrameId = requestAnimationFrame(update);
     };
 
-    // Kick off the loop
     update();
 
-    // Cancel the animation frame when the component is unmounted
     return () => {
       cancelAnimationFrame(animationFrameId);
       zoomSubscription.unsubscribe();
     };
   }, [keysDown]);
 
-  return <div>{/* Your component content here */}</div>;
+  return <div>{}</div>;
 };

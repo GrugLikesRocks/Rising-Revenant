@@ -5,12 +5,15 @@ import {
   getComponentValueStrict,
   getComponentValue,
   EntityIndex,
+  setComponent,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { Assets } from "../constants";
 import { tooltipEvent, circleEvents } from "./eventSystems/eventEmitter";
+import { useDojo } from "../../hooks/useDojo";
+import { userAccountAddress, SCALE } from "../constants";
+import { bigIntToHexWithPrefix, floatToHex, fromFixed, toFixed } from "../../utils/index";
 
-const SCALE = 0.05;
 //scale should be a const
 
 export const spawnOutposts = (layer: PhaserLayer) => {
@@ -22,56 +25,61 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       Main: { objectPool },
     },
     networkLayer: {
-      components: {
-        Position,
-        Defence,
-        WorldEvent,
-        ClientClickPosition,
-        ClientCameraPosition,
-      },
+      components: { Outpost, ClientClickPosition, ClientCameraPosition, WorldEvent, ClientOutpostData },
     },
   } = layer;
+;
 
-  // start system called on the instantiation of an outpost
-  defineEnterSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {
+  // this is called on the instantiation of the outpost, here is where we set the texture
+  defineEnterSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
     const outpostObj = objectPool.get(entity, "Sprite");
 
-    if (!entities.includes(entity)) {
+    const outpostData = getComponentValueStrict(ClientOutpostData, entity);
+
+    if (!entities.includes(entity)) {  // need to find a way to either do a multi query similar to bevy function in rust or do a query for the outpost component
       entities.push(entity);
     }
 
     outpostObj.setComponent({
       id: "texture",
       once: (sprite) => {
-        sprite.setTexture(Assets.CastleHealthySelfAsset);
+        if (outpostData.owned) {
+          sprite.setTexture(Assets.CastleHealthySelfAsset);
+        } else {
+          sprite.setTexture(Assets.CastleHealthyEnemyAsset);
+        }
+
         sprite.scale = SCALE;
       },
     });
   });
 
-  defineSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {
-    const position = getComponentValueStrict(Position, entity);
+  // here is where we set the position of the outpost
+  defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
+    const position = getComponentValueStrict(Outpost, entity);
+
+    console.log("this is the position for the castle ", position.x, "  ", position.y);
 
     const player = objectPool.get(entity, "Sprite");
-
-    console.log("position for the castle", position);
 
     player.setComponent({
       id: "position",
       once: (sprite) => {
-        sprite.setPosition(position?.x, position?.y);
+        sprite.setPosition(position.x - sprite.width * SCALE, position.y - sprite.height * SCALE);
       },
     });
   });
 
-  //  comp for the center of the camera could be user here for effects, this is optional fully but is wrong anyway
-  //   defineSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {});
+  // the issue with checking for the interescetion of the circle is that we might be doing aabb but we just need the center of the sprite
 
-  defineSystem(world, [Has(WorldEvent), Has(Position)], ({ entity }) => {
+  // //  comp for the center of the camera could be user here for effects, this is optional fully but is wrong anyway
+  // //   defineSystem(world, [Has(Position), Has(Defence)], ({ entity }) => {});
+
+  defineSystem(world, [Has(WorldEvent)], ({ entity }) => {
     const dataEvent = getComponentValueStrict(WorldEvent, entity);
-    const dataEventPosition = getComponentValueStrict(Position, entity);
 
-    if (!dataEvent || !dataEventPosition) {
+
+    if (!dataEvent) {
       return;
     }
 
@@ -81,46 +89,64 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       return;
     }
 
-    let positionX = dataEventPosition.x;
-    let positionY = dataEventPosition.y;
+    let positionX = dataEvent.x;
+    let positionY = dataEvent.y;
 
-    console.log("should spawn circle with this data", dataEvent, dataEventPosition);
+    console.log("should spawn circle with this data", dataEvent);
 
-    circleEvents.emit("spawnCircle",dataEventPosition.x,dataEventPosition.y, dataEvent.radius);
+    circleEvents.emit("spawnCircle",dataEvent.x, dataEvent.y, dataEvent.radius);
     circleEvents.emit("setCircleState", true);
 
     for (let index = 0; index < entities.length; index++) {
       const entityId = entities[index];
+
+      console.log("these are all the entities id ", entityId);
+
+      const outpostData = getComponentValueStrict(ClientOutpostData, entity);
+
+      
+
       const playerObj = objectPool.get(entityId, "Sprite");
 
       playerObj.setComponent({
         id: "texture",
         once: (sprite) => {
-          const spriteCenterX = sprite.x + (sprite.width * sprite.scale) / 2;
-          const spriteCenterY = sprite.y + (sprite.height * sprite.scale) / 2;
 
           const distance = Math.sqrt(
-            (spriteCenterX - positionX) ** 2 + (spriteCenterY - positionY) ** 2
+            (sprite.x - positionX) ** 2 + (sprite.y - positionY) ** 2
           );
+
+          console.log("these are the coordinates for the castle ", sprite.x, "  ", sprite.y);
 
           if (distance <= radius) {
             sprite.setTexture(Assets.CastleDamagedAsset);
-          } else {
-            sprite.setTexture(Assets.CastleHealthySelfAsset);
+
+            setComponent(ClientOutpostData, entity, {id: outpostData.id, owned: outpostData.owned, event_effected: true})
+          } 
+          else 
+          {
+            if (outpostData.owned) {
+              sprite.setTexture(Assets.CastleHealthySelfAsset);
+            }
+            else {
+              sprite.setTexture(Assets.CastleHealthyEnemyAsset);
+            }
           }
         },
       });
     }
   });
 
-  // click checks for the ui tooltip
+
+  // Click checks for the ui tooltip
   defineSystem(world, [Has(ClientClickPosition)], ({ entity }) => {
     if (entities.length === 0) {
       return;
     }
 
     const positionClick = getComponentValueStrict(ClientClickPosition, entity);
-    const positionCenterCam = getComponentValueStrict(
+
+    const positionCenterCam = getComponentValueStrict(   // this errors out for some reason but doesnt break everything so this is low priority
       ClientCameraPosition,
       entity
     );
@@ -154,11 +180,13 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       });
 
       if (foundEntity) {
+        foundEntity = getComponentValueStrict(ClientOutpostData, element).id as EntityIndex;
         break;
       }
     }
 
     if (foundEntity) {
+
       tooltipEvent.emit(
         "spawnTooltip",
         positionClick.xFromOrigin,
@@ -166,6 +194,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
         foundEntity
       );
     } else {
+
       tooltipEvent.emit(
         "closeTooltip",
         true,

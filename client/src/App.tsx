@@ -18,6 +18,8 @@ function App() {
 
   }, [networkLayer]);
 
+
+
   return (
     <div>
       <PhaserLayer networkLayer={networkLayer} />

@@ -10,10 +10,13 @@ mod set_world_event {
     use RealmsRisingRevenant::components::GameEntityCounter;
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
+    use RealmsRisingRevenant::constants::MAP_WIDTH;
+    use RealmsRisingRevenant::constants::MAP_HEIGHT;
 
     use RealmsRisingRevenant::components::world_event::{INIT_RADIUS, WorldEvent};
     use RealmsRisingRevenant::utils::MAX_U32;
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+
 
     // This should remove lifes and defence from the entity
     // This should be very random, it can be called by anyone after the blocks have ticked
@@ -28,8 +31,8 @@ mod set_world_event {
         let entity_id: u128 = game_data.event_count.into();
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         let mut random = RandomImpl::new(seed);
-        let x = random.next_u32(0, 100);
-        let y = random.next_u32(0, 100);
+        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
+        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);
 
         // Radius increases when the previous world event does not cause damage.
         let mut radius: u32 = 0;
@@ -49,5 +52,36 @@ mod set_world_event {
         set!(ctx.world, (world_event, game_data));
 
         world_event
+    }
+}
+
+
+
+
+#[system]
+mod fetch_event_data {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::{Into, TryInto};
+    use dojo::world::Context;
+    use option::OptionTrait;
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::GameEntityCounter;
+
+    use RealmsRisingRevenant::constants::GAME_CONFIG;
+
+    use RealmsRisingRevenant::components::world_event::{INIT_RADIUS, WorldEvent};
+    use RealmsRisingRevenant::utils::MAX_U32;
+    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+
+    
+    fn execute(ctx: Context,game_id :u32, entity_id: u128) -> WorldEvent{
+        let game = get!(ctx.world, game_id, Game);
+        // check if the game has started
+        assert(game.status, 'game is not running');
+
+        let event = get!(ctx.world, (game_id,entity_id), WorldEvent);
+
+        event
     }
 }

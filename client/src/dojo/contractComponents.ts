@@ -5,13 +5,17 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Position: (() => {
-      const name = "Position";
+    Outpost: (() => {
+      const name = "Outpost";
       return defineComponent(
         world,
         {
+          owner: RecsType.String, // not too sure about this
+          name: RecsType.Number,
           x: RecsType.Number,
           y: RecsType.Number,
+          lifes: RecsType.Number,
+          status: RecsType.Number,
         },
         {
           metadata: {
@@ -21,88 +25,15 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    Defence: (() => {
-      const name = "Defence";
+    Revenant: (() => {
+      const name = "Revenant";
       return defineComponent(
         world,
         {
-          plague: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    Lifes: (() => {
-      const name = "Lifes";
-      return defineComponent(
-        world,
-        {
-          count: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    Name: (() => {
-      const name = "Name";
-      return defineComponent(
-        world,
-        {
-          value: RecsType.String,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    Prosperity: (() => {
-      const name = "Prosperity";
-      return defineComponent(
-        world,
-        {
-          value: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    GameEntityCounter: (() => {
-      const name = "GameEntityCounter";
-      return defineComponent(
-        world,
-        {
+          owner: RecsType.Number,
+          name: RecsType.Number,
           outpost_count: RecsType.Number,
-          event_count: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    Balance: (() => {
-      const name = "Balance";
-      return defineComponent(
-        world,
-        {
-          value: RecsType.Number,
+          status: RecsType.Number,
         },
         {
           metadata: {
@@ -117,9 +48,9 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          x: RecsType.Number,
+          y: RecsType.Number,
           radius: RecsType.Number,
-          event_type: RecsType.Number,
-          block_number: RecsType.Number,
         },
         {
           metadata: {
@@ -136,7 +67,7 @@ export function defineContractComponents(world: World) {
         {
           start_time: RecsType.Number,
           prize: RecsType.Number,
-          status: RecsType.Boolean,
+          status: RecsType.Number,
         },
         {
           metadata: {
@@ -161,12 +92,14 @@ export function defineContractComponents(world: World) {
       );
     })(),
 
-    Ownership: (() => {
-      const name = "Ownership";
+    GameEntityCounter: (() => {
+      const name = "GameEntityCounter";
       return defineComponent(
         world,
         {
-          address: RecsType.String,
+          revenant_count: RecsType.Number,
+          outpost_count: RecsType.Number,
+          event_count: RecsType.Number,
         },
         {
           metadata: {
@@ -203,6 +136,23 @@ export function defineContractComponents(world: World) {
 
           xFromMiddle: RecsType.Number,
           yFromMiddle: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+
+    ClientOutpostData: (() => {
+      const name = "ClientOutpostData";
+      return defineComponent(
+        world,
+        {
+          id : RecsType.Number,
+          owned: RecsType.Boolean,
+          event_effected: RecsType.Boolean,
         },
         {
           metadata: {

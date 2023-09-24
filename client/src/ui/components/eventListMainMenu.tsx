@@ -10,11 +10,13 @@ type Props = {
 export const EventList = ({ layer }: Props) => {
   const {
     networkLayer: {
-      components: { WorldEvent, Position },
+      components: { WorldEvent },
     },
   } = layer;
 
-  const entities = useEntityQuery([Has(WorldEvent), Has(Position)]);
+  const entities = useEntityQuery([Has(WorldEvent)]);
+
+  //get the current state of the game and deal with that
 
   if (entities.length === 0) {
     return (
@@ -30,7 +32,7 @@ export const EventList = ({ layer }: Props) => {
     <div>
       <ul className="main-menu-event-feed-list-element">
         {entities.map((item, index) => (
-          <li key={index}>Event at x:{getComponentValue(Position, item)?.x || "null"} y:{getComponentValue(Position, item)?.y || "null"}, radius: {getComponentValue(WorldEvent, item)?.radius || "null"}</li>
+          <li key={index}>Event at x:{getComponentValue(WorldEvent, item)?.x || "null"} y:{getComponentValue(WorldEvent, item)?.y || "null"}, radius: {getComponentValue(WorldEvent, item)?.radius || "null"}</li>
         ))}
       </ul>
     </div>

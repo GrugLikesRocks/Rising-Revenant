@@ -27,8 +27,31 @@ mod create_revenant {
             outpost_count: 0,
             status: RevenantStatus::started
         };
-        set!(ctx.world, (revenant));
+        set!(ctx.world, (revenant, game_data));
 
         entity_id
+    }
+}
+
+
+
+#[system]
+mod fetch_revenant_data {
+       use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::Into;
+    use dojo::world::Context;
+
+    use RealmsRisingRevenant::components::{Game, GameEntityCounter};
+    use RealmsRisingRevenant::components::revenant::{Revenant, RevenantStatus};
+
+    fn execute(ctx: Context,game_id :u32, entity_id: u128) -> Revenant{
+        let game = get!(ctx.world, game_id, Game);
+        // check if the game has started
+        assert(game.status, 'game is not running');
+
+        let revenant = get!(ctx.world, (game_id,entity_id), Revenant);
+
+        revenant
     }
 }

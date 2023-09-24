@@ -100,7 +100,6 @@ export const MainMenuComponent = ({
         await fetch_full_game_data(account); //call the join function that should fetch all the components
 
         if (gameDataEntitiesRef.current.length >= 1) {   // check if the component exixts in the client with the ref from above
-          console.log("Game Entity found and game joined: ", currentGameId);
           actionSucceeded = true;   // true to break out of loop
           setShowErrorMessage(false); // set the error message to false
           setShowSuccessMessage(true); // set the success message to true

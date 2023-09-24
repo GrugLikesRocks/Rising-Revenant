@@ -65,7 +65,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     player.setComponent({
       id: "position",
       once: (sprite) => {
-        sprite.setPosition(position.x - sprite.width * SCALE, position.y - sprite.height * SCALE);
+        sprite.setPosition(position.x - (sprite.width * SCALE)/2, position.y - (sprite.height * SCALE)/2);
       },
     });
   });
@@ -103,8 +103,6 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       console.log("these are all the entities id ", entityId);
 
       const outpostData = getComponentValueStrict(ClientOutpostData, entity);
-
-      
 
       const playerObj = objectPool.get(entityId, "Sprite");
 

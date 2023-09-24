@@ -186,11 +186,10 @@ export const ToolTipData = ({ layer }: Props) => {
       {isOwner && 
       (
       <ClickWrapper>
-
-        
         <button
           className="tooltip-button-in-game"
           onClick={() => {
+
             destroy_outpost(account, currentGameId, getComponentValueStrict(GameEntityCounter,currentGameId).event_count, outpostEntityVal);
           }}>
 

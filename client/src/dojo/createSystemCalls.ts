@@ -192,6 +192,13 @@ export function createSystemCalls(
       let keys_amount = 1;
 
       const gameTrackerUUID = uuid();
+
+      let something = Number(txGameTracker[0 + keys_amount]);
+
+      if (something === 0) {
+        return;
+      }
+
       setCurrentGameId(Number(txGameTracker[0 + keys_amount]));
 
       GameTracker.addOverride(gameTrackerUUID, {
@@ -466,7 +473,7 @@ export function createSystemCalls(
 
       const eventUUID = uuid();
 
-      let keys_amount = 1;
+      let keys_amount = 2;
 
       WorldEvent.addOverride(eventUUID, {
         entity: eventId,
@@ -474,6 +481,7 @@ export function createSystemCalls(
           x: tx[0 + keys_amount],
           y: tx[1 + keys_amount],
           radius: tx[2 + keys_amount],
+          destroy_count: tx[3 + keys_amount],
         },
       });
     } catch (e) {

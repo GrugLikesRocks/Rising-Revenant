@@ -51,6 +51,7 @@ export function defineContractComponents(world: World) {
           x: RecsType.Number,
           y: RecsType.Number,
           radius: RecsType.Number,
+          destroy_count: RecsType.Number,
         },
         {
           metadata: {

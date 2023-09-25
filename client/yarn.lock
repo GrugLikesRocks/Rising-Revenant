@@ -1392,10 +1392,10 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@dojoengine/core@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.15.tgz#d8fa1875af2c79e3d85d3df68007ff01d47a2581"
-  integrity sha512-P4Qf7tKvleSW2FX2eatmicJr3RC+lot+S4BFthDmGsx+F2ou2W9IYaa0p5jVb+e1FpXk3uAMDwuUhKngAtczPw==
+"@dojoengine/core@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.17.tgz#f47b1e50d6e76bd52714edb4fbfe4fdfc5351ddd"
+  integrity sha512-e2p+UQ6lRIS9YJOQa1D0vlydtwKA9w4g+bzWisj4Q2K9hTy5Rq9E6JeNCsPGRigWQYTFszisVYwt/LU89ZCObA==
 
 "@dojoengine/create-burner@^0.0.3":
   version "0.0.3"

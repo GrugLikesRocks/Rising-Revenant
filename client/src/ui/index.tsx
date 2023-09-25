@@ -1,53 +1,18 @@
 import { store } from "../store/store";
 import { Wrapper } from "./wrapper";
 
-import { Navbar, MenuState } from "./components/navbar";
+import { MenuState } from "./components/navbar";
 import React, { useState, useEffect } from "react";
 
-import { MainReactComp } from "./pages/mainPage";
-import { RulesReactComp } from "./pages/rulesPage";
-import { StatsReactComp } from "./pages/statsPage";
-import { TradesReactComp } from "./pages/tradesPage";
-import { ProfilePage } from "./pages/profilePage";
-import { MapReactComp } from "./pages/mapPage";
+import { menuEvents, tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
 
-import { ToolTipData } from "./components/outpostToolTip";
-import {CircleEvent} from "./components/eventCircle";
+import "../App.css";
 
-import { tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
+import { MainMenuComponent } from "./components/mainMenuComponent";
 
-interface UIProps {
-  menuState?: MenuState;
-  setMenuState?: React.Dispatch<React.SetStateAction<MenuState>>;
-}
-
-// this state passing thing needs to be changed to an event if thats a thing
-export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenuState }: UIProps) => {
-  const [internalMenuState, internalSetMenuState] = useState<MenuState>(MenuState.MAIN);
-  const [opacity, setOpacity] = useState(1); // New State for opacity
-  
-
-  useEffect(() => {
-    if (externalMenuState !== undefined) {
-      internalSetMenuState(externalMenuState);
-    }
-  }, [externalMenuState]);
-
-  const actualSetMenuState = externalSetMenuState || internalSetMenuState;
-  const actualMenuState = externalMenuState !== undefined ? externalMenuState : internalMenuState;
-  
-  useEffect(() => {
-    
-    if (actualMenuState !== MenuState.MAP) {
-      setOpacity(0.85);
-      
-      tooltipEvent.emit("closeTooltip", false);
-
-    } else {
-      setOpacity(0);
-    }
-  }, [actualMenuState]);
-  
+export const UI = () => {
+  const [opacity, setOpacity] = useState(1);
+  const [menuState, setMenuState] = useState<MenuState>(MenuState.MAIN);
 
   const layers = store((state) => {
     return {
@@ -56,48 +21,38 @@ export const UI = ({ menuState: externalMenuState, setMenuState: externalSetMenu
     };
   });
 
+  const SetMenuState = (state: MenuState) => {
+    console.log("called state change for menu", state);
+    setMenuState(state);
+  };
+
+  //opacity control based on menu state
+  useEffect(() => {
+    if (menuState !== MenuState.MAP) {
+      setOpacity(0.85);
+
+      tooltipEvent.emit("closeTooltip", false);
+    } else {
+      setOpacity(0);
+    }
+
+    menuEvents.on("setMenuState", SetMenuState);
+
+    return () => {
+      menuEvents.off("setMenuState", SetMenuState);
+    };
+  }, [menuState]);
+
   if (!layers.networkLayer || !layers.phaserLayer) return <></>;
 
   return (
     <Wrapper>
-      <div className="phaser-fadeout-background" style={{ opacity: opacity }}></div>
-      <div className="main-menu-container">
-        <div className="top-menu-container">
-          <div className="game-initials-menu">
-          <div className="game-initials-menu-image-background">
-            <div className="game-initials-menu-image"></div>
-          </div>
-          </div>
-          <div className="game-title-menu">
-            <div className="game-title-menu-text"></div>
-          </div>
-          <button className="connect-button-menu">Connect</button>
-        </div>
-        <div className="navbar-container">
-          <Navbar
-            menuState={actualMenuState}
-            setMenuState={actualSetMenuState}
-            layer={layers.phaserLayer}
-          />
-        </div>
-        <div className="page-container">
-          {actualMenuState === MenuState.MAIN && (
-            <MainReactComp layer={layers.phaserLayer} />
-          )}
-          {actualMenuState === MenuState.MAP && <MapReactComp layer={layers.phaserLayer} />}
-          {actualMenuState === MenuState.TRADES && <TradesReactComp />}
-          {actualMenuState === MenuState.PROFILE && (
-            <ProfilePage layer={layers.phaserLayer} />
-          )}
-          {actualMenuState === MenuState.STATS && <StatsReactComp />}
-          {actualMenuState === MenuState.RULES && <RulesReactComp />}
-        </div>
+      <div
+        className="phaser-fadeout-background"
+        style={{ opacity: opacity }}
+      ></div>
 
-        <ToolTipData layer={layers.phaserLayer} />
-        <CircleEvent layer={layers.phaserLayer} />
-        {/* <CircleOutline layer = {layers.phaserLayer} /> */}
-
-      </div>
+      <MainMenuComponent layer={layers.phaserLayer} />
     </Wrapper>
   );
 };

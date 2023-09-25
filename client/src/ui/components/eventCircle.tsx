@@ -89,7 +89,7 @@ export const CircleEvent = ({ layer }: Props) =>{
   const spawnCircle = (x: number, y: number, radius:number) => 
   {
     setRadius(radius);
-    setWorldPos({ x, y });
+    setWorldPos({ x: x-radius, y: y-radius });
     setIsVisible(true);
   } 
 
@@ -106,8 +106,8 @@ export const CircleEvent = ({ layer }: Props) =>{
     width: `${radius * 2}px`,
     height: `${radius * 2}px`,
     borderRadius: "50%",
-    border: '2px solid red', // Outline in red
-    backgroundColor: 'transparent', // No fill
+    border: '2px solid red', 
+    backgroundColor: 'transparent', 
     zIndex: '-2'
   };
   

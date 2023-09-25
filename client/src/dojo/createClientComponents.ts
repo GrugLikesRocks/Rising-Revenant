@@ -7,21 +7,19 @@ export type ClientComponents = ReturnType<typeof createClientComponents>;
 export function createClientComponents({ contractComponents }: SetupNetworkResult) {
     return {
         ...contractComponents,
-        Position: overridableComponent(contractComponents.Position),
-        Defence: overridableComponent(contractComponents.Defence),
-        Lifes: overridableComponent(contractComponents.Lifes),
-        Prosperity : overridableComponent(contractComponents.Prosperity),
-        Name: overridableComponent(contractComponents.Name),
-        Balance: overridableComponent(contractComponents.Balance),
+        
+
+        Outpost: overridableComponent(contractComponents.Outpost),
+        Revenant: overridableComponent(contractComponents.Revenant),
         Game: overridableComponent(contractComponents.Game),
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
-        Ownership: overridableComponent(contractComponents.Ownership),
         GameTracker: overridableComponent(contractComponents.GameTracker),
         GameEntityCounter : overridableComponent(contractComponents.GameEntityCounter),
 
         //should not be here
         ClientClickPosition : overridableComponent(contractComponents.ClientClickPosition),
         ClientCameraPosition : overridableComponent(contractComponents.ClientCameraPosition),
+        ClientOutpostData : overridableComponent(contractComponents.ClientOutpostData),
         
     };
 }

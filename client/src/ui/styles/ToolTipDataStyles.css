@@ -1,4 +1,4 @@
-.tooltip-container {
+.tooltip-container-in-game {
   position: absolute;
   z-index: -1;
   background-color: #0000009f;
@@ -7,14 +7,14 @@
   font-family: revenant_text_font_two;
 }
 
-.text-box {
+.tooltip-text-box-in-game {
   margin-bottom: 10px;
   padding: 5px;
   font-size: 20px;
   color: white;
 }
 
-.optional-button {
+.tooltip-button-in-game {
   background-color: rgb(148, 75, 56);
   color: #fff;
   border: none;
@@ -22,13 +22,4 @@
   padding: 8px;
   cursor: pointer;
   /* transition: background-color 0.3s ease; */
-}
-
-.close-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: red;
-  color: white;
-  cursor: pointer;
 }

@@ -95,7 +95,6 @@
 }
 
 
-
 .game-initials-menu,
 .game-title-menu,
 .main-menu-navbar-container {
@@ -121,6 +120,60 @@
 .connect-button-menu:hover {
   cursor: pointer;
 }
+
+
+
+
+.tooltip-container-connect-button
+{
+  position: absolute;
+  top: 5%;
+  width: 12%;
+  height: 15%;
+  background-color: aqua;
+  display: flex;
+  align-items: center;
+  z-index: 99;
+  flex-direction: column;
+}
+
+.tooltip-element-container-connect-button
+{
+  width: 100%;
+  height: 20%;
+  margin: 2%;
+  background-color: rgb(255, 81, 0);
+
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  /* justify-self: center;   */
+}
+
+
+.tooltip-element-picture-connect-button
+{
+  margin: 5%;
+  width: 20%;
+  height: 80%;
+  
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.tooltip-element-text-connect-button
+{
+  margin: 5%;
+  width: 60%;
+  height: 80%;
+
+  background-color: rgba(177, 224, 5, 0.7);
+  text-align: center;
+}
+
+
+
+
+
 
 .main-menu-navbar-container {
   display: flex;
@@ -183,3 +236,41 @@
   transition: opacity 0.3s ease;
   backdrop-filter: blur(30px);    
 }
+
+
+
+
+
+
+.Application {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.2s ease-in-out;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Black overlay with some transparency */
+  z-index: 10;
+}
+
+.grey-scale-on
+{
+  filter: grayscale(100%);
+}
+
+.grey-scale-off
+{
+  filter: grayscale(0%);
+}
+
+.content {
+  z-index: 2;
+}
+

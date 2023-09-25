@@ -1,4 +1,4 @@
-import { Has, defineEnterSystem} from "@latticexyz/recs";
+import { Has, defineEnterSystem,defineSystem, getComponentValueStrict} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
 import { Assets } from "../constants";
@@ -11,7 +11,7 @@ export const mapSpawn = (layer: PhaserLayer) => {
             Main: { objectPool, camera},
         },
         networkLayer: {
-            components: { Game }
+            components: { Game, GameEntityCounter }
         },
     } = layer;
 
@@ -31,4 +31,12 @@ export const mapSpawn = (layer: PhaserLayer) => {
         });
     });
 
+
+    defineSystem(world, [Has(GameEntityCounter)], ({ entity }) => {
+        
+        const playerObj = getComponentValueStrict(GameEntityCounter,entity)
+
+        console.log("this is the define system", playerObj);
+
+    });
 };

@@ -1,43 +1,39 @@
-  query getEntities {
+ query getEntities {
     entities(keys: ["%"]) {
       edges {
         node {
           keys
           components {
             __typename
-            ... on Lifes {
-              count
+            ... on Revenant {
+              owner
+              name
+              outpost_count
+              status
             }
-            ... on Position {
+            ... on Outpost {
+              owner
+              name
               x
               y
-            }
-            ... on Defence {
-              plague
-            }
-            ... on Name {
-              value
-            }
-            ... on Balance {
-              value
-            }
-            ... on Prosperity {
-              value
+              lifes
+              status
             }
             ... on WorldEvent {
+              x
+              y
               radius
-              event_type
-              block_number
+            }
+            ... on GameTracker {
+              count
             }
             ... on Game {
               start_time
               prize
               status
             }
-            ... on Prosperity {
-              address
-            }
             ... on GameEntityCounter {
+              revenant_count
               outpost_count
               event_count
             }

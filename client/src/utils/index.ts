@@ -5,7 +5,6 @@ export const PRIME: bigint = 361850278866613121369732278309507010562310721533159
 export const PRIME_HALF: bigint = PRIME / 2n;
 
 
-
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
 }
@@ -37,7 +36,6 @@ export function hexToAscii(hex: string) {
     }
     return str;
   }
-
 
 export const toFelt = (num: number | bigint): bigint => BigInt(num);
 
@@ -78,3 +76,31 @@ export class Fixed {
     }
 }
 
+
+///////////////////////////////////////////////////
+//THESE ARE ALL TO CHECK AND MAYBE REMOVE LATER
+
+export function bigIntToHexAndAscii(value: bigint): string {
+    const hexString = value.toString(16);
+    let asciiString = '';
+  
+    for (let i = 0; i < hexString.length; i += 2) {
+      const hexChar = hexString.substr(i, 2);
+      const decimalValue = parseInt(hexChar, 16);
+      asciiString += String.fromCharCode(decimalValue);
+    }
+  
+    return asciiString;
+  }
+  
+  export function bigIntToHexWithPrefix(value: bigint | number): string {
+    const hexString = `0x${value.toString(16)}`;
+    return hexString;
+  }
+  
+
+  export function floatToHex(floatingPointNumber: number): string {
+    const bigIntValue = BigInt(Math.round(floatingPointNumber));
+    const hexString = `0x${bigIntValue.toString(16)}`;
+    return hexString;
+  }

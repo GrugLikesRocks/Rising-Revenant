@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde)]
+#[derive(Component, Copy, Drop, Serde,SerdeLen)]
 struct WorldEvent {
     #[key]
     game_id: u32,
@@ -12,7 +12,8 @@ struct WorldEvent {
     y: u32,
     radius: u32,
     // How many outpost has been destroyed by this event
-    destroy_count: u32
+    destroy_count: u32,
+    block_number:u64
 }
 
 const INIT_RADIUS: u32 = 5;

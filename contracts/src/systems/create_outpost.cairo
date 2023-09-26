@@ -9,28 +9,21 @@ mod create_outpost {
     use RealmsRisingRevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use RealmsRisingRevenant::components::revenant::{
-        Revenant, RevenantStatus, RevenantImpl, RevenantTrait};
 
     use RealmsRisingRevenant::constants::MAP_WIDTH;
     use RealmsRisingRevenant::constants::MAP_HEIGHT;
-
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
-
     use RealmsRisingRevenant::components::GameEntityCounter;
 
     // this will create a newoutpost at a random coordinate
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context, game_id: u32, revenant_id: u128) -> u128 {
+    fn execute(ctx: Context, game_id: u32, name: felt252) -> u128 {
         let (game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
         // check if the game has started
         assert(game.status, 'game is not running');
 
-        let mut revenant = get!(ctx.world, (game_id, revenant_id), Revenant);
-        revenant.assert_can_create_outpost();
-
         game_data.outpost_count += 1;
-        revenant.outpost_count = revenant.outpost_count + 1;
+ 
 
         let entity_id: u128 = game_data.outpost_count.into();
 
@@ -46,18 +39,16 @@ mod create_outpost {
             x,
             y,
             owner: ctx.origin,
-            name: 'Outpost',
+            name: name,
             lifes: 5,
             status: OutpostStatus::created
         };
 
-        set!(ctx.world, (revenant, outpost, game_data));
+        set!(ctx.world, (outpost, game_data));
 
         entity_id
     }
 }
-
-
 
 
 
@@ -73,9 +64,7 @@ mod fetch_outpost_data {
     use RealmsRisingRevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use RealmsRisingRevenant::components::revenant::{
-        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
-    };
+
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
 
     use RealmsRisingRevenant::components::GameEntityCounter;

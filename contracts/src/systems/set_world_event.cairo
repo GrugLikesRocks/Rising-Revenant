@@ -9,9 +9,12 @@ mod set_world_event {
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::GameEntityCounter;
 
-    use RealmsRisingRevenant::constants::GAME_CONFIG;
+
+    use RealmsRisingRevenant::constants::EVENT_BLOCK_INTERVAL;
+
     use RealmsRisingRevenant::constants::MAP_WIDTH;
     use RealmsRisingRevenant::constants::MAP_HEIGHT;
+
 
     use RealmsRisingRevenant::components::world_event::{INIT_RADIUS, WorldEvent};
     use RealmsRisingRevenant::utils::MAX_U32;
@@ -30,6 +33,7 @@ mod set_world_event {
 
         let entity_id: u128 = game_data.event_count.into();
         let seed = starknet::get_tx_info().unbox().transaction_hash;
+        let block_number =  starknet::get_block_info().unbox().block_number;
         let mut random = RandomImpl::new(seed);
         let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
         let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);
@@ -40,6 +44,10 @@ mod set_world_event {
             radius = INIT_RADIUS;
         } else {
             let prev_world_event = get!(ctx.world, (game_id, entity_id - 1), WorldEvent);
+
+            assert((block_number - prev_world_event.block_number  ) > EVENT_BLOCK_INTERVAL , 'event occur interval too small');
+            
+
             if prev_world_event.destroy_count == 0 && prev_world_event.radius < MAX_U32 {
                 radius = prev_world_event.radius + 1;
             } else {
@@ -47,7 +55,8 @@ mod set_world_event {
             }
         }
 
-        let world_event = WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0 };
+      
+        let world_event = WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0, block_number };
 
         set!(ctx.world, (world_event, game_data));
 

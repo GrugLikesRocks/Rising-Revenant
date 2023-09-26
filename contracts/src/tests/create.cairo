@@ -19,14 +19,12 @@ mod tests {
     use RealmsRisingRevenant::components::outpost::{
         outpost, Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use RealmsRisingRevenant::components::revenant::{
-        revenant, Revenant, RevenantStatus, RevenantImpl, RevenantTrait
-    };
+
     use RealmsRisingRevenant::components::world_event::{world_event, WorldEvent, INIT_RADIUS};
 
     // systems
     use RealmsRisingRevenant::systems::create::create_game;
-    use RealmsRisingRevenant::systems::create_revenant::create_revenant;
+
     use RealmsRisingRevenant::systems::create_outpost::create_outpost;
     use RealmsRisingRevenant::systems::reinforce_outpost::reinforce_outpost;
     use RealmsRisingRevenant::systems::set_world_event::set_world_event;
@@ -41,14 +39,14 @@ mod tests {
             game::TEST_CLASS_HASH,
             game_tracker::TEST_CLASS_HASH,
             outpost::TEST_CLASS_HASH,
-            revenant::TEST_CLASS_HASH,
+   
             world_event::TEST_CLASS_HASH
         ];
 
         // systems
         let mut systems = array![
             create_game::TEST_CLASS_HASH,
-            create_revenant::TEST_CLASS_HASH,
+       
             create_outpost::TEST_CLASS_HASH,
             reinforce_outpost::TEST_CLASS_HASH,
             set_world_event::TEST_CLASS_HASH,
@@ -67,25 +65,14 @@ mod tests {
         (world, game_id, caller.into())
     }
 
-    fn create_starter_revenant() -> (IWorldDispatcher, u32, felt252, u128) {
+    fn create_starter_outpost() -> (IWorldDispatcher, u32, felt252, u128) {
         let (world, game_id, caller) = mock_game();
 
         let mut array = array![
             game_id.into(), 5937281861773520500
         ]; // 5937281861773520500 => 'Revenant'
-        let mut res = world.execute('create_revenant'.into(), array);
-        let revenant_id = serde::Serde::<u128>::deserialize(ref res)
-            .expect('id deserialization fail');
 
-        (world, game_id, caller, revenant_id)
-    }
 
-    fn create_starter_outpost() -> (IWorldDispatcher, u32, felt252, u128) {
-        let (world, game_id, caller) = mock_game();
-
-        let (world, game_id, caller, revenant_id) = create_starter_revenant();
-
-        let mut array = array![game_id.into(), revenant_id.into()];
         let mut res = world.execute('create_outpost'.into(), array);
         let outpost_id = serde::Serde::<u128>::deserialize(ref res)
             .expect('id deserialization fail');
@@ -98,11 +85,6 @@ mod tests {
         let (world, _, _) = mock_game();
     }
 
-    #[test]
-    #[available_gas(3000000000)]
-    fn test_create_revenant() {
-        let (world, game_id, caller, revenant_id) = create_starter_revenant();
-    }
 
     #[test]
     #[available_gas(3000000000)]
@@ -128,7 +110,7 @@ mod tests {
                 'Outpost'.into(),
                 compound_key_array.span(),
                 0,
-                dojo::StorageSize::<Outpost>::unpacked_size()
+                dojo::SerdeLen::<Outpost>::len()
             );
         assert(*outpost[4] == 6, 'life value is wrong');
     }
@@ -171,7 +153,7 @@ mod tests {
                 'Outpost'.into(),
                 compound_key_array.span(),
                 0,
-                dojo::StorageSize::<Outpost>::unpacked_size()
+                dojo::SerdeLen::<Outpost>::len()
             );
 
         if destoryed {

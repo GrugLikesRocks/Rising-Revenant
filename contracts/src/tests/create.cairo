@@ -128,7 +128,7 @@ mod tests {
                 'Outpost'.into(),
                 compound_key_array.span(),
                 0,
-                dojo::StorageSize::<Outpost>::unpacked_size()
+                dojo::SerdeLen::<Outpost>::len()
             );
         assert(*outpost[4] == 6, 'life value is wrong');
     }
@@ -171,7 +171,7 @@ mod tests {
                 'Outpost'.into(),
                 compound_key_array.span(),
                 0,
-                dojo::StorageSize::<Outpost>::unpacked_size()
+                dojo::SerdeLen::<Outpost>::len()
             );
 
         if destoryed {

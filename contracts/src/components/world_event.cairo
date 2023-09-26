@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde)]
+#[derive(Component, Copy, Drop, Serde,SerdeLen)]
 struct WorldEvent {
     #[key]
     game_id: u32,

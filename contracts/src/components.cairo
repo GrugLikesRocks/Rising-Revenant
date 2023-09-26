@@ -1,5 +1,4 @@
 mod outpost;
-mod revenant;
 mod world_event;
 
 #[derive(Component, Copy, Drop, Serde,SerdeLen)]

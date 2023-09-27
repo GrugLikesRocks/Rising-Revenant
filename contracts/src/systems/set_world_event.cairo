@@ -59,7 +59,7 @@ mod set_world_event {
                 radius = prev_world_event.radius;
             }
         }
-
+        
       
         let world_event = WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0, block_number };
 

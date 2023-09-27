@@ -30,3 +30,14 @@ struct GameEntityCounter {
     outpost_count: u32,
     event_count: u32
 }
+
+
+// This will track the outpost destroied by each event
+#[derive(Component, Copy, Drop, Serde,SerdeLen)]
+struct WorldEventTracker {
+    #[key]
+    game_id: u32, 
+    #[key]
+    event_id: u128,
+    outpost_id: u128
+}

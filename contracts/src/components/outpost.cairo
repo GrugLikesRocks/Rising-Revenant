@@ -11,7 +11,8 @@ struct Outpost {
     x: u32,
     y: u32,
     lifes: u32,
-    status: u32
+    status: u32,
+    last_affect_event_id: u128,
 }
 
 mod OutpostStatus {

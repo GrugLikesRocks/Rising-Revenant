@@ -46,7 +46,8 @@ mod create_outpost {
             owner: ctx.origin,
             name: name,
             lifes: 5,
-            status: OutpostStatus::created
+            status: OutpostStatus::created,
+            last_affect_event_id: 0
         };
 
         set!(ctx.world, (outpost, game_data));

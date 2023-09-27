@@ -6,6 +6,7 @@ mod destroy_outpost {
     use dojo::world::Context;
 
     use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::WorldEventTracker;
     use RealmsRisingRevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
@@ -27,6 +28,8 @@ mod destroy_outpost {
         let mut outpost = get!(ctx.world, (game_id, outpost_id), Outpost);
         outpost.assert_existed();
 
+        assert(outpost.last_affect_event_id != world_event.entity_id , "outpost affected by same event');
+
         // check if within radius of event -> revert if not
         let distance = utils::calculate_distance(
             world_event.x, world_event.y, outpost.x, outpost.y, 100
@@ -37,7 +40,15 @@ mod destroy_outpost {
 
         // update lifes
         outpost.lifes -= 1;
+        outpost.last_affect_event_id = world_event.entity_id;
         world_event.destroy_count += 1;
+
+        let WorldEventTrack = WorldEventTracker {
+            game_id,
+            event_id: world_event.entity_id,
+            outpost_id: outpost.entity_id
+        };
+
 
         set!(ctx.world, (outpost, world_event));
 

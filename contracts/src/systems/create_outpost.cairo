@@ -15,6 +15,8 @@ mod create_outpost {
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
     use RealmsRisingRevenant::components::GameEntityCounter;
 
+    use RealmsRisingRevenant::constants::PREPARE_PHRASE_INTERVAL;
+
     // this will create a newoutpost at a random coordinate
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, game_id: u32, name: felt252) -> u128 {
@@ -22,6 +24,9 @@ mod create_outpost {
         // check if the game has started
         assert(game.status, 'game is not running');
 
+        let block_number =  starknet::get_block_info().unbox().block_number;
+
+        assert((block_number - game.start_block_number  ) > PREPARE_PHRASE_INTERVAL , 'game not start');
         game_data.outpost_count += 1;
  
 

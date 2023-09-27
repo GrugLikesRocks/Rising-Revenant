@@ -72,7 +72,6 @@ mod tests {
             game_id.into(), 5937281861773520500
         ]; // 5937281861773520500 => 'Revenant'
 
-
         let mut res = world.execute('create_outpost'.into(), array);
         let outpost_id = serde::Serde::<u128>::deserialize(ref res)
             .expect('id deserialization fail');

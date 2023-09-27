@@ -21,12 +21,12 @@ mod create_game {
     fn execute(ctx: Context) -> u32 {
         let mut game_tracker = get!(ctx.world, (GAME_CONFIG), GameTracker);
         let game_id = game_tracker.count + 1; // game id increment
-
-        let start_time = 0; // blocknumber
+     
+        let start_block_number = starknet::get_block_info().unbox().block_number; // blocknumber
         let prize = 0; // total prize
         let status = true; // game status
 
-        set!(ctx.world, (Game { game_id, start_time, prize, status }));
+        set!(ctx.world, (Game { game_id, start_block_number, prize, status }));
 
         set!(
             ctx.world,

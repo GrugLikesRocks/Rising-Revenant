@@ -11,7 +11,7 @@ mod set_world_event {
 
 
     use RealmsRisingRevenant::constants::EVENT_BLOCK_INTERVAL;
-
+    use RealmsRisingRevenant::constants::PREPARE_PHRASE_INTERVAL;
     use RealmsRisingRevenant::constants::MAP_WIDTH;
     use RealmsRisingRevenant::constants::MAP_HEIGHT;
 
@@ -28,12 +28,17 @@ mod set_world_event {
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
 
+        let block_number =  starknet::get_block_info().unbox().block_number;
+        assert((block_number - game.start_block_number  ) > PREPARE_PHRASE_INTERVAL , 'game not start');
+
         let mut game_data = get!(ctx.world, game_id, GameEntityCounter);
         game_data.event_count += 1;
 
+      
+
         let entity_id: u128 = game_data.event_count.into();
         let seed = starknet::get_tx_info().unbox().transaction_hash;
-        let block_number =  starknet::get_block_info().unbox().block_number;
+        
         let mut random = RandomImpl::new(seed);
         let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
         let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);

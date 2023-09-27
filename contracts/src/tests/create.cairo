@@ -178,9 +178,9 @@ mod tests {
             );
 
         if destoryed {
-            assert(*outpost[4] == 4, 'life value is wrong');
+            assert(outpost.life == 4, 'life value is wrong');
         } else {
-            assert(*outpost[4] == 5, 'life value is wrong');
+            assert(outpost.life == 5, 'life value is wrong');
         }
 
         // Check the next world event's radius

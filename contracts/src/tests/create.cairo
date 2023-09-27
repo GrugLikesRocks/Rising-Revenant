@@ -71,8 +71,7 @@ mod tests {
         let mut array = array![
             game_id.into(), 5937281861773520500
         ]; // 5937281861773520500 => 'Revenant'
-
-
+        starknet::testing::set_block_number(5_u64);
         let mut res = world.execute('create_outpost'.into(), array);
         let outpost_id = serde::Serde::<u128>::deserialize(ref res)
             .expect('id deserialization fail');
@@ -118,6 +117,7 @@ mod tests {
     #[available_gas(3000000000)]
     fn test_set_world_event() {
         let (world, game_id, _) = mock_game();
+        starknet::testing::set_block_number(5_u64);
         let mut event = world.execute('set_world_event'.into(), array![game_id.into()]);
 
         let world_event = serde::Serde::<WorldEvent>::deserialize(ref event)

@@ -5,7 +5,7 @@ mod world_event;
 struct Game {
     #[key]
     game_id: u32, // increment
-    start_time: u64,
+    start_block_number: u64,
     prize: u32,
     status: bool
 }

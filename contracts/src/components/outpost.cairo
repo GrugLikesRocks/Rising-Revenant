@@ -7,7 +7,7 @@ struct Outpost {
     #[key]
     entity_id: u128,
     owner: ContractAddress,
-    name: felt252,
+    name: u128,
     x: u32,
     y: u32,
     lifes: u32,

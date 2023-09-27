@@ -26,11 +26,11 @@ mod create_outpost {
     fn execute(ctx: Context, game_id: u32, revenant_id: u128) -> u128 {
         let (game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
         // check if the game has started
-        assert(game.status, 'game is not running');
+        assert(0 == 1,  'not used');
 
         let block_number =  starknet::get_block_info().unbox().block_number;
         assert((block_number - game.start_block_number  ) > PREPARE_PHRASE_INTERVAL , 'game not start');
-        
+
         let mut revenant = get!(ctx.world, (game_id, revenant_id), Revenant);
         revenant.assert_can_create_outpost();
 

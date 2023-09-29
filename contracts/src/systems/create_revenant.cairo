@@ -24,7 +24,7 @@ mod create_revenant {
         assert(game.status, 'game is not running');
         
         let block_number =  starknet::get_block_info().unbox().block_number;
-        assert((block_number - game.start_block_number  ) > PREPARE_PHRASE_INTERVAL , 'game not start');
+        assert((block_number - game.start_block_number  ) <= PREPARE_PHRASE_INTERVAL , 'prepare phrase end');
 
         game_data.revenant_count += 1;
 

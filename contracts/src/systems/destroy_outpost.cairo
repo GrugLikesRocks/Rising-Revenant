@@ -28,7 +28,7 @@ mod destroy_outpost {
         let mut outpost = get!(ctx.world, (game_id, outpost_id), Outpost);
         outpost.assert_existed();
 
-        assert(outpost.last_affect_event_id != world_event.entity_id , "outpost affected by same event');
+        assert(outpost.last_affect_event_id != world_event.entity_id , 'outpost affected by same event');
 
         // check if within radius of event -> revert if not
         let distance = utils::calculate_distance(
@@ -50,7 +50,7 @@ mod destroy_outpost {
         };
 
 
-        set!(ctx.world, (outpost, world_event));
+        set!(ctx.world, (outpost, world_event,WorldEventTrack));
 
         // TODO: Should we reduce outpost_count of revenant after outpost has been destroy?
 

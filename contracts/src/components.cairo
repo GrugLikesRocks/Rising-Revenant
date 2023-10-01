@@ -1,6 +1,7 @@
 mod outpost;
 mod revenant;
 mod world_event;
+mod reinforcement;
 
 #[derive(Component, Copy, Drop, Serde,SerdeLen)]
 struct Game {

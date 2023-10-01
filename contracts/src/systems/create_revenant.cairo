@@ -15,6 +15,8 @@ mod create_revenant {
     use RealmsRisingRevenant::constants::MAP_HEIGHT;
     use RealmsRisingRevenant::constants::PREPARE_PHRASE_INTERVAL;
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+    use RealmsRisingRevenant::components::reinforcement::{Reinforcement};
+    
 
     // this will create a revenant with name
     fn execute(ctx: Context, game_id: u32, name: felt252) -> u128 {
@@ -39,8 +41,13 @@ mod create_revenant {
             status: RevenantStatus::started
         };
 
+        let reinforcements = Reinforcement {
+            game_id,
+            owner: ctx.origin,
+            balance: 0
+        };
 
-        set!(ctx.world, (revenant, game_data));
+        set!(ctx.world, (revenant, game_data, reinforcements));
 
         create_outpost(ctx, game_id);
         entity_id
@@ -49,8 +56,6 @@ mod create_revenant {
     fn create_outpost(ctx: Context, game_id: u32) -> u128 {
   
         let mut game_data = get!(ctx.world, game_id, (GameEntityCounter));
-
-       // let mut revenant = get!(ctx.world, (game_id, revenant_id), Revenant);
         
         game_data.outpost_count += 1;
        

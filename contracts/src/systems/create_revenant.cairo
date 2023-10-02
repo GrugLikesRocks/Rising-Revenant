@@ -74,7 +74,7 @@ mod create_revenant {
             y,
             owner: ctx.origin,
             name: 'Outpost',
-            lifes: 5,
+            lifes: 1,
             status: OutpostStatus::created,
             last_affect_event_id: 0
         };
@@ -98,12 +98,60 @@ mod fetch_revenant_data {
     use RealmsRisingRevenant::components::revenant::{Revenant, RevenantStatus};
 
     fn execute(ctx: Context,game_id :u32, entity_id: u128) -> Revenant{
-        let game = get!(ctx.world, game_id, Game);
-        // check if the game has started
-        assert(game.status, 'game is not running');
 
         let revenant = get!(ctx.world, (game_id,entity_id), Revenant);
 
         revenant
+    }
+}
+
+
+
+
+// call to return the outpost given the ID
+#[system]
+mod fetch_outpost_data {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::Into;
+    use dojo::world::Context;
+
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::outpost::{
+        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+    };
+    use RealmsRisingRevenant::components::revenant::{
+        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
+    };
+    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+
+    use RealmsRisingRevenant::components::GameEntityCounter;
+
+    fn execute(ctx: Context,game_id :u32, entity_id: u128) -> Outpost{
+
+        let outpost = get!(ctx.world, (game_id, entity_id), Outpost);
+
+        outpost
+    }
+}
+
+
+// call to return the outpost given the ID
+#[system]
+mod fetch_current_block_count {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::Into;
+    use dojo::world::Context;
+
+    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::outpost::{
+        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+    };
+
+    use RealmsRisingRevenant::components::GameEntityCounter;
+
+    fn execute(ctx: Context) -> u64 {
+        starknet::get_block_info().unbox().block_number
     }
 }

@@ -29,3 +29,23 @@ mod purchase_reinforcement {
 }
 
 
+#[system]
+mod fetch_reinforcement_balance {
+    use array::ArrayTrait;
+    use box::BoxTrait;
+    use traits::Into;
+    use dojo::world::Context;
+
+    use RealmsRisingRevenant::components::reinforcement::{
+        Reinforcement};
+
+    fn execute(ctx: Context, game_id: u32, address : felt252) -> Reinforcement {
+        
+        let reinforcements = get!(ctx.world, (game_id, address), Reinforcement);
+        
+        reinforcements
+    }
+}
+
+
+

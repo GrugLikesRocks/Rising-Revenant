@@ -16,7 +16,7 @@ struct WorldEvent {
     block_number:u64
 }
 
-const INIT_RADIUS: u32 = 5;
+const INIT_RADIUS: u32 = 144;
 // mod EventType {
 // const not_defined: u32 = 0;
 // TODO: Define world event 

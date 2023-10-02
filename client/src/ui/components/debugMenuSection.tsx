@@ -4,8 +4,8 @@ import { useDojo } from "../../hooks/useDojo";
 import "../../App.css";
 
 import { ClickWrapper } from "../clickWrapper";
-import { EntityIndex,getComponentValueStrict, Has} from "@latticexyz/recs";
-import { currentGameId, GAME_CONFIG } from "../../phaser/constants";
+import { EntityIndex,getComponentValue,getComponentValueStrict, Has} from "@latticexyz/recs";
+import { GAME_CONFIG } from "../../phaser/constants";
 
 import {useEntityQuery} from "@latticexyz/react";
 
@@ -16,7 +16,7 @@ type ExampleComponentProps = {
 export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
   const {
     networkLayer: {
-      components: {GameEntityCounter, GameTracker},
+      components: {GameEntityCounter, GameTracker, ClientGameData},
     },
   } = layer;
 
@@ -39,6 +39,8 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
 
   const gameDataEntities = useEntityQuery([Has(GameEntityCounter)]); // to delete
 
+  const clientGameDataEntity = getComponentValue(ClientGameData,GAME_CONFIG) // to delete
+
 
   const fetch_all_revenants = (revenant_count: number) => 
   {
@@ -48,20 +50,26 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
     for (let i = 0; i < revenant_count; i++) 
     { 
       console.log("fetching revenant: ", i +1, " in game: ", game_id);
-      fetch_revenant_data(game_id,i + 1);
+      fetch_revenant_data(i + 1);
     }
   }
 
   const fetch_all_outposts = (revenant_count: number) => 
   {
-    let game_id :EntityIndex = getComponentValueStrict(GameTracker,  GAME_CONFIG as EntityIndex).count as EntityIndex;
+    let game_id : EntityIndex = getComponentValueStrict(GameTracker,  GAME_CONFIG as EntityIndex).count as EntityIndex;
 
     console.log("fetching all outposts which are: ", revenant_count);
     for (let i = 0; i < revenant_count; i++) 
     { 
       console.log("fetching outpost: ", i + 1, " in game: ", game_id);
-      fetch_outpost_data(game_id,i + 1);
+      fetch_outpost_data(i + 1);
     }
+  }
+
+
+  const fetch_last_event = (event_id: number) => 
+  {
+    fetch_event_data(event_id);
   }
 
 
@@ -79,7 +87,7 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
     <button className="debug-button"  onClick={() => fetch_game_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >join game</button>
 
     {/* this fetches the amount of entities data in the game id given*/}
-    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker,  GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button>
+    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button>
   </ClickWrapper>
   }
   else
@@ -87,19 +95,19 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
    return <ClickWrapper className="debug-menu">
     <div className="debug-title">Debug Menu</div>
 
-    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker,  GAME_CONFIG as EntityIndex).count)} >update counter</button>
+    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >update counter</button>
  
-    <button className="debug-button" onClick={() => fetch_all_revenants(getComponentValueStrict(GameEntityCounter,  currentGameId).revenant_count)} >fetch all revenants</button>
-    <button className="debug-button" onClick={() => fetch_all_outposts(getComponentValueStrict(GameEntityCounter,  currentGameId).revenant_count)} >fetch all outposts</button>
+    <button className="debug-button" onClick={() => fetch_all_revenants(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id as EntityIndex).revenant_count)} >fetch all revenants</button>
+    <button className="debug-button" onClick={() => fetch_all_outposts(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).outpost_count)} >fetch all outposts</button>
+    <button className="debug-button" onClick={() => fetch_last_event(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).event_count)} >fetch all events</button>
 
-    <button className="debug-text">revenants in the game {getComponentValueStrict(GameEntityCounter, currentGameId)?.revenant_count  || 0}</button>
-    <button className="debug-text">outposts in the game {getComponentValueStrict(GameEntityCounter, currentGameId)?.outpost_count  || 0}</button>
-    <button className="debug-text">events in the game {getComponentValueStrict(GameEntityCounter, currentGameId)?.event_count || 0}</button>
+    <button className="debug-text">revenants in the game {getComponentValueStrict(GameEntityCounter,clientGameDataEntity!.current_game_id  as EntityIndex)?.revenant_count  || 0}</button>
+    <button className="debug-text">outposts in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.outpost_count  || 0}</button>
+    <button className="debug-text">events in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.event_count || 0}</button>
+    <button className="debug-text">current block {getComponentValueStrict(ClientGameData, GAME_CONFIG)?.current_block_number || 0}</button>
 
     <button className="debug-button" onClick={() => set_world_event(account)} >Run Event</button>
     
   </ClickWrapper>
   }
-
-
 };

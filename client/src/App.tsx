@@ -8,7 +8,7 @@ import { UI } from './ui';
 
 function App() {
   const networkLayer = useNetworkLayer();
-
+  
   useEffect(() => {
     if (!networkLayer) return;
 
@@ -19,11 +19,10 @@ function App() {
   }, [networkLayer]);
 
 
-
   return (
     <div>
+      
       <PhaserLayer networkLayer={networkLayer} />
-
       <UI />
     </div>
   );

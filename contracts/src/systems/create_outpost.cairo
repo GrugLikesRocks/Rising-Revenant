@@ -42,8 +42,12 @@ mod create_outpost {
         // We set the position of the outpost
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         let mut random = RandomImpl::new(seed);
-        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
-        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);
+        let x = random.next_u32((MAP_HEIGHT/2) - 400,(MAP_HEIGHT/2) + 400);
+        let y = random.next_u32((MAP_HEIGHT/2) - 400,(MAP_HEIGHT/2) + 400);
+
+        let wordOne: felt252 = entity_id.into();
+        let wordTwo: felt252 = 'Outpost '.into();
+        let wordThree: felt252 = wordOne;
 
         let outpost = Outpost {
             game_id,
@@ -51,8 +55,8 @@ mod create_outpost {
             x,
             y,
             owner: ctx.origin,
-            name: 'Outpost',
-            lifes: 5,
+            name: wordThree.into(),
+            lifes: 1,
             status: OutpostStatus::created,
             last_affect_event_id: 0
         };
@@ -64,36 +68,4 @@ mod create_outpost {
 }
 
 
-
-
-
-// call to return the outpost given the ID
-#[system]
-mod fetch_outpost_data {
-    use array::ArrayTrait;
-    use box::BoxTrait;
-    use traits::Into;
-    use dojo::world::Context;
-
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::outpost::{
-        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
-    };
-    use RealmsRisingRevenant::components::revenant::{
-        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
-    };
-    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
-
-    use RealmsRisingRevenant::components::GameEntityCounter;
-
-    fn execute(ctx: Context,game_id :u32, entity_id: u128) -> Outpost{
-        let game = get!(ctx.world, game_id, Game);
-        // check if the game has started
-        assert(game.status, 'game is not running');
-
-        let outpost = get!(ctx.world, (game_id, entity_id), Outpost);
-
-        outpost
-    }
-}
 

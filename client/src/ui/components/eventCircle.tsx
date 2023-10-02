@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { circleEvents } from "../../phaser/systems/eventSystems/eventEmitter";
+import { gameCircleEvent } from "../../phaser/systems/eventSystems/eventEmitter";
 
 import { EntityIndex, getComponentValue} from "@latticexyz/recs";
 
@@ -11,7 +11,9 @@ type Props = {
   layer: PhaserLayer;
 };
 
-export const CircleEvent = ({ layer }: Props) =>{
+//depricated
+
+export const circleEvent = ({ layer }: Props) =>{
 
   const {
     scenes: {
@@ -69,14 +71,14 @@ export const CircleEvent = ({ layer }: Props) =>{
       }
     };
 
-    circleEvents.on("spawnCircle", spawnCircle);
-    circleEvents.on("setCircleState", setCircleState);
+    gameCircleEvent.on("spawnCircle", spawnCircle);
+    gameCircleEvent.on("setCircleState", setCircleState);
 
     const intervalID = setInterval(updateCirclePosition, 1000 / 60);  // this si i think the fps
 
     return () => {
-      circleEvents.off("spawnCircle", spawnCircle);
-      circleEvents.off("setCircleState", setCircleState);
+      gameCircleEvent.off("spawnCircle", spawnCircle);
+      gameCircleEvent.off("setCircleState", setCircleState);
       clearInterval(intervalID);
     };
   }, [radius, worldPos, isVisible]);

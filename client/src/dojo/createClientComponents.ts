@@ -15,11 +15,12 @@ export function createClientComponents({ contractComponents }: SetupNetworkResul
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
         GameTracker: overridableComponent(contractComponents.GameTracker),
         GameEntityCounter : overridableComponent(contractComponents.GameEntityCounter),
+        Reinforcement : overridableComponent(contractComponents.Reinforcement),
 
         //should not be here
         ClientClickPosition : overridableComponent(contractComponents.ClientClickPosition),
         ClientCameraPosition : overridableComponent(contractComponents.ClientCameraPosition),
         ClientOutpostData : overridableComponent(contractComponents.ClientOutpostData),
-        
+        ClientGameData : overridableComponent(contractComponents.ClientGameData),
     };
 }

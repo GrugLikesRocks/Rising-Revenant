@@ -97,5 +97,5 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
     };
   }, [keysDown]);
 
-  return <div>{}</div>;
+  return <div>{ }</div>;
 };

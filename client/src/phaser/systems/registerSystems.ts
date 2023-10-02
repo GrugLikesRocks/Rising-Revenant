@@ -1,11 +1,15 @@
 import { PhaserLayer } from "..";
 
-import { controlCamera } from "./cameraMovement";
+import { cameraManager } from "./cameraMovement";
 import { mapSpawn } from "./mapSpawn";
 import { spawnOutposts } from "./outpostSystems";
+import { clickManager } from "./clickManager";
+import {eventManager} from "./eventSystem";
 
 export const registerSystems = (layer: PhaserLayer) => {
-    controlCamera(layer);
+    cameraManager(layer);
     mapSpawn(layer);
     spawnOutposts(layer);
+    clickManager(layer);
+    eventManager(layer);
 };

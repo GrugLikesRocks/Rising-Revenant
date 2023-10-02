@@ -98,6 +98,8 @@ export type WorldEvent = {
   x?: Maybe<Scalars["u32"]["output"]>;
   y?: Maybe<Scalars["u32"]["output"]>;
   radius?: Maybe<Scalars["u64"]["output"]>;
+  destroy_count?: Maybe<Scalars["u32"]["output"]>;
+  block_number?: Maybe<Scalars["u64"]["output"]>;
 };
 
 export type WorldEventConnection = {
@@ -118,7 +120,7 @@ export type WorldEventEdge = {
 export type Game = {
   __typename?: "Game";
   entity?: Maybe<Entity>;
-  start_time?: Maybe<Scalars["u64"]["output"]>;
+  block_number?: Maybe<Scalars["u64"]["output"]>;
   prize?: Maybe<Scalars["u32"]["output"]>;
   status?: Maybe<Scalars["Boolean"]["output"]>;
 };
@@ -193,6 +195,7 @@ export type Outpost = {
   y?: Maybe<Scalars["u32"]["output"]>;
   lifes?: Maybe<Scalars["u32"]["output"]>;
   status?: Maybe<Scalars["u32"]["output"]>;
+  last_affect_event_id?: Maybe<Scalars["u128"]["output"]>;
 }
 
 export type OutpostConnection = {
@@ -232,6 +235,26 @@ export type RevenantEdge = {
 
 
 
+export type Reinforcement = {
+  __typename?: "Reinforcement";
+  entity?: Maybe<Entity>;
+  balance?: Maybe<Scalars["u32"]["output"]>;
+}
+
+export type ReinforcementConnection = {
+  __typename?: "ReinforcementConnection";
+  edges?: Maybe<Array<Maybe<ReinforcementEdge>>>;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type ReinforcementEdge = {
+  __typename?: "ReinforcementEdge";
+  cursor: Scalars["Cursor"]["output"];
+  node?: Maybe<Reinforcement>;
+};
+
+
+
 export type Query = {
   __typename?: "Query";
   entities?: Maybe<EntityConnection>;
@@ -246,6 +269,7 @@ export type Query = {
 
   outpostComponents?: Maybe<OutpostConnection>;
   revenantComponents?: Maybe<RevenantConnection>;
+  reinforcementComponents?: Maybe<ReinforcementConnection>;
 
   worldEventComponents?: Maybe<WorldEventConnection>;
 
@@ -273,7 +297,12 @@ export type QueryEventArgs = {
   id: Scalars["ID"]["input"];
 };
 
-
+export type QueryReinforcementComponentsArgs = {
+  after?: InputMaybe<Scalars["Cursor"]["input"]>;
+  before?: InputMaybe<Scalars["Cursor"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 export type QueryGameComponentsArgs = {
   after?: InputMaybe<Scalars["Cursor"]["input"]>;
@@ -385,13 +414,15 @@ export type GetEntitiesQuery = {
         components?: Array<
 
           | { __typename: "Revenant"; owner?: any | null; name?: any | null; outpost_count?: any | null; status?: any | null }
-          | { __typename: "Outpost"; owner?: any | null; name?: any | null; x?: any | null; y?: any | null; lifes?: any | null; status?: any | null }
+          | { __typename: "Outpost"; owner?: any | null; name?: any | null; x?: any | null; y?: any | null; lifes?: any | null; status?: any | null; last_affect_event_id?: any | null}
+          | { __typename: "Reinforcement"; balance?: any | null}
 
-          | { __typename: "WorldEvent"; x?: any | null; y?: any | null; radius?: any | null }
+          | { __typename: "WorldEvent"; x?: any | null; y?: any | null; radius?: any | null; destroy_count?: any | null; block_number?: any | null }
 
           | { __typename: "GameTracker"; count?: any | null}
-          | { __typename: "Game"; start_time?: any | null; prize?: any | null; status?: any | null }
+          | { __typename: "Game";  block_number?: any | null;   prize?: any | null; status?: any | null }
           | { __typename: "GameEntityCounter"; revenant_count?: any | null; outpost_count?: any | null; event_count?: any | null}
+
           | null
         > | null;
       } | null;
@@ -420,17 +451,20 @@ export const GetEntitiesDocument = gql`
               y
               lifes
               status
+              last_affect_event_id
             }
             ... on WorldEvent {
               x
               y
               radius
+              destroy_count
+              block_number
             }
             ... on GameTracker {
               count
             }
             ... on Game {
-              start_time
+              block_number
               prize
               status
             }
@@ -438,6 +472,9 @@ export const GetEntitiesDocument = gql`
               revenant_count
               outpost_count
               event_count
+            }
+            ... on Reinforcement {
+              balance
             }
           }
         }

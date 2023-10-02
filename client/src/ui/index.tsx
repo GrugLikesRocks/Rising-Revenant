@@ -2,7 +2,7 @@ import { store } from "../store/store";
 import { Wrapper } from "./wrapper";
 
 import { MenuState } from "./components/navbar";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { menuEvents, tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
 

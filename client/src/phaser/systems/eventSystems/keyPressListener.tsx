@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export const useWASDKeys = () => {
   const [keysDown, setKeysDown] = useState<{ [key: string]: boolean }>({ W: false, A: false, S: false, D: false });
-    
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();

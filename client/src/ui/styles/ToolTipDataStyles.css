@@ -19,7 +19,8 @@
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 8px;
   cursor: pointer;
+  padding: 10px;
+  margin: 10px;
   /* transition: background-color 0.3s ease; */
 }

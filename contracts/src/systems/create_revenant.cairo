@@ -41,13 +41,13 @@ mod create_revenant {
             status: RevenantStatus::started
         };
 
-        let reinforcements = Reinforcement {
+        let reinforcement = Reinforcement {
             game_id,
             owner: ctx.origin,
             balance: 0
         };
 
-        set!(ctx.world, (revenant, game_data, reinforcements));
+        set!(ctx.world, (revenant, game_data, reinforcement));
 
         create_outpost(ctx, game_id);
         entity_id

@@ -1,7 +1,6 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import {
   Account,
-  Event,
 } from "starknet";
 import {
   EntityIndex,
@@ -12,16 +11,15 @@ import {
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import {
-  CAMERA_ID,
   GAME_CONFIG,
   MAP_HEIGHT,
   MAP_WIDTH,
+  PREPARATION_PHASE_BLOCK_COUNT,
 } from "../phaser/constants";
 import { poseidonHashMany } from "micro-starknet";
-import {
-  bigIntToHexWithPrefix,
-} from "../utils";
-import { keys } from "mobx";
+import { bigIntToHexWithPrefix } from "../utils";
+
+import { toast } from 'react-toastify';
 
 // altough this new method is much cleaner, need to try the old one back to see if the number and bigint issue gets fixed
 
@@ -44,16 +42,28 @@ export function createSystemCalls(
     ClientGameData
   }: ClientComponents
 ) {
+
+  const notify = (message: string) => toast(message, {
+    position: "top-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+    theme: "dark",
+  });
+
+
   const reinforce_outpost = async (signer: Account, outpost_id: number) => {
+
+    const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG ).current_game_id;
+
     try {
 
-      const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG as EntityIndex).current_game_id;
-
-      console.log("this is what was sent to the reinforce function", game_id, " ", outpost_id, "\n\n\n")
-
       const tx = await execute(signer, "reinforce_outpost", [
-        outpost_id,
         game_id,
+        outpost_id
       ]);
 
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
@@ -62,9 +72,14 @@ export function createSystemCalls(
 
       console.log("reinforce_outpost", receipt);
 
+      notify("Reinforcing outpost " + outpost_id + "\nTransaction hash: " + receipt.transaction_hash)
+      
+
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
+      notify("this is an error with the sys calss  also this is te game Id " + game_id + " and this is the outpost id " + outpost_id + "\n\n\n")
+      // notify("Reinforcement failed")
     } finally {
     }
   };
@@ -74,7 +89,7 @@ export function createSystemCalls(
     try {
       const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG as EntityIndex).current_game_id;
 
-      console.log("this is what was sent to the reinforce function ", amount, " btw this si the game id ", game_id,"\n\n\n")
+      // console.log("this is what was sent to the reinforce function ", amount, " btw this si the game id ", game_id,"\n\n\n")
 
       const tx = await execute(signer, "purchase_reinforcement", [
         game_id,
@@ -86,6 +101,8 @@ export function createSystemCalls(
       });
 
       console.log("reinforce_outpost", receipt);
+
+      notify("Buying " + amount + " reinforcements\n" + "Transaction hash: " + receipt.transaction_hash)
 
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
@@ -131,6 +148,7 @@ export function createSystemCalls(
       });
 
       console.log("destroy outpost", receipt);
+      notify("Destroying outpost " + outpost_id + "\nTransaction hash: " + receipt.transaction_hash)
 
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
@@ -138,7 +156,6 @@ export function createSystemCalls(
     } finally {
     }
   };
-
 
   const set_world_event = async (signer: Account) => {
     try {
@@ -176,9 +193,12 @@ export function createSystemCalls(
 
       console.log("create revenant", receipt);
 
+      notify("Summoning revenant " + name + "\nTransaction hash: " + receipt.transaction_hash)
+
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
+      notify("adding rev failed")
     } finally {
     }
   };
@@ -214,12 +234,12 @@ export function createSystemCalls(
       });
 
       ClientCameraPosition.addOverride(clientCamCompUUID, {
-        entity: gameDataEntityId,
+        entity: GAME_CONFIG,
         value: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 },
       });
 
       ClientClickPosition.addOverride(clickCompUUID, {
-        entity: gameDataEntityId,
+        entity: GAME_CONFIG,
         value: {
           xFromMiddle: 0,
           yFromMiddle: 0,
@@ -243,12 +263,12 @@ export function createSystemCalls(
         status: Number(tx[2 + keys_amount]),
       });
 
-      setComponent(ClientCameraPosition, gameDataEntityId, {
+      setComponent(ClientCameraPosition, GAME_CONFIG, {
         x: MAP_WIDTH / 2,
         y: MAP_HEIGHT / 2,
       });
 
-      setComponent(ClientClickPosition, gameDataEntityId, {
+      setComponent(ClientClickPosition, GAME_CONFIG, {
         xFromMiddle: 0,
         yFromMiddle: 0,
 
@@ -550,9 +570,21 @@ export function createSystemCalls(
       const txBlockTracker: any = await call("fetch_current_block_count", []);
 
       const clientGameData = getComponentValueStrict(ClientGameData, GAME_CONFIG as EntityIndex);
+      const gameData = getComponentValueStrict(Game, clientGameData.current_game_id as EntityIndex);
+
+      let phase = clientGameData.current_game_state;
+
+      if (clientGameData.current_game_state === 1)
+      { 
+        //prep phase
+        if (Number(txBlockTracker[0]) > gameData.start_block_number + PREPARATION_PHASE_BLOCK_COUNT)
+        {
+          phase = 2;
+        }
+      }
 
       setComponent(ClientGameData, GAME_CONFIG as EntityIndex, {
-        current_game_state: clientGameData.current_game_state,
+        current_game_state: phase,
         user_account_address: clientGameData.user_account_address,
         current_game_id: clientGameData.current_game_id,
         current_block_number: Number(txBlockTracker[0])
@@ -582,7 +614,7 @@ export function createSystemCalls(
           balance: 0,
         },
       });
-    }
+    }      
 
     try {
  
@@ -593,6 +625,9 @@ export function createSystemCalls(
       setComponent(Reinforcement, entityIndex, {
         balance: Number(txBalanceTracker[0 + keys_amount])
       });
+
+      
+      notify("fetching reinforcement balance: " + txBalanceTracker[1 + keys_amount] + " wit game id: " + game_id)
 
     } catch (e) {
       console.log(e);
@@ -606,42 +641,6 @@ export function createSystemCalls(
   //////////////////////////////////////////////////
   //////////////////////////////////////////////////
   //////////////////////////////////////////////////
-
-  // these two dont really have to be called here, also should not use addOvveride, but setComponent
-
-  const set_click_component = async (
-    xOrigin: number,
-    yOrigin: number,
-    xMiddle: number,
-    yMiddle: number
-  ) => {
-    const entityId = CAMERA_ID as EntityIndex;
-
-    const clientClickId = uuid();
-    ClientClickPosition.addOverride(clientClickId, {
-      entity: entityId,
-      value: {
-        xFromMiddle: xMiddle,
-        yFromMiddle: yMiddle,
-
-        yFromOrigin: yOrigin,
-        xFromOrigin: xOrigin,
-      },
-    });
-  };
-
-  const set_camera_position_component = async (x: number, y: number) => {
-    const entityId = CAMERA_ID as EntityIndex;
-
-    const clientCameraId = uuid();
-    ClientCameraPosition.addOverride(clientCameraId, {
-      entity: entityId,
-      value: {
-        x: x,
-        y: y,
-      },
-    });
-  };
 
   return {
     reinforce_outpost,
@@ -661,9 +660,6 @@ export function createSystemCalls(
     fetch_current_block_count,
     fetch_user_reinforcement_balance,
 
-    ///////////////////////////////////////////////////
-    set_camera_position_component,
-    set_click_component,
   };
 }
 

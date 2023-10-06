@@ -11,7 +11,7 @@ import "../App.css";
 import { MainMenuComponent } from "./components/mainMenuComponent";
 
 export const UI = () => {
-  const [opacity, setOpacity] = useState(1);
+  const [phaserLayerOpacity, setPhaserLayerOpacity] = useState(1);
   const [menuState, setMenuState] = useState<MenuState>(MenuState.MAIN);
 
   const layers = store((state) => {
@@ -28,12 +28,13 @@ export const UI = () => {
 
   //opacity control based on menu state
   useEffect(() => {
+
     if (menuState !== MenuState.MAP) {
-      setOpacity(0.85);
+      setPhaserLayerOpacity(0.9);
 
       tooltipEvent.emit("closeTooltip", false);
     } else {
-      setOpacity(0);
+      setPhaserLayerOpacity(0);
     }
 
     menuEvents.on("setMenuState", SetMenuState);
@@ -49,7 +50,7 @@ export const UI = () => {
     <Wrapper>
       <div
         className="phaser-fadeout-background"
-        style={{ opacity: opacity }}
+        style={{ opacity: phaserLayerOpacity }}
       ></div>
 
       <MainMenuComponent layer={layers.phaserLayer} />

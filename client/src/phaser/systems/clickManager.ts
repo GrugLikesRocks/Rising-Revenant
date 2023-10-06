@@ -6,11 +6,13 @@ import {
   defineSystem,
   Has,
   getComponentEntities,
-  getComponentValue
+  getComponentValue,
+  setComponent
 } from "@latticexyz/recs";
 
 
 import { tooltipEvent } from "./eventSystems/eventEmitter";
+import { GAME_CONFIG } from "../constants";
 
 export const clickManager = (layer: PhaserLayer) => {
   const {
@@ -21,7 +23,6 @@ export const clickManager = (layer: PhaserLayer) => {
 
     networkLayer: {
       components: { Outpost, ClientClickPosition, ClientCameraPosition, ClientOutpostData },
-      systemCalls: { set_click_component },
     },
   } = layer;
 
@@ -34,12 +35,19 @@ export const clickManager = (layer: PhaserLayer) => {
     let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
     let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
-    set_click_component(
-      pointer.x,
-      pointer.y,
-      clickRelativeToMiddlePointX,
-      clickRelativeToMiddlePointY
-    );
+    setComponent(ClientClickPosition, GAME_CONFIG, {
+      xFromMiddle: clickRelativeToMiddlePointX,
+      yFromMiddle: clickRelativeToMiddlePointY,
+      xFromOrigin: pointer.x,
+      yFromOrigin: pointer.y,
+    });
+
+    // set_click_component(
+    //   pointer.x,
+    //   pointer.y,
+    //   clickRelativeToMiddlePointX,
+    //   clickRelativeToMiddlePointY
+    // );
   });
 
   // Click checks for the ui tooltip

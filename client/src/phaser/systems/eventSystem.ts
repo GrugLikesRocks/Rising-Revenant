@@ -40,10 +40,9 @@ import {
 
       const graphics = phaserScene.add.graphics();
 
-      graphics.lineStyle(2, 0xff0000); // Set line style for the outline
+      graphics.lineStyle(3, 0xff0000); // Set line style for the outline
       graphics.strokeCircle(dataEvent.x, dataEvent.y, dataEvent.radius); // Draw the outline of a circle with a radius of 50
 
-  
       let radius = dataEvent.radius;
   
       if (radius === 0) {  // this also makes no sense
@@ -67,9 +66,9 @@ import {
         
         if (outpostEntityData.last_affect_event_id === gameEntityCounter.event_count)
         {
-          console.log("\n\nis this even hitting")
-          console.log("if this is then this si the last effect ", outpostEntityData.last_affect_event_id)
-          console.log("and this si the current last event ", gameEntityCounter.event_count)
+          // console.log("\n\nis this even hitting")
+          // console.log("if this is then this si the last effect ", outpostEntityData.last_affect_event_id)
+          // console.log("and this si the current last event ", gameEntityCounter.event_count)
 
           setComponent(ClientOutpostData, outpostEntityValue, {
             id: outpostClientData.id,
@@ -91,7 +90,7 @@ import {
             if (distance <= radius) {
               // sprite.setTexture(Assets.CastleDamagedAsset);
               
-              console.log("this is an event effected outpost and this is the position ", sprite.x, "  ", sprite.y)
+              // console.log("this is an event effected outpost and this is the position ", sprite.x, "  ", sprite.y)
 
               setComponent(ClientOutpostData, outpostEntityValue, {
                 id: outpostClientData.id,

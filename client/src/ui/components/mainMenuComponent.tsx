@@ -28,15 +28,18 @@ import { ToolTipData } from "./outpostToolTip";
 import React, { useState, useEffect, useRef } from "react";
 import { GAME_CONFIG, PREPARATION_PHASE_BLOCK_COUNT } from "../../phaser/constants";
 import { getEntityIdFromKeys } from "../../dojo/createSystemCalls";
-import { bigIntToHexWithPrefix } from "../../utils";
-import { set } from "mobx";
-
 
 type ExampleComponentProps = {
   layer: PhaserLayer;
   menuState?: MenuState;
   setMenuState?: React.Dispatch<React.SetStateAction<MenuState>>;
 };
+
+
+
+// THIS SCRIPT IS TO COMPLETLY CLEAR OUT AND REDO
+
+
 
 export const MainMenuComponent = ({
   layer,
@@ -58,6 +61,7 @@ export const MainMenuComponent = ({
   const [outpostsAmount, setOutpostsAmount] = useState(0);
   const [reinforcementsAmount, setReinforcementsAmount] = useState(0);
 
+  const [navbarOpacity, setNavbarOpacity] = useState(1);
 
   // #region something about the menu prob not needed
 
@@ -81,20 +85,20 @@ export const MainMenuComponent = ({
   // components stuff and dojo hook
   const {
     networkLayer: {
-      components: { Game, GameEntityCounter, GameTracker, ClientGameData,Outpost , ClientOutpostData,Reinforcement},
+      components: { Game, GameEntityCounter, GameTracker, ClientGameData, Outpost, ClientOutpostData, Reinforcement },
     },
   } = layer;
 
   const {
     account: { account },
     networkLayer: {
-      systemCalls: { 
+      systemCalls: {
         fetch_game_tracker_data,
         fetch_game_entity_counter_data,
         fetch_game_data,
-        fetch_revenant_data, 
-        fetch_outpost_data, 
-        fetch_event_data, 
+        fetch_revenant_data,
+        fetch_outpost_data,
+        fetch_event_data,
         fetch_current_block_count,
         fetch_user_reinforcement_balance
       },
@@ -115,23 +119,24 @@ export const MainMenuComponent = ({
     const performActionWithRetry = async () => {
 
       let actionSucceeded = false;  //set the action to false
-      while (!actionSucceeded) {  // while the actiion is no completed
+      while (!actionSucceeded) {  // while the action is no completed
 
         await fetch_game_tracker_data(account); //call the join function that should fetch all the components
 
         const game_id = getComponentValue(GameTracker, GAME_CONFIG as EntityIndex)?.count as EntityIndex;
-        
-        if (game_id === undefined || game_id === 0) 
-        {
+
+        if (game_id === undefined || game_id === 0) {
           await new Promise((resolve) => setTimeout(resolve, 5000));
           continue;
         }
 
-        await fetch_game_entity_counter_data(game_id); 
-        await fetch_game_data(game_id); 
+        await fetch_game_entity_counter_data(game_id);
+        await fetch_game_data(game_id);
+        await fetch_current_block_count()
 
         if (gameDataEntitiesRef.current.length >= 1) {   // check if the component exixts in the client with the ref from above
           actionSucceeded = true;   // true to break out of loop
+          console.log(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number)
           setShowErrorMessage(false); // set the error message to false
           setShowSuccessMessage(true); // set the success message to true
         }
@@ -163,8 +168,6 @@ export const MainMenuComponent = ({
     }
 
   }, [showSuccessMessage]);
-
-
 
 
   const handleDocumentClick = () => {
@@ -242,13 +245,11 @@ export const MainMenuComponent = ({
 
         const entityCounter = getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex);
 
-        if (entityCounter.revenant_count != 0 && entityCounter.outpost_count != 0)
-        {
+        if (entityCounter.revenant_count != 0 && entityCounter.outpost_count != 0) {
           fetch_all_game_entities(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).revenant_count);
         }
 
-        if (entityCounter.event_count != 0)
-        {
+        if (entityCounter.event_count != 0) {
           fetch_event_data(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).event_count)
         }
 
@@ -269,8 +270,7 @@ export const MainMenuComponent = ({
 
       await fetch_user_reinforcement_balance(account);
 
-      const entityIndex = getEntityIdFromKeys([BigInt(getComponentValueStrict(ClientGameData,GAME_CONFIG).current_game_id),BigInt(account.address)]);
-      console.log(getComponentValueStrict(Reinforcement, entityIndex).balance);
+      const entityIndex = getEntityIdFromKeys([BigInt(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id), BigInt(account.address)]);
       setReinforcementsAmount(getComponentValueStrict(Reinforcement, entityIndex).balance);
     };
 
@@ -278,28 +278,23 @@ export const MainMenuComponent = ({
       let num = 0;
 
       const game_state = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state;
-      
+
       allOutpostsEntities.forEach(element => {
         const entityData = getComponentValueStrict(Outpost, element);
         const entityClientData = getComponentValueStrict(ClientOutpostData, element);
 
-        if (game_state === 1)
-        {
-         
+        if (game_state === 1) {
           if (entityClientData.owned) {
             num++;
           }
         }
-        else
-        {
-          if (entityClientData && entityData.lifes >= 0) {
+        else {
+          if (entityClientData && entityData.lifes > 0) {
             num++;
           }
         }
-
       });
 
-      console.log(num);
       setOutpostsAmount(num);
 
       FetchBalance();
@@ -310,36 +305,81 @@ export const MainMenuComponent = ({
 
 
 
+  const toggleOpacity = () => {
+
+    if (actualMenuState != MenuState.MAP) {
+      setNavbarOpacity(1);
+      return;
+    }
+    if (navbarOpacity === 1) {
+      setNavbarOpacity(0);
+    }
+    else {
+      setNavbarOpacity(1);
+    }
+
+    console.log(navbarOpacity, actualMenuState)
+  }
+
+
+  useEffect(() => {
+
+    const handleShift = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        toggleOpacity();
+      }
+    };
+
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'escape') {
+        setNavbarOpacity(1);
+      }
+    };
+
+    window.addEventListener('keydown', handleShift);
+    window.addEventListener('keydown', handleEscape);
+
+    return () => {
+      window.removeEventListener('keydown', handleShift);
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [navbarOpacity, actualMenuState]);
+
+
+
+
+
+
 
   return (
-    <div className={`main-page-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"}`}>
+    <div className={`main-page-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"} ${navbarOpacity === 0 && actualMenuState === MenuState.MAP ? "opacity-scale-off" : "opacity-scale-on"} `}>
       {showErrorMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">searching for a game{Array(dots).fill(".").join("")}</div>
+          <div className="loading-screen-title-text">Searching for a game{Array(dots).fill(".").join("")}</div>
           <div className="loading-screen-divider"></div>
         </div>)}
 
       {showSuccessMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">joined game -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
+          <div className="loading-screen-title-text">Joined game -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
 
           {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 ? (
             <div className="loading-screen-message">
               STARTING PHASE ENDS IN {Math.abs(
                 Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
-                (Number(getComponentValueStrict(Game, getComponentValueStrict(GameTracker, GAME_CONFIG).count as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)
+                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)
               )} BLOCKS
             </div>
           ) : (
             <div className="loading-screen-message">
               PLAY PHASE STARTED {Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
-                (Number(getComponentValueStrict(Game, getComponentValueStrict(GameTracker, GAME_CONFIG).count as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCKS AGO
+                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCKS AGO
             </div>
           )}
 
-
           <div className="loading-screen-divider"></div>
-          <div className="loading-screen-message">minted revenants so far -- {getComponentValueStrict(GameEntityCounter,
+          <div className="loading-screen-message">Number of Revenants summoned so far -- {getComponentValueStrict(GameEntityCounter,
             getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).revenant_count}</div>
         </div>)}
 
@@ -350,52 +390,47 @@ export const MainMenuComponent = ({
           </div>
         </div>
         <div className="game-title-menu">
-          <div className="game-title-menu-text"></div> 
+          <div className="game-title-menu-text"></div>
         </div>
 
         <ClickWrapper className="connect-button-menu"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          onClick={() => setShowTooltip(false)}
         >
           {getComponentValue(ClientGameData, GAME_CONFIG)?.user_account_address?.substring(0, 8) + "..." || "Connect"}
 
-          {showTooltip && (
+          {showTooltip && navbarOpacity === 1 && (
             <div className="tooltip-container-connect-button">
 
-              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2 && (
-              <div className="tooltip-element-container-connect-button">
-                {/* <div className="tooltip-element-picture-connect-button">
+              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2  && (
+                <div className="tooltip-element-container-connect-button">
 
-                </div> */}
-                <div className="tooltip-element-text-connect-button">
-                  Outposts alive: {outpostsAmount}
-                </div>
-              </div>)}
+                  <div className="tooltip-element-text-connect-button">
+                    Your Outposts alive: {outpostsAmount}
+                  </div>
+                </div>)}
 
               {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 && (
+                <div className="tooltip-element-container-connect-button">
+
+                  <div className="tooltip-element-text-connect-button">
+                    Outposts bought: {outpostsAmount}
+                  </div>
+                </div>)}
+
+
+
+
+
               <div className="tooltip-element-container-connect-button">
-                {/* <div className="tooltip-element-picture-connect-button">
 
-                </div> */}
-                <div className="tooltip-element-text-connect-button">
-                  Outposts bought: {outpostsAmount}
-                </div>
-              </div>)}
-
-              <div className="tooltip-element-container-connect-button">
-                {/* <div className="tooltip-element-picture-connect-button">
-
-                </div> */}
                 <div className="tooltip-element-text-connect-button">
                   Reinforcements: {reinforcementsAmount}
                 </div>
               </div>
 
               <div className="tooltip-element-container-connect-button">
-                {/* <div className="tooltip-element-picture-connect-button">
 
-                </div> */}
                 <div className="tooltip-element-text-connect-button">
                   Lords: {lordsAmount}
                 </div>
@@ -412,6 +447,7 @@ export const MainMenuComponent = ({
           setMenuState={actualSetMenuState}
           layer={layer}
           passedTimer={timerPassed}
+          navbarOpacity={navbarOpacity}
         />
       </div>
 
@@ -424,8 +460,8 @@ export const MainMenuComponent = ({
         {actualMenuState === MenuState.RULES && <RulesReactComp />}
       </div>
 
-      <ToolTipData layer={layer} useDojoContents={useDojoContents} />
-      {/* <CircleEvent layer={layer} /> */}
+      {actualMenuState === MenuState.MAP && <ToolTipData layer={layer} useDojoContents={useDojoContents} />}
+
     </div>
   );
 };

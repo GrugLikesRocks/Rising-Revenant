@@ -18,7 +18,7 @@
   margin-right: 10px;
   font-size: 1.5vw;
   color: rgb(255, 255, 255);
-  font-family: revenant_text_font_two;
+  font-family: Revenant_text_font;
 }
 
 .text-field {
@@ -28,7 +28,7 @@
   background-color: rgb(30, 30, 30);
   font-size: 1vw;
   text-align: center;
-  font-family: revenant_text_font_two;
+  font-family: Revenant_text_font;
 }
 
 .list-container {
@@ -50,7 +50,7 @@
   text-align: center;
   background-color: black;
   color: white;
-  font-family: Revenant_font;
+  font-family: Revenant_title_font;
 }
 
 .list-element-stats-page {
@@ -58,5 +58,5 @@
   overflow-y: auto;
   color: white;
   font-size: 1.2vw;
-  font-family: revenant_text_font_two;
+  font-family: Revenant_text_font;
 }

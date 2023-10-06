@@ -5,8 +5,7 @@ import "../../App.css"
 import { PhaserLayer } from "../../phaser";
 
 import { menuEvents } from '../../phaser/systems/eventSystems/eventEmitter';
-import { Has, getComponentValueStrict } from '@latticexyz/recs';
-import { useComponentValue, useEntityQuery } from '@latticexyz/react';
+import { getComponentValueStrict } from '@latticexyz/recs';
 import { GAME_CONFIG } from '../../phaser/constants';
 
 export enum MenuState {
@@ -23,9 +22,10 @@ interface NavbarProps {
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
   layer: PhaserLayer;
   passedTimer: boolean;
+  navbarOpacity: number;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer, passedTimer }) => {
+export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer, passedTimer, navbarOpacity }) => {
 
   const toggleMenu = (newState: MenuState) => {
     setMenuState((prevState) => (prevState === newState ? MenuState.MAIN : newState));
@@ -37,6 +37,8 @@ export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer, 
         setMenuState(MenuState.MAIN);
       }
     };
+
+
     window.addEventListener('keydown', handleEsc);
 
     return () => {
@@ -54,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer, 
     },
   } = layer;
 
-  if (!passedTimer) {
+  if (!passedTimer || navbarOpacity === 0) {
     return (
       <div className="main-menu-navbar-container">
         <button className="navbar-button">rules</button>

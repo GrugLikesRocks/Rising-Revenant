@@ -11,7 +11,7 @@ import {
 import { useDojo } from "../../hooks/useDojo";
 
 import { ClickWrapper } from "../clickWrapper";
-import { CAMERA_ID, GAME_CONFIG } from "../../phaser/constants";
+import { GAME_CONFIG } from "../../phaser/constants";
 
 import { bigIntToHexAndAscii, bigIntToHexWithPrefix } from "../../utils";
 import { getEntityIdFromKeys } from "../../dojo/createSystemCalls";
@@ -108,7 +108,8 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
     );
 
     // set the data
-    setNameText(bigIntToHexAndAscii(BigInt(_outpostEntityData.name)));
+    // setNameText(bigIntToHexAndAscii(BigInt(_outpostEntityData.name)));
+    setNameText(_outpostEntityData.x + " " + _outpostEntityData.y)
     setAddressText(bigIntToHexWithPrefix(BigInt(_outpostEntityData.owner)));
     setReinforceText(Number(_outpostEntityData.lifes)); // why does this need to be a number to work
 
@@ -118,15 +119,14 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
    
 
     // this should not be like this, will need to be changed
-    if (_outpostEntityData.lifes < 0) 
+    if (_outpostEntityData.lifes <= 0) 
     {
       setIsOwner(false);
     }
 
-
     initialCameraCenterPos.current = getComponentValue(
       ClientCameraPosition,
-      CAMERA_ID as EntityIndex
+      GAME_CONFIG as EntityIndex
     );
     currentTooltipPos.current = { x, y };
 
@@ -148,10 +148,12 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
     tooltipEvent.on("closeTooltip", closeTooltip);
 
     const updateTooltipPosition = () => {
-      if (isVisible) {
+        if (!isVisible)
+        {return;}
+          
         const newCameraCenterPos = getComponentValue(
           ClientCameraPosition,
-          CAMERA_ID as EntityIndex
+          GAME_CONFIG as EntityIndex
         );
 
         if (newCameraCenterPos && initialCameraCenterPos.current) {
@@ -170,7 +172,6 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
 
           initialCameraCenterPos.current = newCameraCenterPos;
         }
-      }
     };
 
     const intervalID = setInterval(updateTooltipPosition, 1000 / 60);
@@ -183,7 +184,7 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
         clearTimeout(timer);
       }
     };
-  }, []);
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
@@ -222,6 +223,20 @@ export const ToolTipData = ({ layer, useDojoContents }: Props) => {
               Confirm Event
             </button>
           )}
+
+
+  <button
+              className="tooltip-button-in-game"
+              onClick={() => {
+                destroy_outpost(
+                  account,
+                  getComponentValueStrict(GameEntityCounter, gameId).event_count,
+                  outpostEntityVal
+                );
+              }}
+            >
+              Confirm Event
+            </button>
 
           <button
             className="tooltip-button-in-game"

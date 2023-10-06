@@ -26,6 +26,7 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
       systemCalls: {
         create_game,
         set_world_event,
+        create_revenant,
 
         fetch_event_data,
         fetch_game_data,
@@ -107,6 +108,10 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
     <button className="debug-text">current block {getComponentValueStrict(ClientGameData, GAME_CONFIG)?.current_block_number || 0}</button>
 
     <button className="debug-button" onClick={() => set_world_event(account)} >Run Event</button>
+    <button className="debug-button" onClick={() => create_revenant(
+              account,
+              "name " + getComponentValueStrict(GameEntityCounter, getComponentValueStrict(ClientGameData,GAME_CONFIG).current_game_id as EntityIndex).revenant_count as string, 
+            )}>create revenant</button>
     
   </ClickWrapper>
   }

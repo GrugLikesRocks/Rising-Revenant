@@ -23,18 +23,10 @@ export const mapSpawn = (layer: PhaserLayer) => {
     networkLayer: {
       components: { Game, ClientGameData },
     },
-    
   } = layer;
 
   defineEnterSystem(world, [Has(Game)], ({ entity }) => {
     const mapObj = objectPool.get(entity, "Sprite");
-    
-    // const phaserScene = layer.scenes.Main.phaserScene;
-
-    // const svg = phaserScene.load.svg(Assets.MapPicture, "assets/map.svg");
-    // console.log(svg);
-    // const phaserObj = phaserScene.add.image(10240, 5164, Assets.MapPicture);
-    // phaserObj.depth = -1;
 
     mapObj.setComponent({
       id: "animation",
@@ -47,33 +39,30 @@ export const mapSpawn = (layer: PhaserLayer) => {
     });
   });
 
-  defineSystem(world, [Has(Game)], ({ entity }) => {
-    const gameComp = getComponentValueStrict(Game, entity);
-    const clientGameData = getComponentValueStrict(ClientGameData, GAME_CONFIG);
+  defineSystem(world, [Has(ClientGameData)], ({ entity }) => {
+    const clientGameData = getComponentValueStrict(ClientGameData, entity);
 
-    if (
-      Number(gameComp.start_block_number) + PREPARATION_PHASE_BLOCK_COUNT >=
-        clientGameData.current_block_number + 1 &&
-      clientGameData.current_game_state === 1
-    ) 
-    {
-      return;
-    } 
-    else 
-    {
-      if (clientGameData.current_game_state === 1) {
-        setComponent(ClientGameData, GAME_CONFIG, {
-          current_game_state: 2,
-          user_account_address: clientGameData.user_account_address,
-          current_game_id: clientGameData.current_game_id,
-          current_block_number: clientGameData.current_block_number,
-        });
+    // if (
+    //   Number(gameComp.start_block_number) + PREPARATION_PHASE_BLOCK_COUNT >=
+    //     clientGameData.current_block_number + 1 &&
+    //   clientGameData.current_game_state === 1
+    // ) {
+    //   return;
+    // } else {
+    //   if (clientGameData.current_game_state === 1) {
+    //     drawPhaserLayer.emit("toggleVisibility", true);
+    //   } else {
+    //     return;
+    //   }
+    // }
 
-        drawPhaserLayer.emit("toggleVisibility", true);
-      } 
-      else {
-        return;
-      }
+    if (clientGameData.current_game_state === 1)
+    {
+      drawPhaserLayer.emit("toggleVisibility", false);
+    }
+    else
+    {
+      drawPhaserLayer.emit("toggleVisibility", true);
     }
   });
 };

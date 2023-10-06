@@ -1,26 +1,17 @@
-
 @font-face {
-  font-family: Revenant_font;
-  src: url("fonts/Revenant_font.otf") format("opentype");
-}
-/* these names are to change, also number one isnt used anymore */
-@font-face {
-  font-family: revenant_text_font_one;
-  src: url("fonts/Messapia-Regular.otf") format("opentype");
+  font-family: Revenant_title_font;
+  src: url("fonts/Revenant_title_font.otf") format("opentype");
 }
 
 @font-face {
-  font-family: revenant_text_font_two;
+  font-family: Revenant_text_font;
   src: url("fonts/OrticaLinear-Regular.otf") format("opentype");
 }
 
 /*  this isnt a solution, to change */
-* 
-{
+* {
   overflow: hidden;
 }
-
-/*  the top section with the menu title initial and all of that right now is a bit of a mess and to be re done */
 
 .phaser-layer-substitute {
   position: absolute;
@@ -32,8 +23,7 @@
   background-color: black;
 }
 
-.phaser-layer-original
-{
+.phaser-layer-original {
   position: absolute;
   top: 0;
   left: 0;
@@ -53,7 +43,7 @@
 }
 
 .top-menu-container {
-  font-family: Revenant_font;
+  font-family: Revenant_title_font;
   padding-bottom: 1%;
   padding-top: 2%;
   height: 6%;
@@ -61,8 +51,8 @@
   background-color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
-  border-bottom-left-radius: 40px; 
-  border-bottom-right-radius: 40px;  
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
 }
 
 .navbar-container {
@@ -92,6 +82,7 @@
   background: url('/RisingRevenantLogo.png') center/contain no-repeat;
   /* background-color: aqua; */
 }
+
 /* 
 .game-title-image
 {
@@ -110,11 +101,11 @@
   height: 70%;
   width: 20%;
   /* background: rgb(255, 255, 255) ; */
-  display: flex; 
+  display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   border-radius: 6%;
-  margin-bottom: 5% ;
+  margin-bottom: 5%;
   /* background-color: aliceblue; */
 }
 
@@ -143,39 +134,29 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: calc(1em + 0.5vw);
+  font-size: 1.8rem;
   color: white;
-  font-family: revenant_text_font_two;
+  font-family: Revenant_text_font;
 }
 
-.connect-button-menu:hover {
-  cursor: pointer;
-}
-
-
-
-
-.tooltip-container-connect-button
-{
+.tooltip-container-connect-button {
   position: absolute;
   top: 8%;
   width: 12%;
-  height: 15%;
-  background-color: aqua;
+  /* height: 15%; */
+  background-color: rgb(224, 200, 156);
   display: flex;
   align-items: center;
   z-index: 99;
   flex-direction: column;
-  cursor:default;
+  cursor: default;
+  border-radius: 5px;
 }
 
-.tooltip-element-container-connect-button
-{
+.tooltip-element-container-connect-button {
   width: 100%;
-  height: 20%;
-  margin: 2%;
-  background-color: rgb(255, 81, 0);
-
+  min-height: 30%;
+  margin: 5%;
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -184,24 +165,24 @@
 }
 
 
-.tooltip-element-picture-connect-button
-{
-  margin: 5%;
+.tooltip-element-picture-connect-button {
+  /* margin: 5%; */
   width: 20%;
   height: 80%;
-  
+
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.tooltip-element-text-connect-button
-{
+.tooltip-element-text-connect-button {
   width: 90%;
   height: 80%;
-  font-size: 1.4rem;
-
-  background-color: rgba(177, 224, 5, 0.7);
-  text-align: center;
+  font-size: 1.1vh;
+  background-color: rgb(131, 55, 36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .main-menu-navbar-container {
   display: flex;
@@ -212,8 +193,10 @@
   width: 40%;
   height: 100%;
   background-color: rgb(0, 0, 0);
-  border-bottom-left-radius: 10px; 
-  border-bottom-right-radius: 10px;  
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  user-select: none;
+  pointer-events: none;
 }
 
 .navbar-button {
@@ -233,7 +216,7 @@
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
-  font-family: 'Revenant_font', fallback-fonts, sans-serif;
+  font-family: 'Revenant_title_font', fallback-fonts, sans-serif;
 }
 
 .navbar-button:hover {
@@ -261,7 +244,7 @@
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
-  font-family: 'Revenant_font', fallback-fonts, sans-serif;
+  font-family: 'Revenant_title_font', fallback-fonts, sans-serif;
 }
 
 .navbar-button-disabled:hover {
@@ -290,7 +273,7 @@
   background-color: rgb(0, 0, 0);
   z-index: -1;
   transition: opacity 0.3s ease;
-  backdrop-filter: blur(30px);    
+  backdrop-filter: blur(30px);
 }
 
 
@@ -312,21 +295,130 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Black overlay with some transparency */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Black overlay with some transparency */
   z-index: 10;
 }
 
-.grey-scale-on
-{
+.grey-scale-on {
   filter: grayscale(100%);
 }
 
-.grey-scale-off
-{
+.grey-scale-off {
   filter: grayscale(0%);
 }
 
 .content {
   z-index: 2;
 }
+
+
+.opacity-scale-on {
+  opacity: 1;
+}
+
+.opacity-scale-off {
+  opacity: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.event-feed-main-container
+{
+  position: absolute;
+
+  top: 60%;
+  left: 79%;
+
+  width: 20%;
+  height: 30%;
+
+  background-color: rgb(224, 200, 156);
+  color: black;
+  border-radius: 10px;
+}
+
+.event-feed-title
+{
+  font-family: Revenant_title_font;
+  font-size: 4vw;
+  color: white;
+  text-align: center;
+  height: 20%;
+}
+
+.event-feed-worldevent-data-text
+{
+  height: 15%;
+  font-family: Revenant_text_font;
+  font-size: 1vw;
+  
+  text-align: center;
+  height: fit-content;
+}
+
+.event-feed-divider
+{
+  margin-top: 3%;
+  margin-bottom: 3%;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    black 30%,
+    black 70%,
+    transparent 100%
+  );
+}
+
+.event-feed-outpost-data-container {
+  align-self: center;
+  max-height: 45%;
+  width: 90%;
+  padding-top: 10px;
+  overflow-y: auto;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(245,218,179);
+}
+
+
+.event-feed-outpost-data-element
+{
+  font-family: Revenant_text_font;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  background-color: rgb(171,152,125);
+  margin-left: 12px;
+}
+
+
+.event-feed-outpost-data-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.event-feed-outpost-data-container::-webkit-scrollbar-thumb {
+  background-color: rgb(110, 104, 79);
+  border-radius: 10px;
+}
+
+.event-feed-outpost-data-container::-webkit-scrollbar-track {
+  background-color: rgba(121, 106, 86, 0.493);
+}
+
+
+
 

@@ -23,15 +23,15 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
   // here is where we set the position of the outpost
   defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
-    const position = getComponentValueStrict(Outpost, entity);
-    const outpostData = getComponentValueStrict(ClientOutpostData, entity);
+    const outpostDojoData = getComponentValueStrict(Outpost, entity);
+    const outpostClientData = getComponentValueStrict(ClientOutpostData, entity);
 
     const outpostObj = objectPool.get(entity, "Sprite");
 
     outpostObj.setComponent({
       id: "position",
       once: (sprite) => {
-        sprite.setPosition(position.x - (sprite.width * SCALE) / 2, position.y - (sprite.height * SCALE) / 2);
+        sprite.setPosition(outpostDojoData.x - (sprite.width * SCALE) / 2, outpostDojoData.y - (sprite.height * SCALE) / 2);
       },
     });
 
@@ -41,12 +41,12 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
         sprite.depth = 0;
 
-        if (position.lifes < 0) {
+        if (outpostDojoData.lifes <= 0) {
           sprite.setTexture(Assets.CastleDestroyedAsset);
         }
         else {
-          if (!outpostData.event_effected) {
-            if (outpostData.owned) {
+          if (!outpostClientData.event_effected) {
+            if (outpostClientData.owned) {
               sprite.setTexture(Assets.CastleHealthySelfAsset);
             } else {
               sprite.setTexture(Assets.CastleHealthyEnemyAsset);

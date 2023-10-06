@@ -1,14 +1,13 @@
 import React from "react";
-import { BuyRevenantButton } from "../components/buyRevenantButton";
+import { SummonRevenantButton } from "../components/summonRevenantButton";
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
-import { ClickWrapper } from "../clickWrapper";
 import "../styles/MainPageStyle.css";
 
-import { EventList } from "../components/eventFeedMainMenu";
+// import { EventList } from "../components/eventFeedMainMenu";
+import { EventList } from "../components/eventFeedComponent";
 
 import { DebugMenuSection } from "../components/debugMenuSection";
-import { getComponentValueStrict } from "@latticexyz/recs";
 
 export const MainReactComp: React.FC<{
   layer: PhaserLayer;
@@ -34,26 +33,19 @@ export const MainReactComp: React.FC<{
         ></div>
 
         <div className="main-menu-side-section-container">
-          <EventList layer={layer} timerPassed={timerPassed}/>
-
-                  {/* <div className={`main-menu-list-container ${timerPassed ? "opaque-on" : "opaque-off"}`}>
-                    <div className="main-menu-event-list-title">event feed</div>
-                    <ClickWrapper >
-                      <EventList layer={layer}/>
-                    </ClickWrapper>
-                  </div>
-                  </div> */}
         </div>
       </div>
 
+      <EventList layer={layer} timerPassed={timerPassed}/>
+      
       <div
         className={`main-menu-button-container ${
           timerPassed ? "grey-scale-off" : "grey-scale-on"
         }`}
       >
-        <ClickWrapper>
-          <BuyRevenantButton layer={layer} timerPassed={timerPassed} />
-        </ClickWrapper>
+
+          <SummonRevenantButton layer={layer} timerPassed={timerPassed} />
+      
       </div>
     </div>
   );

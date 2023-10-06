@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useWASDKeys } from "../../phaser/systems/eventSystems/keyPressListener";
 import "../styles/MapPageStyle.css";
 
+import { ClickWrapper } from "../clickWrapper";
+
 import { PhaserLayer } from "../../phaser";
-import { CAMERA_ID, MAP_HEIGHT, MAP_WIDTH } from "../../phaser/constants";
-import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from "../../phaser/constants";
+import { getComponentValue, setComponent } from "@latticexyz/recs";
 
 export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
   const keysDown = useWASDKeys();
-  const camEntity = CAMERA_ID as EntityIndex;
   const CAMERA_SPEED = 10;
 
   const {
@@ -16,7 +17,6 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
       Main: { camera },
     },
     networkLayer: {
-      systemCalls: { set_camera_position_component },
       components: { ClientCameraPosition },
     },
   } = layer;
@@ -37,7 +37,7 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
     const update = () => {
       const current_pos = getComponentValue(
         ClientCameraPosition,
-        camEntity
+        GAME_CONFIG
       ) || { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 };
 
       if (!current_pos) {
@@ -80,7 +80,10 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
 
       if (newX !== prevX || newY !== prevY) {
 
-        set_camera_position_component(newX, newY);
+        setComponent(ClientCameraPosition, GAME_CONFIG, {
+          x: newX,
+          y: newY,
+        });
 
         prevX = newX;
         prevY = newY;
@@ -97,5 +100,16 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
     };
   }, [keysDown]);
 
-  return <div>{ }</div>;
+
+
+  return (
+  <div>
+    <ClickWrapper className="instruction-for-map-container">
+    <div className="instruction-for-map-title-element">instructions</div>
+      <div className="instruction-for-map-text-element">Ctrl + scrool wheel to zoom (disabele)</div>
+      <div className="instruction-for-map-text-element">Shift to toggle NavBar</div>
+    </ClickWrapper>
+  </div>
+
+  );
 };

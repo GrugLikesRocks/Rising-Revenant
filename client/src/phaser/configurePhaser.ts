@@ -36,7 +36,7 @@ export const phaserConfig = {
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
                     key: Assets.MapPicture,
-                    path: "src/assets/old_map.png",
+                    path: "src/assets/rev_map_big.png",
                     // path: "src/assets/map.svg",
                 }
             },
@@ -63,12 +63,12 @@ export const phaserConfig = {
         zoom: 1,
         mode: Phaser.Scale.NONE,
     }),
-    cameraConfig: defineCameraConfig({
-        pinchSpeed: 0.01,
-        wheelSpeed: 0.01,
-        maxZoom: 2,
-        minZoom: 0.4,
-    }),
+    // cameraConfig: defineCameraConfig({
+    //     pinchSpeed: 0.01,
+    //     wheelSpeed: 0.01,
+    //     maxZoom: 2,
+    //     minZoom: 0.4,
+    // }),
     // ZOOMING IN AND OUT IS DISABLED FOR NOW 
 
     cullingChunkSize: 10000 * 5024,

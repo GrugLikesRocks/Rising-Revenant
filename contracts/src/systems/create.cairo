@@ -17,7 +17,7 @@ mod create_game {
     // increments game id
     // sets game tracker
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context) -> u32 {
+    fn execute(ctx: Context, preparation_phase_interval: u64, event_interval: u64) -> u32 {
         let mut game_tracker = get!(ctx.world, (GAME_CONFIG), GameTracker);
         let game_id = game_tracker.count + 1; // game id increment
 
@@ -25,7 +25,17 @@ mod create_game {
         let prize = 0; // total prize
         let status = true; // game status
 
-        set!(ctx.world, (Game { game_id, start_block_number, prize, status }));
+        set!(
+            ctx.world,
+            (Game {
+                game_id,
+                start_block_number,
+                prize,
+                preparation_phase_interval,
+                event_interval,
+                status
+            })
+        );
 
         set!(
             ctx.world,

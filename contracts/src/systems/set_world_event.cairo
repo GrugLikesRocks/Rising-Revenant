@@ -9,9 +9,7 @@ mod set_world_event {
     use RealmsRisingRevenant::components::Game;
     use RealmsRisingRevenant::components::GameEntityCounter;
     use RealmsRisingRevenant::components::world_event::WorldEvent;
-    use RealmsRisingRevenant::constants::{
-        EVENT_BLOCK_INTERVAL, EVENT_INIT_RADIUS, MAP_HEIGHT, MAP_WIDTH, PREPARE_PHRASE_INTERVAL
-    };
+    use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, MAP_HEIGHT, MAP_WIDTH};
     use RealmsRisingRevenant::utils::MAX_U32;
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
 
@@ -25,7 +23,8 @@ mod set_world_event {
 
         let block_number = starknet::get_block_info().unbox().block_number;
         assert(
-            (block_number - game.start_block_number) > PREPARE_PHRASE_INTERVAL, 'game not start'
+            (block_number - game.start_block_number) > game.preparation_phase_interval,
+            'game not start'
         );
 
         let mut game_data = get!(ctx.world, game_id, GameEntityCounter);
@@ -46,7 +45,7 @@ mod set_world_event {
             let prev_world_event = get!(ctx.world, (game_id, entity_id - 1), WorldEvent);
 
             assert(
-                (block_number - prev_world_event.block_number) > EVENT_BLOCK_INTERVAL,
+                (block_number - prev_world_event.block_number) > game.event_interval,
                 'event occur interval too small'
             );
 

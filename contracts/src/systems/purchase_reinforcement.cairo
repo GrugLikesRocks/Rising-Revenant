@@ -6,10 +6,7 @@ mod purchase_reinforcement {
     use dojo::world::Context;
 
     use RealmsRisingRevenant::components::Game;
-
-    use RealmsRisingRevenant::components::reinforcement::{Reinforcement};
-
-    use RealmsRisingRevenant::constants::PREPARE_PHRASE_INTERVAL;
+    use RealmsRisingRevenant::components::reinforcement::Reinforcement;
 
     // this will create a newoutpost at a random coordinate
     // TODO: Add Lords Deposit
@@ -18,7 +15,7 @@ mod purchase_reinforcement {
         // check if the game has started
         let block_number = starknet::get_block_info().unbox().block_number;
         assert(
-            (block_number - game.start_block_number) <= PREPARE_PHRASE_INTERVAL,
+            (block_number - game.start_block_number) <= game.preparation_phase_interval,
             'prepare phrase end'
         );
 

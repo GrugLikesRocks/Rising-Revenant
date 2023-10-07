@@ -24,9 +24,7 @@ mod tests {
     };
     use RealmsRisingRevenant::components::world_event::{world_event, WorldEvent};
 
-    use RealmsRisingRevenant::constants::{
-        EVENT_BLOCK_INTERVAL, EVENT_INIT_RADIUS, OUTPOST_INIT_LIFE, PREPARE_PHRASE_INTERVAL
-    };
+    use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, OUTPOST_INIT_LIFE};
     // systems
     use RealmsRisingRevenant::systems::create::create_game;
     use RealmsRisingRevenant::systems::create_revenant::create_revenant;
@@ -35,6 +33,8 @@ mod tests {
     use RealmsRisingRevenant::systems::set_world_event::set_world_event;
     use RealmsRisingRevenant::systems::destroy_outpost::destroy_outpost;
 
+    const EVENT_BLOCK_INTERVAL: u64 = 3;
+    const PREPARE_PHRASE_INTERVAL: u64 = 10;
 
     fn mock_game() -> (IWorldDispatcher, u32, felt252) {
         let caller = starknet::contract_address_const::<0x0>();
@@ -61,7 +61,7 @@ mod tests {
         // deploy executor, world and register components/systems
         let world = spawn_test_world(components, systems);
 
-        let calldata = array![];
+        let calldata = array![PREPARE_PHRASE_INTERVAL.into(), EVENT_BLOCK_INTERVAL.into()];
         let mut res = world.execute('create_game'.into(), calldata);
         let game_id = serde::Serde::<u32>::deserialize(ref res)
             .expect('spawn deserialization failed');

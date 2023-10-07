@@ -1,6 +1,4 @@
 const GAME_CONFIG: felt252 = 999999999999999;
-const EVENT_BLOCK_INTERVAL: u64 = 3;
-const PREPARE_PHRASE_INTERVAL: u64 = 10;
 const OUTPOST_INIT_LIFE: u32 = 5;
 // the max of outpost count is 1. 
 const OUTPOST_MAX_COUNT: u32 = 1;

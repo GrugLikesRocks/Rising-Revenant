@@ -10,14 +10,12 @@ mod create_revenant {
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
     use RealmsRisingRevenant::components::outpost::{
-        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
+        Outpost, OutpostPosition, OutpostStatus, OutpostImpl, OutpostTrait
     };
+    use RealmsRisingRevenant::components::reinforcement::Reinforcement;
 
-    use RealmsRisingRevenant::constants::{
-        MAP_HEIGHT, MAP_WIDTH, OUTPOST_INIT_LIFE, PREPARE_PHRASE_INTERVAL
-    };
+    use RealmsRisingRevenant::constants::{MAP_HEIGHT, MAP_WIDTH, OUTPOST_INIT_LIFE};
     use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
-    use RealmsRisingRevenant::components::reinforcement::{Reinforcement};
 
 
     // this will create a revenant with name
@@ -29,7 +27,7 @@ mod create_revenant {
 
         let block_number = starknet::get_block_info().unbox().block_number;
         assert(
-            (block_number - game.start_block_number) <= PREPARE_PHRASE_INTERVAL,
+            (block_number - game.start_block_number) <= game.preparation_phase_interval,
             'prepare phrase end'
         );
 
@@ -64,8 +62,22 @@ mod create_revenant {
         // We set the position of the outpost
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         let mut random = RandomImpl::new(seed);
-        let x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
-        let y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
+        let mut x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
+        let mut y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
+
+        let mut prevOutpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
+
+        // avoid multiple outpost appearing in the same position
+        if prevOutpost.entity_id > 0 {
+            loop {
+                x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
+                y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
+                prevOutpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
+                if prevOutpost.entity_id == 0 {
+                    break;
+                };
+            }
+        };
 
         let outpost = Outpost {
             game_id,
@@ -79,7 +91,8 @@ mod create_revenant {
             last_affect_event_id: 0
         };
 
-        set!(ctx.world, (outpost, game_data));
+        let position = OutpostPosition { game_id, x, y, entity_id };
+        set!(ctx.world, (outpost, game_data, position));
 
         entity_id
     }

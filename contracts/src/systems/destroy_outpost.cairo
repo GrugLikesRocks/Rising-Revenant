@@ -16,7 +16,7 @@ mod destroy_outpost {
     // This should remove lifes and defence from the entity
     // TODO: Send reward to destroy of outpost
     //returns a bool here
-    fn execute(ctx: Context, game_id: u32, event_id: u128, outpost_id: u128) -> bool{
+    fn execute(ctx: Context, game_id: u32, event_id: u128, outpost_id: u128) -> bool {
         // Check if the game is active
         let mut game = get!(ctx.world, game_id, Game);
         assert(game.status, 'Game is not active');
@@ -28,7 +28,9 @@ mod destroy_outpost {
         let mut outpost = get!(ctx.world, (game_id, outpost_id), Outpost);
         outpost.assert_existed();
 
-        assert(outpost.last_affect_event_id != world_event.entity_id , 'outpost affected by same event');
+        assert(
+            outpost.last_affect_event_id != world_event.entity_id, 'outpost affected by same event'
+        );
 
         // check if within radius of event -> revert if not
         let distance = utils::calculate_distance(
@@ -44,13 +46,10 @@ mod destroy_outpost {
         world_event.destroy_count += 1;
 
         let WorldEventTrack = WorldEventTracker {
-            game_id,
-            event_id: world_event.entity_id,
-            outpost_id: outpost.entity_id
+            game_id, event_id: world_event.entity_id, outpost_id: outpost.entity_id
         };
 
-
-        set!(ctx.world, (outpost, world_event,WorldEventTrack));
+        set!(ctx.world, (outpost, world_event, WorldEventTrack));
 
         // TODO: Should we reduce outpost_count of revenant after outpost has been destroy?
 

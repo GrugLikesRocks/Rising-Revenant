@@ -22,10 +22,10 @@ mod tests {
     use RealmsRisingRevenant::components::revenant::{
         revenant, Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
-    use RealmsRisingRevenant::components::world_event::{world_event, WorldEvent, INIT_RADIUS};
+    use RealmsRisingRevenant::components::world_event::{world_event, WorldEvent};
 
     use RealmsRisingRevenant::constants::{
-        EVENT_BLOCK_INTERVAL, OUTPOST_INIT_LIFE, PREPARE_PHRASE_INTERVAL
+        EVENT_BLOCK_INTERVAL, EVENT_INIT_RADIUS, OUTPOST_INIT_LIFE, PREPARE_PHRASE_INTERVAL
     };
     // systems
     use RealmsRisingRevenant::systems::create::create_game;
@@ -131,7 +131,7 @@ mod tests {
         let world_event = serde::Serde::<WorldEvent>::deserialize(ref event)
             .expect('Event deserialization fail');
 
-        assert(world_event.radius == INIT_RADIUS, 'event radius is wrong');
+        assert(world_event.radius == EVENT_INIT_RADIUS, 'event radius is wrong');
     }
 
     #[test]
@@ -175,9 +175,9 @@ mod tests {
         let world_event2 = serde::Serde::<WorldEvent>::deserialize(ref event2)
             .expect('W event deserialization fail');
         if destoryed {
-            assert(world_event2.radius == INIT_RADIUS, 'radius value is wrong');
+            assert(world_event2.radius == EVENT_INIT_RADIUS, 'radius value is wrong');
         } else {
-            assert(world_event2.radius == INIT_RADIUS + 1, 'radius value is wrong');
+            assert(world_event2.radius == EVENT_INIT_RADIUS + 1, 'radius value is wrong');
         }
     }
 }

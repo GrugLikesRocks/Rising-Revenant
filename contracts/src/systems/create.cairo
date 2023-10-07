@@ -13,7 +13,6 @@ mod create_game {
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
 
-
     // Creates a new game
     // increments game id
     // sets game tracker
@@ -21,7 +20,7 @@ mod create_game {
     fn execute(ctx: Context) -> u32 {
         let mut game_tracker = get!(ctx.world, (GAME_CONFIG), GameTracker);
         let game_id = game_tracker.count + 1; // game id increment
-     
+
         let start_block_number = starknet::get_block_info().unbox().block_number; // blocknumber
         let prize = 0; // total prize
         let status = true; // game status
@@ -43,11 +42,6 @@ mod create_game {
 }
 
 
-
-
-
-
-
 #[system]
 mod fetch_game_data {
     use array::ArrayTrait;
@@ -58,7 +52,7 @@ mod fetch_game_data {
 
     use RealmsRisingRevenant::components::Game;
 
-    fn execute(ctx: Context, game_id: u32 ) -> Game {
+    fn execute(ctx: Context, game_id: u32) -> Game {
         let game = get!(ctx.world, game_id, Game);
         game
     }
@@ -84,7 +78,6 @@ mod fetch_game_tracker_data {
 }
 
 
-
 #[system]
 mod fetch_game_entity_counter_data {
     use array::ArrayTrait;
@@ -100,6 +93,3 @@ mod fetch_game_entity_counter_data {
         game_entity_counter
     }
 }
-
-
-

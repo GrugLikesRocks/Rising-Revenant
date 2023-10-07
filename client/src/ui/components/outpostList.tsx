@@ -55,16 +55,16 @@ export const OutpostList = ({ layer }: Props) => {
         return (
             <div className="player-outpost-list-container">
                 <div className="player-outpost-list-fields-container">
-                    <div className="player-outpost-list-fields">revenant id</div>
-                    <div className="player-outpost-list-fields">position</div>
-                    <div className="player-outpost-list-fields">reinforces</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles">REVENANT ID</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles">POSITION</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles">REINFORCEMENTS</div>
                     <div className="player-outpost-list-field-spacer"></div>
                 </div>
                 <div className="player-outpost-list-data-container">
                     <div className="player-outpost-subdata-container">
-                        <div className="player-outpost-data-element"> No data available </div>
-                        <div className="player-outpost-data-element"> No data available </div>
-                        <div className="player-outpost-data-element"> No data available </div>
+                        <div className="player-outpost-data-element font-size-texts"> No data available </div>
+                        <div className="player-outpost-data-element font-size-texts"> No data available </div>
+                        <div className="player-outpost-data-element font-size-texts"> No data available </div>
                     </div>
                 </div>
             </div>
@@ -75,21 +75,21 @@ export const OutpostList = ({ layer }: Props) => {
         <div className="player-outpost-list-container">
 
             <div className="player-outpost-list-fields-container">
-                <div className="player-outpost-list-fields">revenant id</div>
-                <div className="player-outpost-list-fields">position</div>
-                <div className="player-outpost-list-fields">reinforces</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles" >REVENANT ID</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles">POSITION</div>
+                    <div className="player-outpost-list-fields font-size-mid-titles">REINFORCEMENTS</div>  
                 <div className="player-outpost-list-field-spacer"></div>
             </div>
 
             <ClickWrapper className="player-outpost-list-data-container">
                 {playerOutpostsOnly.map((entity, index) => (
                     <div className="player-outpost-subdata-container" key={index}>
-                        <div className="player-outpost-data-element">
+                        <div className="player-outpost-data-element font-size-texts">
                             {String(getComponentValueStrict(ClientOutpostData, entity).id)}
                         </div>
 
                         <div
-                            className="player-outpost-data-element"
+                            className="player-outpost-data-element font-size-texts"
                             style={{ cursor: getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2 ? "pointer" : "auto" }}
                             onMouseLeave={() => {
                                 setShowTooltip(false);
@@ -113,7 +113,7 @@ export const OutpostList = ({ layer }: Props) => {
                         </div>
 
                         <div
-                            className="player-outpost-data-element"
+                            className="player-outpost-data-element font-size-texts"
                             style={{ cursor: "pointer" }}
                             onMouseLeave={() => {
                                 setShowTooltip(false);
@@ -134,7 +134,7 @@ export const OutpostList = ({ layer }: Props) => {
 
                         {showTooltip && tooltipIndex === index && (
                             <div
-                                className="player-outpost-data-element-tooltip"
+                                className="player-outpost-data-element-tooltip font-size-texts"
                                 style={{ top: divRect ? `${divRect.y}px` : "0" }}
                             >
                                 {tooltipText}

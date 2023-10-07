@@ -5,7 +5,7 @@ import "../../App.css";
 import "../styles/MainPageStyle.css";
 
 // import { EventList } from "../components/eventFeedMainMenu";
-import { EventList } from "../components/eventFeedComponent";
+import { EventFeed } from "../components/eventFeedComponent";
 
 import { DebugMenuSection } from "../components/debugMenuSection";
 
@@ -36,7 +36,7 @@ export const MainReactComp: React.FC<{
         </div>
       </div>
 
-      <EventList layer={layer} timerPassed={timerPassed}/>
+      <EventFeed layer={layer} timerPassed={timerPassed}/>
       
       <div
         className={`main-menu-button-container ${

@@ -21,8 +21,6 @@ import { bigIntToHexWithPrefix } from "../utils";
 
 import { toast } from 'react-toastify';
 
-// altough this new method is much cleaner, need to try the old one back to see if the number and bigint issue gets fixed
-
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
@@ -57,7 +55,7 @@ export function createSystemCalls(
 
   const reinforce_outpost = async (signer: Account, outpost_id: number) => {
 
-    const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG ).current_game_id;
+    const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
 
     try {
 
@@ -70,10 +68,7 @@ export function createSystemCalls(
         retryInterval: 100,
       });
 
-      console.log("reinforce_outpost", receipt);
-
       notify("Reinforcing outpost " + outpost_id + "\nTransaction hash: " + receipt.transaction_hash)
-      
 
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
@@ -198,7 +193,7 @@ export function createSystemCalls(
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
-      notify("adding rev failed")
+      notify("adding rev ")
     } finally {
     }
   };
@@ -209,8 +204,7 @@ export function createSystemCalls(
 
   const fetch_game_data = async (game_id: number) => {
 
-    if (game_id === 0 )
-    {
+    if (game_id === 0) {
       return;
     }
 
@@ -291,8 +285,7 @@ export function createSystemCalls(
 
   const fetch_game_entity_counter_data = async (game_id: number) => {
 
-    if (game_id === 0 )
-    {
+    if (game_id === 0) {
       return;
     }
 
@@ -402,7 +395,7 @@ export function createSystemCalls(
       BigInt(entity_id),
     ]);
 
-    let outpostData = getComponentValue(ClientOutpostData, outpostId);
+    const outpostData = getComponentValue(Outpost, outpostId);
 
     const outpostUUID = uuid();
     const outpostDataUUID = uuid();
@@ -412,7 +405,7 @@ export function createSystemCalls(
       Outpost.addOverride(outpostUUID, {
         entity: outpostId,
         value: {
-          owner: "",
+          owner:0 ,
           name: 0,
           x: 0,
           y: 0,
@@ -431,13 +424,24 @@ export function createSystemCalls(
         },
       });
     }
-    
+
 
     try {
 
       const tx: any = await call("fetch_outpost_data", [game_id, entity_id]);
 
       let keys_amount = 2;
+
+      if (outpostData?.status === Number(tx[5 + keys_amount]) &&
+        outpostData?.lifes === Number(tx[4 + keys_amount]) &&
+        outpostData?.y === Number(tx[3 + keys_amount]) &&
+        outpostData?.x === Number(tx[2 + keys_amount]) &&
+        outpostData?.name === Number(tx[1 + keys_amount]) &&
+        outpostData?.owner === (tx[0 + keys_amount]) &&
+        outpostData?.last_affect_event_id === Number(tx[6 + keys_amount])) 
+      {
+        return;
+      }
 
       setComponent(Outpost, outpostId, {
         owner: tx[0 + keys_amount],
@@ -455,10 +459,12 @@ export function createSystemCalls(
         owned = true;
       }
 
+      const outpostClientData = getComponentValue(ClientOutpostData, outpostId);
+
       setComponent(ClientOutpostData, outpostId, {
         id: entity_id,
         owned: owned,
-        event_effected: outpostData?.event_effected || false
+        event_effected: outpostClientData?.event_effected || false
       });
 
     } catch (e) {
@@ -502,6 +508,14 @@ export function createSystemCalls(
       const tx: any = await call("fetch_revenant_data", [game_id, entity_id]);
 
       let keys_amount = 2;
+
+      if (revenantComp?.status === Number(tx[3 + keys_amount]) && 
+      revenantComp?.outpost_count === Number(tx[2 + keys_amount]) && 
+      revenantComp?.name === Number(tx[1 + keys_amount]) && 
+      revenantComp?.owner === (tx[0 + keys_amount])) 
+      {
+        return;
+      }
 
       setComponent(Revenant, revenantId, {
         owner: tx[0 + keys_amount],
@@ -548,6 +562,12 @@ export function createSystemCalls(
 
       let keys_amount = 2;
 
+      // this is to change
+      if (WorldEventComp?.block_number === Number(tx[4 + keys_amount])) {
+        return;
+      }
+
+
       setComponent(WorldEvent, eventId, {
         x: Number(tx[0 + keys_amount]),
         y: Number(tx[1 + keys_amount]),
@@ -574,13 +594,17 @@ export function createSystemCalls(
 
       let phase = clientGameData.current_game_state;
 
-      if (clientGameData.current_game_state === 1)
-      { 
+      if (clientGameData.current_game_state === 1) {
         //prep phase
-        if (Number(txBlockTracker[0]) > gameData.start_block_number + PREPARATION_PHASE_BLOCK_COUNT)
-        {
+        if (Number(txBlockTracker[0]) > gameData.start_block_number + PREPARATION_PHASE_BLOCK_COUNT) {
           phase = 2;
         }
+      }
+
+      // we dont want to set the component again if its the same value
+
+      if (clientGameData.current_block_number === Number(txBlockTracker[0])) {
+        return;
       }
 
       setComponent(ClientGameData, GAME_CONFIG as EntityIndex, {
@@ -596,7 +620,7 @@ export function createSystemCalls(
     }
   };
 
-  const fetch_user_reinforcement_balance = async (signer : Account) => {
+  const fetch_user_reinforcement_balance = async (signer: Account) => {
 
     const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
 
@@ -614,10 +638,10 @@ export function createSystemCalls(
           balance: 0,
         },
       });
-    }      
+    }
 
     try {
- 
+
       const txBalanceTracker: any = await call("fetch_reinforcement_balance", [game_id, signer.address]);
 
       let keys_amount = 2;
@@ -626,8 +650,7 @@ export function createSystemCalls(
         balance: Number(txBalanceTracker[0 + keys_amount])
       });
 
-      
-      notify("fetching reinforcement balance: " + txBalanceTracker[1 + keys_amount] + " wit game id: " + game_id)
+      notify("fetching reinforcement balance for " + signer.address + " with game id: " + game_id)
 
     } catch (e) {
       console.log(e);
@@ -644,9 +667,9 @@ export function createSystemCalls(
 
   return {
     reinforce_outpost,
-    create_game,
+    create_game,   //debug
     destroy_outpost,
-    set_world_event,
+    set_world_event,   //debug
     create_revenant,
     purchase_reinforcement,
 

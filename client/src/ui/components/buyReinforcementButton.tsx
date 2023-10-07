@@ -29,13 +29,14 @@ export const BuyReinforcementComponent = () => {
     }
 
     return (
-            <ClickWrapper className="buy-reinforces-container">
-                
-                <button className="buy-reinforcement-button" onClick={() => purchase_reinforcement(account, amount)}>Buy {amount} Reinforces</button>
-                
-                <button className="buy-reinforcement-amount-button" onClick={() => ChangeAmount(-1)}> - </button>
-                <button className="buy-reinforcement-button-text" onClick={() => purchase_reinforcement(account, amount)}>1</button>
-                <button className="buy-reinforcement-amount-button" onClick={() => ChangeAmount(1)}> + </button>
-            </ClickWrapper>
+        <ClickWrapper className="buy-reinforces-container">
+
+            <button className="buy-reinforcement-button font-size-mid-titles" onClick={() => purchase_reinforcement(account, amount)}> Buy {amount} Reinforcement{amount > 1 ? 's' : ''} </button>
+
+            <button className="buy-reinforcement-amount-button font-size-mid-titles" onClick={() => ChangeAmount(-1)}> - </button>
+            <button className="buy-reinforcement-button-text font-size-mid-titles">1</button>
+            <button className="buy-reinforcement-amount-button font-size-mid-titles" onClick={() => ChangeAmount(1)}> + </button>
+
+        </ClickWrapper>
     );
 };

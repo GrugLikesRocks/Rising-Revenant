@@ -9,7 +9,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          owner: RecsType.String,
+          owner: RecsType.Number,
           name: RecsType.Number,
           x: RecsType.Number,
           y: RecsType.Number,

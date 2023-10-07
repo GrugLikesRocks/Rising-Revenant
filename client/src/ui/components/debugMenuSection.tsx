@@ -77,38 +77,38 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
   if (gameDataEntities.length === 0) 
   {
    return <ClickWrapper className="debug-menu">
-    <div className="debug-title">Debug Menu</div>
+    <div className="debug-title font-size-titles">Debug Menu</div>
     {/* this creates the game this shuold be done via a main address/ account */}
-    <button className="debug-button"  onClick={() => create_game(account)} >Create Game</button>  
+    <button className="debug-button font-size-texts"  onClick={() => create_game(account)} >Create Game</button>  
 
     {/* this should run at the start of the game and should fetch the latest game ID */}
-    <button className="debug-button"  onClick={() => fetch_game_tracker_data(account)} >fetch game tracker</button>
+    <button className="debug-button font-size-texts"  onClick={() => fetch_game_tracker_data(account)} >fetch game tracker</button>
 
     {/* this fetches the actual game data */}
-    <button className="debug-button"  onClick={() => fetch_game_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >join game</button>
+    <button className="debug-button font-size-texts"  onClick={() => fetch_game_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >join game</button>
 
     {/* this fetches the amount of entities data in the game id given*/}
-    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button>
+    <button className="debug-button font-size-texts"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button>
   </ClickWrapper>
   }
   else
   {
    return <ClickWrapper className="debug-menu">
-    <div className="debug-title">Debug Menu</div>
+    <div className="debug-title font-size-titles">Debug Menu</div>
 
-    <button className="debug-button"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >update counter</button>
+    <button className="debug-button font-size-texts"  onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >update counter</button>
  
-    <button className="debug-button" onClick={() => fetch_all_revenants(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id as EntityIndex).revenant_count)} >fetch all revenants</button>
-    <button className="debug-button" onClick={() => fetch_all_outposts(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).outpost_count)} >fetch all outposts</button>
-    <button className="debug-button" onClick={() => fetch_last_event(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).event_count)} >fetch all events</button>
+    <button className="debug-button font-size-texts" onClick={() => fetch_all_revenants(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id as EntityIndex).revenant_count)} >fetch all revenants</button>
+    <button className="debug-button font-size-texts" onClick={() => fetch_all_outposts(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).outpost_count)} >fetch all outposts</button>
+    <button className="debug-button font-size-texts" onClick={() => fetch_last_event(getComponentValueStrict(GameEntityCounter,  clientGameDataEntity!.current_game_id  as EntityIndex).event_count)} >fetch all events</button>
 
-    <button className="debug-text">revenants in the game {getComponentValueStrict(GameEntityCounter,clientGameDataEntity!.current_game_id  as EntityIndex)?.revenant_count  || 0}</button>
-    <button className="debug-text">outposts in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.outpost_count  || 0}</button>
-    <button className="debug-text">events in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.event_count || 0}</button>
-    <button className="debug-text">current block {getComponentValueStrict(ClientGameData, GAME_CONFIG)?.current_block_number || 0}</button>
+    <button className="debug-text font-size-texts">revenants in the game {getComponentValueStrict(GameEntityCounter,clientGameDataEntity!.current_game_id  as EntityIndex)?.revenant_count  || 0}</button>
+    <button className="debug-text font-size-texts">outposts in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.outpost_count  || 0}</button>
+    <button className="debug-text font-size-texts">events in the game {getComponentValueStrict(GameEntityCounter, clientGameDataEntity!.current_game_id  as EntityIndex)?.event_count || 0}</button>
+    <button className="debug-text font-size-texts">current block {getComponentValueStrict(ClientGameData, GAME_CONFIG)?.current_block_number || 0}</button>
 
-    <button className="debug-button" onClick={() => set_world_event(account)} >Run Event</button>
-    <button className="debug-button" onClick={() => create_revenant(
+    <button className="debug-button font-size-texts" onClick={() => set_world_event(account)} >Run Event</button>
+    <button className="debug-button font-size-texts"  onClick={() => create_revenant(
               account,
               "name " + getComponentValueStrict(GameEntityCounter, getComponentValueStrict(ClientGameData,GAME_CONFIG).current_game_id as EntityIndex).revenant_count as string, 
             )}>create revenant</button>

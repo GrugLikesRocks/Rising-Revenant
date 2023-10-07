@@ -34,7 +34,7 @@ export const SummonRevenantButton = ({ layer,timerPassed }: ExampleComponentProp
   return (
     <ClickWrapper className={` ${timerPassed ? "opaque-on" : "opaque-off"}`}>
         <button
-          className="buy-revenant-button"  
+          className="buy-revenant-button font-size-mid-titles"  
           onClick={() =>
             create_revenant(
               account,

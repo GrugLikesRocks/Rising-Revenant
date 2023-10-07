@@ -23,7 +23,6 @@ import { ProfilePage } from "../pages/profilePage";
 import { MapReactComp } from "../pages/mapPage";
 
 import { ToolTipData } from "./outpostToolTip";
-// import { CircleEvent } from "./eventCircle";
 
 import React, { useState, useEffect, useRef } from "react";
 import { GAME_CONFIG, PREPARATION_PHASE_BLOCK_COUNT } from "../../phaser/constants";
@@ -218,6 +217,13 @@ export const MainMenuComponent = ({
       }
     }
 
+    const fetch_all_event_entities = (event_count: number) => {
+        
+        for (let i = 0; i < event_count; i++) {
+          fetch_event_data(i + 1);
+        }
+      }
+
     const performActionWithRetry = async () => {
 
       let actionSucceeded = false;
@@ -250,7 +256,7 @@ export const MainMenuComponent = ({
         }
 
         if (entityCounter.event_count != 0) {
-          fetch_event_data(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).event_count)
+          fetch_all_event_entities(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).event_count)
         }
 
         await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -300,10 +306,6 @@ export const MainMenuComponent = ({
       FetchBalance();
     }
   }, [showTooltip]);
-
-
-
-
 
   const toggleOpacity = () => {
 
@@ -356,30 +358,31 @@ export const MainMenuComponent = ({
     <div className={`main-page-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"} ${navbarOpacity === 0 && actualMenuState === MenuState.MAP ? "opacity-scale-off" : "opacity-scale-on"} `}>
       {showErrorMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">Searching for a game{Array(dots).fill(".").join("")}</div>
+          <div className="loading-screen-title-text font-size-titles">Searching for a game{Array(dots).fill(".").join("")}</div>
           <div className="loading-screen-divider"></div>
         </div>)}
 
       {showSuccessMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">Joined game -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
+          <div className="loading-screen-title-text  font-size-mid-titles">JOINED GAME -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
 
           {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 ? (
-            <div className="loading-screen-message">
+            <div className="loading-screen-message  font-size-mid-titles">
               STARTING PHASE ENDS IN {Math.abs(
                 Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
                 (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)
               )} BLOCKS
             </div>
           ) : (
-            <div className="loading-screen-message">
+
+            <div className="loading-screen-message font-size-mid-titles">
               PLAY PHASE STARTED {Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
                 (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCKS AGO
             </div>
           )}
 
           <div className="loading-screen-divider"></div>
-          <div className="loading-screen-message">Number of Revenants summoned so far -- {getComponentValueStrict(GameEntityCounter,
+          <div className="loading-screen-message font-size-mid-titles">Number of Revenants summoned so far -- {getComponentValueStrict(GameEntityCounter,
             getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).revenant_count}</div>
         </div>)}
 
@@ -393,14 +396,14 @@ export const MainMenuComponent = ({
           <div className="game-title-menu-text"></div>
         </div>
 
-        <ClickWrapper className="connect-button-menu"
+        <ClickWrapper className="connect-button-menu font-size-mid-titles"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
           {getComponentValue(ClientGameData, GAME_CONFIG)?.user_account_address?.substring(0, 8) + "..." || "Connect"}
 
           {showTooltip && navbarOpacity === 1 && (
-            <div className="tooltip-container-connect-button">
+            <div className="tooltip-container-connect-button font-size-texts">
 
               {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2  && (
                 <div className="tooltip-element-container-connect-button">

@@ -59,49 +59,49 @@ export const Navbar: React.FC<NavbarProps> = ({ menuState, setMenuState, layer, 
   if (!passedTimer || navbarOpacity === 0) {
     return (
       <div className="main-menu-navbar-container">
-        <button className="navbar-button">rules</button>
+        <button className="navbar-button">RULES</button>
         <div className="navbar-divider"></div>
-        <button className="navbar-button">map</button>
+        <button className="navbar-button">MAP</button>
         <div className="navbar-divider"></div>
-        <button className="navbar-button" >stats</button>
+        <button className="navbar-button" >STATS</button>
         <div className="navbar-divider"></div>
-        <button className="navbar-button" >trades</button>
+        <button className="navbar-button " >TRADES</button>
         <div className="navbar-divider"></div>
-        <button className="navbar-button" >profile</button>
+        <button className="navbar-button" >PROFILE</button>
       </div>
     );
   }
-  else {
-    
+ 
+  else { 
     const clientGameData = getComponentValueStrict(ClientGameData, GAME_CONFIG);
 
     if (clientGameData.current_game_state === 1) {
       return (
         <ClickWrapper className="main-menu-navbar-container">
-        <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>rules</button>
+        <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>RULES</button>
         <div className="navbar-divider"></div>
-        <div className="navbar-button-disabled" >map</div>
+        <div className="navbar-button-disabled" >MAP</div>
         <div className="navbar-divider"></div>
-        <div className="navbar-button-disabled" >stats</div>
+        <div className="navbar-button-disabled" >STATS</div>
         <div className="navbar-divider"></div>
-        <div className="navbar-button-disabled" >trades</div>
+        <div className="navbar-button-disabled" >TRADES</div>
         <div className="navbar-divider"></div>
-        <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>profile</button>
+        <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>PROFILE</button>
       </ClickWrapper>
       );
     }
     else {
       return (
         <ClickWrapper className="main-menu-navbar-container">
-          <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>rules</button>
+          <button className={`navbar-button ${menuState === MenuState.RULES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.RULES)}>RULES</button>
           <div className="navbar-divider"></div>
-          <button className={`navbar-button ${menuState === MenuState.MAP ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.MAP)}>map</button>
+          <button className={`navbar-button ${menuState === MenuState.MAP ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.MAP)}>MAP</button>
           <div className="navbar-divider"></div>
-          <button className={`navbar-button ${menuState === MenuState.STATS ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.STATS)}>stats</button>
+          <button className={`navbar-button ${menuState === MenuState.STATS ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.STATS)}>STATS</button>
           <div className="navbar-divider"></div>
-          <button className={`navbar-button ${menuState === MenuState.TRADES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.TRADES)}>trades</button>
+          <button className={`navbar-button ${menuState === MenuState.TRADES ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.TRADES)}>TRADES</button>
           <div className="navbar-divider"></div>
-          <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>profile</button>
+          <button className={`navbar-button ${menuState === MenuState.PROFILE ? 'selected' : ''}`} onClick={() => toggleMenu(MenuState.PROFILE)}>PROFILE</button>
         </ClickWrapper>
       );
     }

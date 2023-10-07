@@ -8,7 +8,7 @@
 }
 
 .rules-page-title {
-  font-size: 2.5vw;
+  /* font-size: 2.5vw; */
   margin-bottom: 20px;
   color: white;
   text-align: center;
@@ -26,6 +26,6 @@
   padding: 10px;
   color: white;
   line-height: 1.6;
-  font-size: 1.2vw; 
+  /* font-size: 1.2vw;  */
   font-family: Revenant_text_font;
 }

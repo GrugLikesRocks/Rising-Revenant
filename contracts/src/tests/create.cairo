@@ -14,8 +14,7 @@ mod tests {
     use dojo::test_utils::spawn_test_world;
 
     // components
-    use RealmsRisingRevenant::components::{game, Game};
-    use RealmsRisingRevenant::components::{game_tracker, GameTracker};
+    use RealmsRisingRevenant::components::game::{game, Game, game_tracker, GameTracker};
     use RealmsRisingRevenant::components::outpost::{
         outpost, Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };

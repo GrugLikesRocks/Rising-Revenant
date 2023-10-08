@@ -6,11 +6,7 @@ mod create_game {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::GameTracker;
-
-    use RealmsRisingRevenant::components::GameEntityCounter;
-
+    use RealmsRisingRevenant::components::game::{Game, GameStatus, GameTracker, GameEntityCounter};
     use RealmsRisingRevenant::constants::GAME_CONFIG;
 
     // Creates a new game
@@ -23,7 +19,7 @@ mod create_game {
 
         let start_block_number = starknet::get_block_info().unbox().block_number; // blocknumber
         let prize = 0; // total prize
-        let status = true; // game status
+        let status = GameStatus::preparing; // game status
 
         set!(
             ctx.world,
@@ -39,7 +35,7 @@ mod create_game {
 
         set!(
             ctx.world,
-            (GameEntityCounter { game_id, revenant_count: 0, outpost_count: 0, event_count: 0 })
+            (GameEntityCounter { game_id, revenant_count: 0, outpost_count: 0, event_count: 0, outpost_exists_count: 0 })
         );
 
         set!(
@@ -60,7 +56,7 @@ mod fetch_game_data {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::game::Game;
 
     fn execute(ctx: Context, game_id: u32) -> Game {
         let game = get!(ctx.world, game_id, Game);
@@ -77,7 +73,7 @@ mod fetch_game_tracker_data {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsRisingRevenant::components::GameTracker;
+    use RealmsRisingRevenant::components::game::GameTracker;
 
     use RealmsRisingRevenant::constants::GAME_CONFIG;
 
@@ -96,7 +92,7 @@ mod fetch_game_entity_counter_data {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsRisingRevenant::components::GameEntityCounter;
+    use RealmsRisingRevenant::components::game::GameEntityCounter;
 
     fn execute(ctx: Context, game_id: u32) -> GameEntityCounter {
         let game_entity_counter = get!(ctx.world, game_id, GameEntityCounter);

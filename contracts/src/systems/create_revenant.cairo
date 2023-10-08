@@ -5,7 +5,7 @@ mod create_revenant {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::{Game, GameEntityCounter};
+    use RealmsRisingRevenant::components::game::{Game, GameTrait, GameImpl, GameEntityCounter};
     use RealmsRisingRevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
@@ -22,14 +22,8 @@ mod create_revenant {
     fn execute(ctx: Context, game_id: u32, name: felt252) -> (u128, u128) {
         assert(name != 0, 'name length must larger than 0');
 
-        let (game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
-        assert(game.status, 'game is not running');
-
-        let block_number = starknet::get_block_info().unbox().block_number;
-        assert(
-            (block_number - game.start_block_number) <= game.preparation_phase_interval,
-            'prepare phrase end'
-        );
+        let (mut game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
+        game.assert_can_create_outpost(ctx);
 
         game_data.revenant_count += 1;
 
@@ -56,6 +50,7 @@ mod create_revenant {
         let mut game_data = get!(ctx.world, game_id, (GameEntityCounter));
 
         game_data.outpost_count += 1;
+        game_data.outpost_exists_count += 1;
 
         let entity_id: u128 = game_data.outpost_count.into();
 
@@ -106,7 +101,6 @@ mod fetch_revenant_data {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::{Game, GameEntityCounter};
     use RealmsRisingRevenant::components::revenant::{Revenant, RevenantStatus};
 
     fn execute(ctx: Context, game_id: u32, entity_id: u128) -> Revenant {
@@ -125,16 +119,7 @@ mod fetch_outpost_data {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::outpost::{
-        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
-    };
-    use RealmsRisingRevenant::components::revenant::{
-        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
-    };
-    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
-
-    use RealmsRisingRevenant::components::GameEntityCounter;
+    use RealmsRisingRevenant::components::outpost::Outpost;
 
     fn execute(ctx: Context, game_id: u32, entity_id: u128) -> Outpost {
         let outpost = get!(ctx.world, (game_id, entity_id), Outpost);
@@ -151,13 +136,6 @@ mod fetch_current_block_count {
     use box::BoxTrait;
     use traits::Into;
     use dojo::world::Context;
-
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::outpost::{
-        Outpost, OutpostStatus, OutpostImpl, OutpostTrait
-    };
-
-    use RealmsRisingRevenant::components::GameEntityCounter;
 
     fn execute(ctx: Context) -> u64 {
         starknet::get_block_info().unbox().block_number

@@ -6,8 +6,7 @@ mod set_world_event {
     use dojo::world::Context;
     use option::OptionTrait;
 
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::GameEntityCounter;
+    use RealmsRisingRevenant::components::game::{Game, GameEntityCounter, GameTrait, GameImpl};
     use RealmsRisingRevenant::components::world_event::WorldEvent;
     use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, MAP_HEIGHT, MAP_WIDTH};
     use RealmsRisingRevenant::utils::MAX_U32;
@@ -19,13 +18,7 @@ mod set_world_event {
     fn execute(ctx: Context, game_id: u32) -> WorldEvent {
         // check game is active
         let mut game = get!(ctx.world, game_id, Game);
-        assert(game.status, 'Game is not active');
-
-        let block_number = starknet::get_block_info().unbox().block_number;
-        assert(
-            (block_number - game.start_block_number) > game.preparation_phase_interval,
-            'game not start'
-        );
+        game.assert_is_playing(ctx);
 
         let mut game_data = get!(ctx.world, game_id, GameEntityCounter);
         game_data.event_count += 1;
@@ -37,6 +30,7 @@ mod set_world_event {
         let x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
         let y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
 
+        let block_number = starknet::get_block_info().unbox().block_number;
         // Radius increases when the previous world event does not cause damage.
         let mut radius: u32 = 0;
         if entity_id <= 1 {
@@ -74,20 +68,13 @@ mod fetch_event_data {
     use traits::{Into, TryInto};
     use dojo::world::Context;
     use option::OptionTrait;
-    use RealmsRisingRevenant::components::Game;
-    use RealmsRisingRevenant::components::GameEntityCounter;
-
-    use RealmsRisingRevenant::constants::GAME_CONFIG;
-
+    use RealmsRisingRevenant::components::game::{Game, GameTrait, GameImpl};
     use RealmsRisingRevenant::components::world_event::WorldEvent;
-    use RealmsRisingRevenant::utils::MAX_U32;
-    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
-
+    use RealmsRisingRevenant::constants::GAME_CONFIG;
 
     fn execute(ctx: Context, game_id: u32, entity_id: u128) -> WorldEvent {
         let game = get!(ctx.world, game_id, Game);
-        // check if the game has started
-        assert(game.status, 'game is not running');
+        game.assert_existed();
 
         let event = get!(ctx.world, (game_id, entity_id), WorldEvent);
 

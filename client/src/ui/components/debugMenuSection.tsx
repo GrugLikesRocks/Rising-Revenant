@@ -82,13 +82,13 @@ export const DebugMenuSection = ({ layer }: ExampleComponentProps) => {
     <button className="debug-button font-size-texts standard-orange-color-palette"  onClick={() => create_game(account)} >Create Game</button>  
 
     {/* this should run at the start of the game and should fetch the latest game ID */}
-    <button className="debug-button font-size-texts standard-orange-color-palette"  onClick={() => fetch_game_tracker_data(account)} >fetch game tracker</button>
+    {/* <button className="debug-button font-size-texts standard-orange-color-palette"  onClick={() => fetch_game_tracker_data(account)} >fetch game tracker</button> */}
 
     {/* this fetches the actual game data */}
-    <button className="debug-button font-size-texts standard-orange-color-palette"  onClick={() => fetch_game_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >join game</button>
+    {/* <button className="debug-button font-size-texts standard-orange-color-palette"  onClick={() => fetch_game_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >join game</button> */}
 
     {/* this fetches the amount of entities data in the game id given*/}
-    <button className="debug-button font-size-texts standard-orange-color-palette"   onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button>
+    {/* <button className="debug-button font-size-texts standard-orange-color-palette"   onClick={() => fetch_game_entity_counter_data(getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count)} >fetch entity counter</button> */}
   </ClickWrapper>
   }
   else

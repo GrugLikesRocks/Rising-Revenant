@@ -56,18 +56,34 @@ export function createSystemCalls(
 
     const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
 
-    const overrideId = uuid();
-    let outpost_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
+    const reinforcement_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(signer.address)])
 
-    let current_outpost_data = getComponentValueStrict(Outpost, outpost_entity_id);
+    const current_balance_data = getComponentValueStrict(Reinforcement, reinforcement_entity_id);
 
-    Outpost.addOverride(overrideId, {
+
+    const balanceOverrideId = uuid();
+    Reinforcement.addOverride(balanceOverrideId, {
+      entity: reinforcement_entity_id,
+      value: { balance: current_balance_data.balance - 1}
+    })
+
+    if (current_balance_data.balance < 1) {
+      notify("Not enough reinforcements")
+      Reinforcement.removeOverride(balanceOverrideId);
+      return;
+    }
+
+    const outpost_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
+
+    const current_outpost_data = getComponentValueStrict(Outpost, outpost_entity_id);
+
+    const outpostOverrideId = uuid();
+
+    Outpost.addOverride(outpostOverrideId, {
         entity: outpost_entity_id,
         value: { lifes: current_outpost_data.lifes + 1}
     })
-
-    //add prerender change
-
+  
     try {
 
       const tx = await execute(signer, "reinforce_outpost", [
@@ -84,11 +100,12 @@ export function createSystemCalls(
       // setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
-      // notify("this is an error with the sys calss  also this is te game Id " + game_id + " and this is the outpost id " + outpost_id + "\n\n\n")
-      // notify("Reinforcement failed")
-     Outpost.removeOverride(overrideId);
+    
+     Outpost.removeOverride(outpostOverrideId);
+      Reinforcement.removeOverride(balanceOverrideId);
     } finally {
-      Outpost.removeOverride(overrideId);
+      Outpost.removeOverride(outpostOverrideId);
+      Reinforcement.removeOverride(balanceOverrideId);
     }
   };
 
@@ -159,15 +176,25 @@ export function createSystemCalls(
     
     const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
 
-    const overrideId = uuid();
+    const outpostOverrideId = uuid();
+    const clientOutpostOverrideId = uuid();
+
+
+
     let outpost_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
 
     let current_outpost_data = getComponentValueStrict(Outpost, outpost_entity_id);
 
-    Outpost.addOverride(overrideId, {
+    Outpost.addOverride(outpostOverrideId, {
         entity: outpost_entity_id,
         value: { lifes: current_outpost_data.lifes - 1}
     })
+
+    ClientOutpostData.addOverride(clientOutpostOverrideId, {
+      entity: outpost_entity_id,
+      value: { event_effected: false}
+    })
+
 
     try {
 
@@ -186,10 +213,13 @@ export function createSystemCalls(
       console.log("destroy outpost", receipt);
       notify("Destroying outpost " + outpost_id + "\nTransaction hash: " + receipt.transaction_hash)
 
-      //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
+      Outpost.removeOverride(outpostOverrideId);
+      ClientOutpostData.removeOverride(clientOutpostOverrideId);
     } finally {
+      Outpost.removeOverride(outpostOverrideId);
+      ClientOutpostData.removeOverride(clientOutpostOverrideId);
     }
   };
 
@@ -234,7 +264,7 @@ export function createSystemCalls(
       //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
-      notify("adding rev ")
+      notify("Revenant summoned")
     } finally {
     }
   };
@@ -464,10 +494,7 @@ export function createSystemCalls(
           selected: false,
         },
       });
-
-      // console.log("creating new entity in memeory")
     }
-
 
     try {
 

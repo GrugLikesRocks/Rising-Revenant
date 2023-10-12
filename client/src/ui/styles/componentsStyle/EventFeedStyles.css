@@ -36,8 +36,15 @@
 
 .event-feed-event-data-text
 {
-    width : fit-content;
+    width: fit-content;
+    margin: 0 auto;
+    text-align: center;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    /* background-color: #555; */
 }
+
 
 .event-feed-event-data-button-container
 {

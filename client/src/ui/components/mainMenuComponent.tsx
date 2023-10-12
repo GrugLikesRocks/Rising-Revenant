@@ -407,7 +407,7 @@ export const MainMenuComponent = ({
                 </div>
               ) : (
                 <div className="game-top-bar-text-container font-size-texts">
-                  Outposts Alive: {allOutpostsEntities.length-deadOutpostsEntities.length}/{allOutpostsEntities.length}
+                  Total Outposts Alive: {allOutpostsEntities.length - deadOutpostsEntities.length}/{allOutpostsEntities.length}
                 </div>
               )}
             </>

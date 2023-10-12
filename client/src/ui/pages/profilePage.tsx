@@ -75,7 +75,7 @@ export const ProfilePage: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
 
       <div className="above-table-text font-size-titles">Your Revenants</div>
       <div className="above-table-container">
-        <div className="above-table-text font-size-mid-titles" style={{flex : 1}}>Reinforcements avaialble: {reinforcementsAmount}</div>
+        <div className="above-table-text font-size-mid-titles" style={{flex : 1}}>Reinforcements available: {reinforcementsAmount}</div>
         <div className="above-table-text font-size-mid-titles" style={{flex : 1}}>Number of Outposts: {outpostsAmount}</div>
       </div>
     </div>

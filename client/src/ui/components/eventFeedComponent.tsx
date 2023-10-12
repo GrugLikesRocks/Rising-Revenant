@@ -38,7 +38,7 @@ export const EventFeed = ({ layer, timerPassed }: Props) => {
 
   useEffect(() => {
 
-    console.log("this is the select index thing")
+    // console.log("this is the select index thing")
 
     if (worldEventEntities.length === 0) { return; }
 
@@ -58,9 +58,9 @@ export const EventFeed = ({ layer, timerPassed }: Props) => {
     let worldEvent = getComponentValueStrict(WorldEvent, getEntityIdFromKeys([BigInt(game_id), BigInt(newIndex)]));
 
 
-    console.log(newIndex)
-    console.log(worldEvent);
-    console.log(worldEventEntities)
+    // console.log(newIndex)
+    // console.log(worldEvent);
+    // console.log(worldEventEntities)
 
     setEventEffectedOnlyOutposts(outpostEntities.filter((entity) => {
       const outpost = getComponentValueStrict(Outpost, entity);
@@ -70,7 +70,7 @@ export const EventFeed = ({ layer, timerPassed }: Props) => {
   }, [selectedEventIndex, worldEventEntities]);
 
 
-  useEffect(() => { console.log("this is in the outpstt eneitty") }, [outpostEntities]);
+  // useEffect(() => { console.log("this is in the outpstt eneitty") }, [outpostEntities]);
 
   useEffect(() => { 
 

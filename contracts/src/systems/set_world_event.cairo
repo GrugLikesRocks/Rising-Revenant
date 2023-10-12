@@ -40,8 +40,8 @@ mod set_world_event {
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         
         let mut random = RandomImpl::new(seed);
-        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
-        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);
+        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 250);
+        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 250);
 
         // Radius increases when the previous world event does not cause damage.
         let mut radius: u32 = 0;

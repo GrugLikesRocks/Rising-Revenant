@@ -1,5 +1,6 @@
 import React from "react";
 import { SummonRevenantButton } from "../components/summonRevenantButton";
+import { CheatWin } from "../components/cheatWinFrontEnd";
 import { PhaserLayer } from "../../phaser";
 import "../../App.css";
 import "../styles/MainPageStyle.css";
@@ -26,9 +27,8 @@ export const MainReactComp: React.FC<{
         </div>
 
         <div
-          className={`main-menu-middle-section-image ${
-            timerPassed ? "blurred-off" : "blurred-on"
-          }`}
+          className={`main-menu-middle-section-image ${timerPassed ? "blurred-off" : "blurred-on"
+            }`}
           onClick={onDivClick}
         ></div>
 
@@ -36,16 +36,16 @@ export const MainReactComp: React.FC<{
         </div>
       </div>
 
-      <EventFeed layer={layer} timerPassed={timerPassed}/>
-      
+      <EventFeed layer={layer} timerPassed={timerPassed} />
+
       <div
-        className={`main-menu-button-container ${
-          timerPassed ? "grey-scale-off" : "grey-scale-on"
-        }`}
+        className={`main-menu-button-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"
+          }`}
       >
 
-          <SummonRevenantButton layer={layer} timerPassed={timerPassed} />
-      
+        <SummonRevenantButton layer={layer} timerPassed={timerPassed} />
+        <CheatWin layer={layer} timerPassed={timerPassed} />
+
       </div>
     </div>
   );

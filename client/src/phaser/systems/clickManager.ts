@@ -11,7 +11,7 @@ import {
 } from "@latticexyz/recs";
 
 
-import { tooltipEvent } from "./eventSystems/eventEmitter";
+import { tooltipEvent,setTooltipArray } from "./eventSystems/eventEmitter";
 import { GAME_CONFIG } from "../constants";
 
 export const clickManager = (layer: PhaserLayer) => {
@@ -42,12 +42,6 @@ export const clickManager = (layer: PhaserLayer) => {
       yFromOrigin: pointer.y,
     });
 
-    // set_click_component(
-    //   pointer.x,
-    //   pointer.y,
-    //   clickRelativeToMiddlePointX,
-    //   clickRelativeToMiddlePointY
-    // );
   });
 
   // Click checks for the ui tooltip
@@ -68,7 +62,7 @@ export const clickManager = (layer: PhaserLayer) => {
     let positionX = positionClick.xFromMiddle + positionCenterCam.x;
     let positionY = positionClick.yFromMiddle + positionCenterCam.y;
 
-    let foundEntity: EntityIndex | null = null; // store the found entity
+    let foundEntity: EntityIndex[] =[]; // store the found entity
 
     for (const outpostEntityValue of outpostArray) {
       const playerObj = objectPool.get(outpostEntityValue, "Sprite");
@@ -87,34 +81,36 @@ export const clickManager = (layer: PhaserLayer) => {
             positionY >= minY &&
             positionY <= maxY
           ) {
-            foundEntity = outpostEntityValue;
+            foundEntity.push(outpostEntityValue);
           }
         },
       });
 
-      if (foundEntity) {
-        foundEntity = getComponentValueStrict(ClientOutpostData, outpostEntityValue).id as EntityIndex;
-        break;
-      }
     }
 
-    if (foundEntity) {
-
-      tooltipEvent.emit(
-        "spawnTooltip",
-        positionClick.xFromOrigin,
-        positionClick.yFromOrigin,
-        foundEntity
-      );
-    } else {
-
-      tooltipEvent.emit(
-        "closeTooltip",
-        true,
-        positionClick.xFromOrigin,
-        positionClick.yFromOrigin
-      );
+    // setTooltipArray.emit("setToolTipArray",foundEntity);
+    if (foundEntity.length > 0)
+    {
+      setTooltipArray.emit("setToolTipArray",foundEntity);
     }
+
+    // if (foundEntity) {
+
+    //   tooltipEvent.emit(
+    //     "spawnTooltip",
+    //     positionClick.xFromOrigin,
+    //     positionClick.yFromOrigin,
+    //     foundEntity
+    //   );
+    // } else {
+
+    //   tooltipEvent.emit(
+    //     "closeTooltip",
+    //     true,
+    //     positionClick.xFromOrigin,
+    //     positionClick.yFromOrigin
+    //   );
+    // }
   });
 
 };

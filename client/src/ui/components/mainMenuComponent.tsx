@@ -9,6 +9,7 @@ import {
   getComponentValueStrict,
   getComponentValue,
   Has,
+  HasValue,
 } from "@latticexyz/recs";
 
 import { useEntityQuery } from "@latticexyz/react";
@@ -22,7 +23,7 @@ import { TradesReactComp } from "../pages/tradesPage";
 import { ProfilePage } from "../pages/profilePage";
 import { MapReactComp } from "../pages/mapPage";
 
-import { ToolTipData } from "./outpostToolTip";
+// import { ToolTipData } from "./outpostToolTip";
 
 import React, { useState, useEffect, useRef } from "react";
 import { GAME_CONFIG, PREPARATION_PHASE_BLOCK_COUNT } from "../../phaser/constants";
@@ -105,7 +106,7 @@ export const MainMenuComponent = ({
   } = useDojo();
 
   const allOutpostsEntities = useEntityQuery([Has(Outpost)]);
-
+  const deadOutpostsEntities = useEntityQuery([HasValue(Outpost, { lifes: 0 })]);
 
   // this is necessary to check if any new entities have been created and we save them as a ref to we can reference it in the use effect below
   const gameDataEntitiesRef = useRef<EntityIndex[]>([]);
@@ -218,11 +219,11 @@ export const MainMenuComponent = ({
     }
 
     const fetch_all_event_entities = (event_count: number) => {
-        
-        for (let i = 0; i < event_count; i++) {
-          fetch_event_data(i + 1);
-        }
+
+      for (let i = 0; i < event_count; i++) {
+        fetch_event_data(i + 1);
       }
+    }
 
     const performActionWithRetry = async () => {
 
@@ -231,7 +232,6 @@ export const MainMenuComponent = ({
 
         //await fetch_full_game_data(account); 
         console.log("should be called every 10 seconds")
-
         const game_id = getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex)?.count as EntityIndex;
 
         await fetch_game_entity_counter_data(game_id);
@@ -266,8 +266,6 @@ export const MainMenuComponent = ({
     //call the function to start the loop
     performActionWithRetry();
   }, [timerPassed]);
-
-
 
 
   useEffect(() => {
@@ -352,7 +350,7 @@ export const MainMenuComponent = ({
 
 
 
-
+  // the checks for the blocks needs to be put in a function
 
   return (
     <div className={`main-page-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"} ${navbarOpacity === 0 && actualMenuState === MenuState.MAP ? "opacity-scale-off" : "opacity-scale-on"} `}>
@@ -377,8 +375,10 @@ export const MainMenuComponent = ({
 
             <div className="loading-screen-message font-size-mid-titles">
               PLAY PHASE STARTED {Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
-                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCKS AGO
+                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCK{Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
+                  (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT) !== 1 ? 'S' : ''} AGO
             </div>
+
           )}
 
           <div className="loading-screen-divider"></div>
@@ -392,9 +392,34 @@ export const MainMenuComponent = ({
             <div className="game-initials-menu-image"></div>
           </div>
         </div>
+
+        <div className="game-top-bar-mid-container">
+
+          {timerPassed && (
+            <>
+              <div className="game-top-bar-text-container font-size-texts">
+                Total Lords Prize: {getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).prize} Lords
+              </div>
+
+              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 ? (
+                <div className="game-top-bar-text-container font-size-texts">
+                  Revenants Summoned: {allOutpostsEntities.length}
+                </div>
+              ) : (
+                <div className="game-top-bar-text-container font-size-texts">
+                  Outposts Alive: {allOutpostsEntities.length-deadOutpostsEntities.length}/{allOutpostsEntities.length}
+                </div>
+              )}
+            </>
+          )}
+
+        </div>
+
         <div className="game-title-menu">
           <div className="game-title-menu-text"></div>
         </div>
+
+        <div className="game-top-bar-mid-container"></div>
 
         <ClickWrapper className="connect-button-menu font-size-mid-titles"
           onMouseEnter={() => setShowTooltip(true)}
@@ -405,7 +430,7 @@ export const MainMenuComponent = ({
           {showTooltip && navbarOpacity === 1 && (
             <div className="tooltip-container-connect-button font-size-texts">
 
-              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2  && (
+              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2 && (
                 <div className="tooltip-element-container-connect-button">
 
                   <div className="tooltip-element-text-connect-button">
@@ -420,9 +445,6 @@ export const MainMenuComponent = ({
                     Outposts bought: {outpostsAmount}
                   </div>
                 </div>)}
-
-
-
 
 
               <div className="tooltip-element-container-connect-button">
@@ -463,7 +485,7 @@ export const MainMenuComponent = ({
         {actualMenuState === MenuState.RULES && <RulesReactComp />}
       </div>
 
-      {actualMenuState === MenuState.MAP && <ToolTipData layer={layer} useDojoContents={useDojoContents} />}
+      {/* {actualMenuState === MenuState.MAP && <ToolTipData layer={layer} useDojoContents={useDojoContents} />} */}
 
     </div>
   );

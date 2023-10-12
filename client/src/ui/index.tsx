@@ -30,7 +30,7 @@ export const UI = () => {
   useEffect(() => {
 
     if (menuState !== MenuState.MAP) {
-      setPhaserLayerOpacity(0.9);
+      setPhaserLayerOpacity(1);
 
       tooltipEvent.emit("closeTooltip", false);
     } else {

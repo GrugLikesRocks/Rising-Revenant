@@ -46,7 +46,6 @@
     font-family: Revenant_text_font;
     width: 5%;
     height: 80%;
-    /* font-size: 1vw; */
     color: white;
     border: none;
     border-radius: 10px;
@@ -60,12 +59,10 @@
     margin: 5%;
     padding: 1% 3%;
     height: 90%;
-    /* font-size: 1.2vw; */
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: rgb(148, 75, 56);
 }
 
 .buy-reinforcement-button-text{
@@ -73,12 +70,10 @@
     margin: 1%;
     height: 90%;
     padding: 1% 3%;
-    /* font-size: 1.2vw; */
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: rgb(148, 75, 56);
 }
 
 

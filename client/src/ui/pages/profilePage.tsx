@@ -59,6 +59,8 @@ export const ProfilePage: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
       setReinforcementsAmount(getComponentValueStrict(Reinforcement, entityIndex).balance);
     };
 
+    FetchBalance();
+
     const getStuffInterval = setInterval(() => {
       FetchBalance();
 

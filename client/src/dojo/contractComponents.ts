@@ -173,6 +173,7 @@ export function defineContractComponents(world: World) {
           id : RecsType.Number,
           owned: RecsType.Boolean,
           event_effected: RecsType.Boolean,
+          selected: RecsType.Boolean,
         },
         {
           metadata: {

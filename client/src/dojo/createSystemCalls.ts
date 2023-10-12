@@ -8,7 +8,7 @@ import {
   getComponentValueStrict,
   getComponentValue,
 } from "@latticexyz/recs";
-import { uuid } from "@latticexyz/utils";
+import { awaitPromise, uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import {
   GAME_CONFIG,
@@ -52,10 +52,21 @@ export function createSystemCalls(
     theme: "dark",
   });
 
-
   const reinforce_outpost = async (signer: Account, outpost_id: number) => {
 
     const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
+
+    const overrideId = uuid();
+    let outpost_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
+
+    let current_outpost_data = getComponentValueStrict(Outpost, outpost_entity_id);
+
+    Outpost.addOverride(overrideId, {
+        entity: outpost_entity_id,
+        value: { lifes: current_outpost_data.lifes + 1}
+    })
+
+    //add prerender change
 
     try {
 
@@ -70,21 +81,36 @@ export function createSystemCalls(
 
       notify("Reinforcing outpost " + outpost_id + "\nTransaction hash: " + receipt.transaction_hash)
 
-      //setComponentsFromEvents(contractComponents, getEvents(receipt));
+      // setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
-      notify("this is an error with the sys calss  also this is te game Id " + game_id + " and this is the outpost id " + outpost_id + "\n\n\n")
+      // notify("this is an error with the sys calss  also this is te game Id " + game_id + " and this is the outpost id " + outpost_id + "\n\n\n")
       // notify("Reinforcement failed")
+     Outpost.removeOverride(overrideId);
     } finally {
+      Outpost.removeOverride(overrideId);
     }
   };
 
 
   const purchase_reinforcement = async (signer: Account, amount: number) => {
+
+    const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
+
+    const overrideId = uuid();
+    let reinforcement_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(signer.address)])
+
+    let current_balance_data = getComponentValueStrict(Reinforcement, reinforcement_entity_id);
+
+    Reinforcement.addOverride(overrideId, {
+        entity: reinforcement_entity_id,
+        value: { balance: current_balance_data.balance + amount}
+    })
+      //add prerender change
+
+
     try {
       const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG as EntityIndex).current_game_id;
-
-      // console.log("this is what was sent to the reinforce function ", amount, " btw this si the game id ", game_id,"\n\n\n")
 
       const tx = await execute(signer, "purchase_reinforcement", [
         game_id,
@@ -99,10 +125,11 @@ export function createSystemCalls(
 
       notify("Buying " + amount + " reinforcements\n" + "Transaction hash: " + receipt.transaction_hash)
 
-      //setComponentsFromEvents(contractComponents, getEvents(receipt));
     } catch (e) {
       console.log(e);
+      Reinforcement.removeOverride(overrideId);
     } finally {
+      Reinforcement.removeOverride(overrideId);
     }
   };
 
@@ -126,9 +153,23 @@ export function createSystemCalls(
     event_id: number,
     outpost_id: number
   ) => {
-    try {
 
-      const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG as EntityIndex).current_game_id;
+
+    
+    
+    const game_id = getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id;
+
+    const overrideId = uuid();
+    let outpost_entity_id = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
+
+    let current_outpost_data = getComponentValueStrict(Outpost, outpost_entity_id);
+
+    Outpost.addOverride(overrideId, {
+        entity: outpost_entity_id,
+        value: { lifes: current_outpost_data.lifes - 1}
+    })
+
+    try {
 
       console.log("this is what was sent to the destroy function", signer, " ", event_id, " ", outpost_id, "  ", game_id, "\n\n\n")
 
@@ -289,7 +330,6 @@ export function createSystemCalls(
       return;
     }
 
-
     const gameEntityCounterId = getEntityIdFromKeys([BigInt(game_id)]);
 
     const gameEntityCounterComp = getComponentValue(GameEntityCounter, gameEntityCounterId);
@@ -420,9 +460,12 @@ export function createSystemCalls(
         value: {
           id: 0,
           owned: false,
-          event_effected: false
+          event_effected: false,
+          selected: false,
         },
       });
+
+      // console.log("creating new entity in memeory")
     }
 
 
@@ -432,14 +475,15 @@ export function createSystemCalls(
 
       let keys_amount = 2;
 
-      if (outpostData?.status === Number(tx[5 + keys_amount]) &&
+      if (outpostData?.status === tx[5 + keys_amount] &&
         outpostData?.lifes === Number(tx[4 + keys_amount]) &&
         outpostData?.y === Number(tx[3 + keys_amount]) &&
         outpostData?.x === Number(tx[2 + keys_amount]) &&
-        outpostData?.name === Number(tx[1 + keys_amount]) &&
-        outpostData?.owner === (tx[0 + keys_amount]) &&
+        outpostData?.name === tx[1 + keys_amount] &&
+        outpostData?.owner === tx[0 + keys_amount] &&
         outpostData?.last_affect_event_id === Number(tx[6 + keys_amount])) 
       {
+        // console.log("this eneityt already eixsts and its the smae no need ot add stuff")
         return;
       }
 
@@ -464,7 +508,8 @@ export function createSystemCalls(
       setComponent(ClientOutpostData, outpostId, {
         id: entity_id,
         owned: owned,
-        event_effected: outpostClientData?.event_effected || false
+        event_effected: outpostClientData?.event_effected || false,
+        selected: outpostClientData?.selected || false,
       });
 
     } catch (e) {
@@ -650,7 +695,7 @@ export function createSystemCalls(
         balance: Number(txBalanceTracker[0 + keys_amount])
       });
 
-      notify("fetching reinforcement balance for " + signer.address + " with game id: " + game_id)
+     // notify("fetching reinforcement balance for " + signer.address + " with game id: " + game_id + " and the balance is " + Number(txBalanceTracker[0 + keys_amount]))
 
     } catch (e) {
       console.log(e);
@@ -685,6 +730,15 @@ export function createSystemCalls(
 
   };
 }
+
+
+
+
+
+
+
+
+
 
 export function getEntityIdFromKeys(keys: bigint[]): EntityIndex {
   if (keys.length === 1) {

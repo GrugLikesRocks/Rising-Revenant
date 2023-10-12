@@ -6,6 +6,8 @@ import "../../App.css";
 import "../styles/ProfilePageStyle.css";
 import { ClickWrapper } from "../clickWrapper";
 
+
+
 export const BuyReinforcementComponent = () => {
     const {
         account: { account },
@@ -31,11 +33,11 @@ export const BuyReinforcementComponent = () => {
     return (
         <ClickWrapper className="buy-reinforces-container">
 
-            <button className="buy-reinforcement-button font-size-mid-titles" onClick={() => purchase_reinforcement(account, amount)}> Buy {amount} Reinforcement{amount > 1 ? 's' : ''} </button>
+            <button className="buy-reinforcement-button font-size-mid-titles standard-orange-color-palette" onClick={() => purchase_reinforcement(account, amount)}> Buy {amount} Reinforcement{amount > 1 ? 's' : ''} </button>
 
-            <button className="buy-reinforcement-amount-button font-size-mid-titles" onClick={() => ChangeAmount(-1)}> - </button>
-            <button className="buy-reinforcement-button-text font-size-mid-titles">1</button>
-            <button className="buy-reinforcement-amount-button font-size-mid-titles" onClick={() => ChangeAmount(1)}> + </button>
+            <button className="buy-reinforcement-amount-button font-size-mid-titles standard-orange-color-palette" onClick={() => ChangeAmount(-1)}> - </button>
+            <button className="buy-reinforcement-button-text font-size-mid-titles standard-orange-color-palette">1</button>
+            <button className="buy-reinforcement-amount-button font-size-mid-titles standard-orange-color-palette" onClick={() => ChangeAmount(1)}> + </button>
 
         </ClickWrapper>
     );

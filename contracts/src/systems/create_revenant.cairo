@@ -41,13 +41,13 @@ mod create_revenant {
             status: RevenantStatus::started
         };
 
-        let reinforcement = Reinforcement {
-            game_id,
-            owner: ctx.origin,
-            balance: 0
-        };
+        // let reinforcement = Reinforcement {
+        //     game_id,
+        //     owner: ctx.origin,
+        //     balance: 0
+        // };
 
-        set!(ctx.world, (revenant, game_data, reinforcement));
+        set!(ctx.world, (revenant, game_data));
 
         create_outpost(ctx, game_id);
         entity_id
@@ -64,8 +64,8 @@ mod create_revenant {
         // We set the position of the outpost
         let seed = starknet::get_tx_info().unbox().transaction_hash;
         let mut random = RandomImpl::new(seed);
-        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 400);
-        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 400);
+        let x =  (MAP_WIDTH/2) -  random.next_u32(0, 250);
+        let y =  (MAP_HEIGHT/2) -  random.next_u32(0, 250);
 
         let outpost = Outpost {
             game_id,

@@ -8,7 +8,7 @@
 
 /*  the issue with the shadow is that the image isnt the actual size of the div  */
 .main-menu-middle-section-image {
-  background: url("/map.svg") center/contain no-repeat;
+  background: url("/map_scaled_down.png") center/contain no-repeat;
   height: 70%;
   width: 60%;
   transition: filter 3s ease;
@@ -91,7 +91,7 @@
   margin: 5px;
   padding: 5px 10px;
   color: white;
-  background-color: rgb(148, 75, 56);
+  /* background-color: rgb(148, 75, 56); */
   border: none;
 }
 

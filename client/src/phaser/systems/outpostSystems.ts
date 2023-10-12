@@ -1,12 +1,10 @@
 import {
   Has,
-  defineEnterSystem,
   defineSystem,
   getComponentValueStrict,
-  setComponent
-} from "@latticexyz/recs";
+  } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { Assets, GAME_CONFIG } from "../constants";
+import { Assets } from "../constants";
 import { SCALE } from "../constants";
 
 export const spawnOutposts = (layer: PhaserLayer) => {
@@ -21,12 +19,13 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     },
   } = layer;
 
-  // here is where we set the position of the outpost
   defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
     const outpostDojoData = getComponentValueStrict(Outpost, entity);
     const outpostClientData = getComponentValueStrict(ClientOutpostData, entity);
 
     const outpostObj = objectPool.get(entity, "Sprite");
+
+    //can this be merged?
 
     outpostObj.setComponent({
       id: "position",
@@ -41,22 +40,30 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
         sprite.depth = 0;
 
-        if (outpostDojoData.lifes <= 0) {
-          sprite.setTexture(Assets.CastleDestroyedAsset);
+        if (outpostClientData.selected)
+        {
+          sprite.setTexture(Assets.CaslteSelectedAsset);
         }
-        else {
-          if (!outpostClientData.event_effected) {
-            if (outpostClientData.owned) {
-              sprite.setTexture(Assets.CastleHealthySelfAsset);
-            } else {
-              sprite.setTexture(Assets.CastleHealthyEnemyAsset);
-            }
+        else
+        {
+          if (outpostDojoData.lifes <= 0) {
+            sprite.setTexture(Assets.CastleDestroyedAsset);
           }
           else {
-            sprite.setTexture(Assets.CastleDamagedAsset);
+            if (!outpostClientData.event_effected) {
+              if (outpostClientData.owned) {
+                sprite.setTexture(Assets.CastleHealthySelfAsset);
+              } else {
+                sprite.setTexture(Assets.CastleHealthyEnemyAsset);
+              }
+            }
+            else {
+              sprite.setTexture(Assets.CastleDamagedAsset);
+            }
           }
         }
 
+        // sprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
         sprite.scale = SCALE;
       },
     });

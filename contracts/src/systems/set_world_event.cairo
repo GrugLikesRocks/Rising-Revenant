@@ -70,7 +70,6 @@ mod fetch_event_data {
     use option::OptionTrait;
     use RealmsRisingRevenant::components::game::{Game, GameTrait, GameImpl};
     use RealmsRisingRevenant::components::world_event::WorldEvent;
-    use RealmsRisingRevenant::constants::GAME_CONFIG;
 
     fn execute(ctx: Context, game_id: u32, entity_id: u128) -> WorldEvent {
         let game = get!(ctx.world, game_id, Game);

@@ -60,15 +60,15 @@ mod create_revenant {
         let mut x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
         let mut y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
 
-        let mut prevOutpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
+        let mut prev_outpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
 
         // avoid multiple outpost appearing in the same position
-        if prevOutpost.entity_id > 0 {
+        if prev_outpost.entity_id > 0 {
             loop {
                 x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
                 y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
-                prevOutpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
-                if prevOutpost.entity_id == 0 {
+                prev_outpost = get!(ctx.world, (game_id, x, y), OutpostPosition);
+                if prev_outpost.entity_id == 0 {
                     break;
                 };
             }

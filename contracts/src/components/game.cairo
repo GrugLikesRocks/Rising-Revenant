@@ -1,4 +1,4 @@
-use dojo::world::{Context, IWorldDispatcher, IWorldDispatcherTrait};
+use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Game {
@@ -42,27 +42,27 @@ mod GameStatus {
 
 #[generate_trait]
 impl GameImpl of GameTrait {
-    fn refresh_status(ref self: Game, ctx: Context) {
+    fn refresh_status(ref self: Game, world: IWorldDispatcher) {
         let block_number = starknet::get_block_info().unbox().block_number;
         if self.status == GameStatus::preparing
             && (block_number - self.start_block_number) > self.preparation_phase_interval {
             self.status = GameStatus::playing;
-            set!(ctx.world, (self));
+            set!(world, (self));
         }
     }
 
-    fn assert_can_create_outpost(ref self: Game, ctx: Context) {
+    fn assert_can_create_outpost(ref self: Game, world: IWorldDispatcher) {
         self.assert_existed();
         assert(self.status != GameStatus::ended, 'Game has ended');
 
-        self.refresh_status(ctx);
+        self.refresh_status(world);
         assert(self.status != GameStatus::playing, 'Prepare phase ended');
     }
 
-    fn assert_is_playing(ref self: Game, ctx: Context) {
+    fn assert_is_playing(ref self: Game, world: IWorldDispatcher) {
         self.assert_existed();
         assert(self.status != GameStatus::ended, 'Game has ended');
-        self.refresh_status(ctx);
+        self.refresh_status(world);
         assert(self.status == GameStatus::playing, 'Game has not started');
     }
 

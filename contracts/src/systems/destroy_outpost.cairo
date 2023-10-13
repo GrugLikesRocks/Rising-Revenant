@@ -20,7 +20,7 @@ mod destroy_outpost {
     fn execute(ctx: Context, game_id: u32, event_id: u128, outpost_id: u128) -> bool {
         // Check if the game is active
         let (mut game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
-        game.assert_is_playing(ctx);
+        game.assert_is_playing(ctx.world);
 
         // Get the event
         let mut world_event = get!(ctx.world, (game_id, event_id), WorldEvent);

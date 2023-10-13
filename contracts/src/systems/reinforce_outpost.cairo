@@ -15,7 +15,7 @@ mod reinforce_outpost {
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, game_id: u32, entity_id: u128,) {
         let mut game = get!(ctx.world, game_id, Game);
-        game.assert_is_playing(ctx);
+        game.assert_is_playing(ctx.world);
 
         let mut outpost = get!(ctx.world, (game_id, entity_id), (Outpost));
         outpost.assert_existed();

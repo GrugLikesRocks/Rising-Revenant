@@ -27,7 +27,7 @@ mod tests {
 
     use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, OUTPOST_INIT_LIFE};
     // systems
-    use RealmsRisingRevenant::systems::create::create_game;
+    use RealmsRisingRevenant::systems::create_game::create_game;
     use RealmsRisingRevenant::systems::create_revenant::create_revenant;
     use RealmsRisingRevenant::systems::purchase_reinforcement::purchase_reinforcement;
     use RealmsRisingRevenant::systems::reinforce_outpost::reinforce_outpost;

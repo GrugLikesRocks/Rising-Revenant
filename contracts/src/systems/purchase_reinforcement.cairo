@@ -12,7 +12,7 @@ mod purchase_reinforcement {
     // TODO: Add Lords Deposit
     fn execute(ctx: Context, game_id: u32, count: u32) -> bool {
         let mut game = get!(ctx.world, game_id, Game);
-        game.assert_can_create_outpost(ctx);
+        game.assert_can_create_outpost(ctx.world);
 
         let mut reinforcements = get!(ctx.world, (game_id, ctx.origin), Reinforcement);
         reinforcements.balance += count;

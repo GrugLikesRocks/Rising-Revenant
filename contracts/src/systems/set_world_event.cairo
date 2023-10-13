@@ -18,7 +18,7 @@ mod set_world_event {
     fn execute(ctx: Context, game_id: u32) -> WorldEvent {
         // check game is active
         let mut game = get!(ctx.world, game_id, Game);
-        game.assert_is_playing(ctx);
+        game.assert_is_playing(ctx.world);
 
         let mut game_data = get!(ctx.world, game_id, GameEntityCounter);
         game_data.event_count += 1;

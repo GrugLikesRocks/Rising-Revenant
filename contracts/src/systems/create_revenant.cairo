@@ -23,7 +23,7 @@ mod create_revenant {
         assert(name != 0, 'name length must larger than 0');
 
         let (mut game, mut game_data) = get!(ctx.world, game_id, (Game, GameEntityCounter));
-        game.assert_can_create_outpost(ctx);
+        game.assert_can_create_outpost(ctx.world);
 
         game_data.revenant_count += 1;
 

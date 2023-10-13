@@ -14,7 +14,9 @@ mod tests {
     use dojo::test_utils::spawn_test_world;
 
     // components
-    use RealmsRisingRevenant::components::game::{game, Game, game_tracker, GameTracker};
+    use RealmsRisingRevenant::components::game::{
+        game, Game, game_tracker, GameTracker, GameStatus, GameEntityCounter
+    };
     use RealmsRisingRevenant::components::outpost::{
         outpost, Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
@@ -69,9 +71,7 @@ mod tests {
         (world, game_id, caller.into())
     }
 
-    fn create_starter_revenant() -> (IWorldDispatcher, u32, felt252, u128, u128) {
-        let (world, game_id, caller) = mock_game();
-
+    fn _create_revenant(world: IWorldDispatcher, game_id: u32, caller: felt252) -> (u128, u128) {
         let mut array = array![
             game_id.into(), 5937281861773520500
         ]; // 5937281861773520500 => 'Revenant'
@@ -79,6 +79,12 @@ mod tests {
         let (revenant_id, outpost_id) = serde::Serde::<(u128, u128)>::deserialize(ref res)
             .expect('id deserialization fail');
 
+        (revenant_id, outpost_id)
+    }
+
+    fn create_starter_revenant() -> (IWorldDispatcher, u32, felt252, u128, u128) {
+        let (world, game_id, caller) = mock_game();
+        let (revenant_id, outpost_id) = _create_revenant(world, game_id, caller);
         (world, game_id, caller, revenant_id, outpost_id)
     }
 
@@ -156,6 +162,7 @@ mod tests {
         let compound_key_array = array![s_id, g_id];
 
         // assert plague value decreased
+
         let outpost = world
             .entity(
                 'Outpost'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Outpost>::len()
@@ -178,5 +185,59 @@ mod tests {
         } else {
             assert(world_event2.radius == EVENT_INIT_RADIUS + 1, 'radius value is wrong');
         }
+    }
+
+    #[test]
+    #[available_gas(3000000000)]
+    fn test_game_end() {
+        // Create initial outposts
+        let (world, game_id, caller) = mock_game();
+        let mut array = array![
+            game_id.into(), 5937281861773520500
+        ]; // 5937281861773520500 => 'Revenant'
+
+        let (revenant_id1, outpost_id1) = _create_revenant(world, game_id, caller);
+        let (_, _) = _create_revenant(world, game_id, caller);
+
+        let mut block_number = starknet::get_block_info().unbox().block_number;
+
+        block_number += PREPARE_PHRASE_INTERVAL + 1;
+        starknet::testing::set_block_number(block_number);
+        // Loop world event
+        loop {
+            block_number += EVENT_BLOCK_INTERVAL + 1;
+            starknet::testing::set_block_number(block_number);
+            let mut event = world.execute('set_world_event'.into(), array![game_id.into()]);
+
+            let world_event = serde::Serde::<WorldEvent>::deserialize(ref event)
+                .expect('W event deserialization fail');
+
+            let mut result1 = world
+                .execute(
+                    'destroy_outpost'.into(),
+                    array![game_id.into(), world_event.entity_id.into(), outpost_id1.into()]
+                );
+            let destoryed1 = serde::Serde::<bool>::deserialize(ref result1)
+                .expect('destory deserialization fail');
+
+            if destoryed1 {
+                let compound_key_array = array![game_id.into()];
+                let game_counter = world
+                    .entity(
+                        'GameEntityCounter'.into(),
+                        compound_key_array.span(),
+                        0,
+                        dojo::SerdeLen::<GameEntityCounter>::len()
+                    );
+                if (*game_counter[3]) == 1.into() {
+                    break;
+                }
+            };
+        };
+
+        let compound_key_array = array![game_id.into()];
+        let game = world
+            .entity('Game'.into(), compound_key_array.span(), 0, dojo::SerdeLen::<Game>::len());
+        assert(*game[4] == GameStatus::ended.into(), *game[4]);
     }
 }

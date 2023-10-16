@@ -74,6 +74,7 @@ import {
             id: outpostClientData.id,
             owned: outpostClientData.owned,
             event_effected: false,
+            selected: outpostClientData.selected,
           });
         
           continue;
@@ -88,14 +89,12 @@ import {
             );
   
             if (distance <= radius) {
-              // sprite.setTexture(Assets.CastleDamagedAsset);
-              
-              // console.log("this is an event effected outpost and this is the position ", sprite.x, "  ", sprite.y)
 
               setComponent(ClientOutpostData, outpostEntityValue, {
                 id: outpostClientData.id,
                 owned: outpostClientData.owned,
                 event_effected: true,
+                selected: outpostClientData.selected,
               });
 
             } 
@@ -105,6 +104,7 @@ import {
                 id: outpostClientData.id,
                 owned: outpostClientData.owned,
                 event_effected: false,
+                selected: outpostClientData.selected,
               });
 
             }

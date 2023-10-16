@@ -18,13 +18,13 @@ export const RulesReactComp: React.FC = () => {
   
   return (
     <div className="rules-page-container">
-      <div className="rules-page-title">title</div>
+      <div className="rules-page-title font-size-titles">Title</div>
       <ClickWrapper 
               ref={containerRef}
               className="rules-page-text-container"
               onWheel={handleWheel}
         >
-          <p className="rules-paragraph">
+          <p className="rules-paragraph font-size-texts">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
@@ -35,7 +35,7 @@ export const RulesReactComp: React.FC = () => {
             and more recently with desktop publishing software like Aldus
             PageMaker including versions of Lorem Ipsum.
           </p>
-          <p className="rules-paragraph">
+          <p className="rules-paragraph font-size-texts">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
@@ -46,7 +46,7 @@ export const RulesReactComp: React.FC = () => {
             and more recently with desktop publishing software like Aldus
             PageMaker including versions of Lorem Ipsum.
           </p>
-          <p className="rules-paragraph">
+          <p className="rules-paragraph font-size-texts">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
@@ -57,7 +57,7 @@ export const RulesReactComp: React.FC = () => {
             and more recently with desktop publishing software like Aldus
             PageMaker including versions of Lorem Ipsum.
           </p>
-          <p className="rules-paragraph">
+          <p className="rules-paragraph font-size-texts">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type

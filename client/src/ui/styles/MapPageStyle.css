@@ -28,13 +28,11 @@
 .instruction-for-map-title-element
 {    
     font-family: Revenant_title_font;
-    font-size: 1.8rem;
 }
 
 .instruction-for-map-text-element
 {    
     font-family: Revenant_text_font;
-    font-size: 1rem;
 }
 
 .instruction-for-map-container:hover

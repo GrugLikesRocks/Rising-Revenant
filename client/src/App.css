@@ -53,6 +53,7 @@
   justify-content: space-between;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
+  /* background-color: blue; */
 }
 
 .navbar-container {
@@ -69,28 +70,39 @@
 }
 
 .game-title-menu {
-  width: 40%;
+  width: 30%;
   height: 100%;
+  /* background-color: beige; */
 }
 
-/* THESE ARE THE SAME */
 .game-title-menu-text {
-  /* padding-left: 5px;
-  padding-right: 5px; */
-  width: 100%;
+  width: 80%;
   height: 72%;
   background: url('/RisingRevenantLogo.png') center/contain no-repeat;
-  /* background-color: aqua; */
 }
 
-/* 
-.game-title-image
+.game-top-bar-mid-container
 {
-  background: url('/RisingRevenantLogo.png') center/contain no-repeat;
-} */
+  height: 100%;
+  /* background-color: blueviolet; */
+  flex: 1;
+}
+
+.game-top-bar-text-container
+{
+  height: 50%;
+  width: 100%;
+  /* background-color: blue; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+}
+
 
 .game-initials-menu {
-  width: 20%;
+  width: 15%;
   height: 100%;
   padding-top: 10px;
   /* background-color: aqua; */
@@ -98,9 +110,8 @@
 
 /* this is to change */
 .game-initials-menu-image-background {
-  height: 70%;
-  width: 20%;
-  /* background: rgb(255, 255, 255) ; */
+  height: 90%;
+  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,6 +125,7 @@
   width: 100%;
   justify-self: center;
   background: url('/LOGO_BLACK_whitebg.png') center/contain no-repeat;
+  /* background-color: black; */
 }
 
 
@@ -126,7 +138,7 @@
 }
 
 .connect-button-menu {
-  width: 20%;
+  width: 15%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -134,16 +146,15 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.8rem;
   color: white;
   font-family: Revenant_text_font;
+  background-color: black;
 }
 
 .tooltip-container-connect-button {
   position: absolute;
   top: 8%;
   width: 12%;
-  /* height: 15%; */
   background-color: rgb(224, 200, 156);
   display: flex;
   align-items: center;
@@ -161,7 +172,7 @@
   align-items: center;
   flex-direction: row;
   justify-content: center;
-  /* justify-self: center;   */
+  border-radius: 10px;
 }
 
 
@@ -176,7 +187,10 @@
 .tooltip-element-text-connect-button {
   width: 90%;
   height: 80%;
-  font-size: 1.1vh;
+  padding:5px;
+  border-radius: 10px;
+
+  
   background-color: rgb(131, 55, 36);
   display: flex;
   align-items: center;
@@ -209,10 +223,10 @@
   border: none;
   color: white;
   text-align: center;
-  text-decoration: none;
   width: 15%;
   height: 90%;
-  font-size: calc(1em + 0.8vw);
+  /* font-size: calc(1.7rem); */
+  font-size: clamp(1.1rem, 1.1vw, 2rem);
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -237,10 +251,10 @@
   border: none;
   color: white;
   text-align: center;
-  text-decoration: none;
   width: 15%;
   height: 90%;
-  font-size: calc(1em + 0.8vw);
+  /* font-size: calc(1em + 0.8vw); */
+  font-size: clamp(1.1rem, 1.1vw, 2rem);
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -261,7 +275,7 @@
 }
 
 .selected {
-  background-color: rgb(148, 75, 56);
+  background-color: rgb(144, 76, 61);
 }
 
 .phaser-fadeout-background {
@@ -326,99 +340,30 @@
 
 
 
-
-
-
-
-
-
-
-
-.event-feed-main-container
+.font-size-titles
 {
-  position: absolute;
-
-  top: 60%;
-  left: 79%;
-
-  width: 20%;
-  height: 30%;
-
-  background-color: rgb(224, 200, 156);
-  color: black;
-  border-radius: 10px;
+  font-size: 3rem;
 }
 
-.event-feed-title
+.font-size-mid-titles
 {
-  font-family: Revenant_title_font;
-  font-size: 4vw;
+  font-size: 2.3rem;
+}
+
+.font-size-texts
+{
+  font-size: 1.4rem;
+}
+
+.font-size-mid-texts
+{
+  font-size: 0.8rem;
+}
+
+
+
+.standard-orange-color-palette
+{
+  background-color: rgb(144, 76, 61);
   color: white;
-  text-align: center;
-  height: 20%;
 }
-
-.event-feed-worldevent-data-text
-{
-  height: 15%;
-  font-family: Revenant_text_font;
-  font-size: 1vw;
-  
-  text-align: center;
-  height: fit-content;
-}
-
-.event-feed-divider
-{
-  margin-top: 3%;
-  margin-bottom: 3%;
-  height: 4px;
-  width: 100%;
-  background: linear-gradient(
-    to left,
-    transparent 0%,
-    black 30%,
-    black 70%,
-    transparent 100%
-  );
-}
-
-.event-feed-outpost-data-container {
-  align-self: center;
-  max-height: 45%;
-  width: 90%;
-  padding-top: 10px;
-  overflow-y: auto;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: rgb(245,218,179);
-}
-
-
-.event-feed-outpost-data-element
-{
-  font-family: Revenant_text_font;
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  background-color: rgb(171,152,125);
-  margin-left: 12px;
-}
-
-
-.event-feed-outpost-data-container::-webkit-scrollbar {
-  width: 12px;
-}
-
-.event-feed-outpost-data-container::-webkit-scrollbar-thumb {
-  background-color: rgb(110, 104, 79);
-  border-radius: 10px;
-}
-
-.event-feed-outpost-data-container::-webkit-scrollbar-track {
-  background-color: rgba(121, 106, 86, 0.493);
-}
-
-
-
-

@@ -16,28 +16,32 @@ export const phaserConfig = {
                 [Assets.CastleHealthySelfAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthySelfAsset,
-                    path: "src/assets/Blue_Outpost.png",
+                    path: "src/assets/blue.png",
                 },
                 [Assets.CastleDamagedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDamagedAsset,
-                    path: "src/assets/Red_Outpost.png",
+                    path: "src/assets/red.png",
                 },
                 [Assets.CastleHealthyEnemyAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthyEnemyAsset,
-                    path: "src/assets/White_Outpost.png",
+                    path: "src/assets/purple.png",
                 },
                 [Assets.CastleDestroyedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDestroyedAsset,
-                    path: "src/assets/Black_Outpost.png",
+                    path: "src/assets/grey.png",
+                },
+                [Assets.CaslteSelectedAsset]: {
+                    type: AssetType.Image,
+                    key: Assets.CaslteSelectedAsset,
+                    path: "src/assets/white.png",
                 },
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
                     key: Assets.MapPicture,
                     path: "src/assets/rev_map_big.png",
-                    // path: "src/assets/map.svg",
                 }
             },
             maps: {

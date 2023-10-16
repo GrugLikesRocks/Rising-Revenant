@@ -9,6 +9,7 @@ import {
   getComponentValueStrict,
   getComponentValue,
   Has,
+  HasValue,
 } from "@latticexyz/recs";
 
 import { useEntityQuery } from "@latticexyz/react";
@@ -22,8 +23,7 @@ import { TradesReactComp } from "../pages/tradesPage";
 import { ProfilePage } from "../pages/profilePage";
 import { MapReactComp } from "../pages/mapPage";
 
-import { ToolTipData } from "./outpostToolTip";
-// import { CircleEvent } from "./eventCircle";
+// import { ToolTipData } from "./outpostToolTip";
 
 import React, { useState, useEffect, useRef } from "react";
 import { GAME_CONFIG, PREPARATION_PHASE_BLOCK_COUNT } from "../../phaser/constants";
@@ -106,7 +106,7 @@ export const MainMenuComponent = ({
   } = useDojo();
 
   const allOutpostsEntities = useEntityQuery([Has(Outpost)]);
-
+  const deadOutpostsEntities = useEntityQuery([HasValue(Outpost, { lifes: 0 })]);
 
   // this is necessary to check if any new entities have been created and we save them as a ref to we can reference it in the use effect below
   const gameDataEntitiesRef = useRef<EntityIndex[]>([]);
@@ -218,6 +218,13 @@ export const MainMenuComponent = ({
       }
     }
 
+    const fetch_all_event_entities = (event_count: number) => {
+
+      for (let i = 0; i < event_count; i++) {
+        fetch_event_data(i + 1);
+      }
+    }
+
     const performActionWithRetry = async () => {
 
       let actionSucceeded = false;
@@ -225,7 +232,6 @@ export const MainMenuComponent = ({
 
         //await fetch_full_game_data(account); 
         console.log("should be called every 10 seconds")
-
         const game_id = getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex)?.count as EntityIndex;
 
         await fetch_game_entity_counter_data(game_id);
@@ -250,7 +256,7 @@ export const MainMenuComponent = ({
         }
 
         if (entityCounter.event_count != 0) {
-          fetch_event_data(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).event_count)
+          fetch_all_event_entities(getComponentValueStrict(GameEntityCounter, clientGameData.current_game_id as EntityIndex).event_count)
         }
 
         await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -260,8 +266,6 @@ export const MainMenuComponent = ({
     //call the function to start the loop
     performActionWithRetry();
   }, [timerPassed]);
-
-
 
 
   useEffect(() => {
@@ -300,10 +304,6 @@ export const MainMenuComponent = ({
       FetchBalance();
     }
   }, [showTooltip]);
-
-
-
-
 
   const toggleOpacity = () => {
 
@@ -350,36 +350,39 @@ export const MainMenuComponent = ({
 
 
 
-
+  // the checks for the blocks needs to be put in a function
 
   return (
     <div className={`main-page-container ${timerPassed ? "grey-scale-off" : "grey-scale-on"} ${navbarOpacity === 0 && actualMenuState === MenuState.MAP ? "opacity-scale-off" : "opacity-scale-on"} `}>
       {showErrorMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">Searching for a game{Array(dots).fill(".").join("")}</div>
+          <div className="loading-screen-title-text font-size-titles">Searching for a game{Array(dots).fill(".").join("")}</div>
           <div className="loading-screen-divider"></div>
         </div>)}
 
       {showSuccessMessage && (
         <div className="loading-screen-message-container">
-          <div className="loading-screen-title-text">Joined game -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
+          <div className="loading-screen-title-text  font-size-mid-titles">JOINED GAME -- {getComponentValueStrict(GameTracker, GAME_CONFIG as EntityIndex).count}</div>
 
           {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 ? (
-            <div className="loading-screen-message">
+            <div className="loading-screen-message  font-size-mid-titles">
               STARTING PHASE ENDS IN {Math.abs(
                 Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
                 (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)
               )} BLOCKS
             </div>
           ) : (
-            <div className="loading-screen-message">
+
+            <div className="loading-screen-message font-size-mid-titles">
               PLAY PHASE STARTED {Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
-                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCKS AGO
+                (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT)} BLOCK{Number(getComponentValueStrict(ClientGameData, GAME_CONFIG).current_block_number) -
+                  (Number(getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).start_block_number) + PREPARATION_PHASE_BLOCK_COUNT) !== 1 ? 'S' : ''} AGO
             </div>
+
           )}
 
           <div className="loading-screen-divider"></div>
-          <div className="loading-screen-message">Number of Revenants summoned so far -- {getComponentValueStrict(GameEntityCounter,
+          <div className="loading-screen-message font-size-mid-titles">Number of Revenants summoned so far -- {getComponentValueStrict(GameEntityCounter,
             getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).revenant_count}</div>
         </div>)}
 
@@ -389,20 +392,45 @@ export const MainMenuComponent = ({
             <div className="game-initials-menu-image"></div>
           </div>
         </div>
+
+        <div className="game-top-bar-mid-container">
+
+          {timerPassed && (
+            <>
+              <div className="game-top-bar-text-container font-size-texts">
+                Total Lords Prize: {getComponentValueStrict(Game, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex).prize} Lords
+              </div>
+
+              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 1 ? (
+                <div className="game-top-bar-text-container font-size-texts">
+                  Revenants Summoned: {allOutpostsEntities.length}
+                </div>
+              ) : (
+                <div className="game-top-bar-text-container font-size-texts">
+                  Total Outposts Alive: {allOutpostsEntities.length - deadOutpostsEntities.length}/{allOutpostsEntities.length}
+                </div>
+              )}
+            </>
+          )}
+
+        </div>
+
         <div className="game-title-menu">
           <div className="game-title-menu-text"></div>
         </div>
 
-        <ClickWrapper className="connect-button-menu"
+        <div className="game-top-bar-mid-container"></div>
+
+        <ClickWrapper className="connect-button-menu font-size-mid-titles"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
           {getComponentValue(ClientGameData, GAME_CONFIG)?.user_account_address?.substring(0, 8) + "..." || "Connect"}
 
           {showTooltip && navbarOpacity === 1 && (
-            <div className="tooltip-container-connect-button">
+            <div className="tooltip-container-connect-button font-size-texts">
 
-              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2  && (
+              {getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_state === 2 && (
                 <div className="tooltip-element-container-connect-button">
 
                   <div className="tooltip-element-text-connect-button">
@@ -417,9 +445,6 @@ export const MainMenuComponent = ({
                     Outposts bought: {outpostsAmount}
                   </div>
                 </div>)}
-
-
-
 
 
               <div className="tooltip-element-container-connect-button">
@@ -460,7 +485,7 @@ export const MainMenuComponent = ({
         {actualMenuState === MenuState.RULES && <RulesReactComp />}
       </div>
 
-      {actualMenuState === MenuState.MAP && <ToolTipData layer={layer} useDojoContents={useDojoContents} />}
+      {/* {actualMenuState === MenuState.MAP && <ToolTipData layer={layer} useDojoContents={useDojoContents} />} */}
 
     </div>
   );

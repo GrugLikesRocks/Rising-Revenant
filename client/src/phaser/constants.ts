@@ -19,6 +19,7 @@ export enum Assets {
     CastleDamagedAsset = "CastleDamagedAsset",
     CastleHealthyEnemyAsset = "CastleHealthyEnemyAsset",
     CastleDestroyedAsset = "CastleDestroyedAsset",
+    CaslteSelectedAsset = "CaslteSelectedAsset",
 }
 
 export const MAP_WIDTH = 10240;
@@ -28,5 +29,4 @@ export const PREPARATION_PHASE_BLOCK_COUNT = 10;
 export const EVENT_PHASE_BLOCK_COUNT =3;
 
 export const GAME_CONFIG : EntityIndex = 999999999999999 as EntityIndex;
-export const SCALE = 0.15;
-
+export const SCALE = 0.1;

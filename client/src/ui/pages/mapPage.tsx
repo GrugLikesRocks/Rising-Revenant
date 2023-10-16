@@ -8,6 +8,11 @@ import { PhaserLayer } from "../../phaser";
 import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from "../../phaser/constants";
 import { getComponentValue, setComponent } from "@latticexyz/recs";
 
+import { EventFeed } from "../components/eventFeedComponent";
+
+import {GameToolTipList} from "../components/gameTooltip";
+import { Game } from "phaser";
+
 export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
   const keysDown = useWASDKeys();
   const CAMERA_SPEED = 10;
@@ -100,16 +105,15 @@ export const MapReactComp: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
     };
   }, [keysDown]);
 
-
-
   return (
-  <div>
-    <ClickWrapper className="instruction-for-map-container">
-    <div className="instruction-for-map-title-element">instructions</div>
-      <div className="instruction-for-map-text-element">Ctrl + scrool wheel to zoom (disabele)</div>
-      <div className="instruction-for-map-text-element">Shift to toggle NavBar</div>
-    </ClickWrapper>
-  </div>
-
+    <div>
+      <ClickWrapper className="instruction-for-map-container">
+        <div className="instruction-for-map-title-element font-size-mid-titles">instructions</div>
+        <div className="instruction-for-map-text-element font-size-texts">Ctrl + scrool wheel to zoom (disabled)</div>
+        <div className="instruction-for-map-text-element font-size-texts">Shift to toggle NavBar</div>
+      </ClickWrapper>
+      <EventFeed layer={layer} timerPassed={true} />
+      <GameToolTipList layer={layer} />
+    </div>
   );
 };

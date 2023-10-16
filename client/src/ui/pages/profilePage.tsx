@@ -59,24 +59,25 @@ export const ProfilePage: React.FC<{ layer: PhaserLayer }> = ({ layer }) => {
       setReinforcementsAmount(getComponentValueStrict(Reinforcement, entityIndex).balance);
     };
 
+    FetchBalance();
+
     const getStuffInterval = setInterval(() => {
       FetchBalance();
 
     }, 10000);
   
-    return () => clearInterval(getStuffInterval); // Cleanup interval on component unmount
+    return () => clearInterval(getStuffInterval); 
   }, []);
 
   return <div className="profile-page-container">
 
     <div className="above-table-main-container">
 
-      <div className="above-table-text">Your Revenants</div>
+      <div className="above-table-text font-size-titles">Your Revenants</div>
       <div className="above-table-container">
-        <div className="above-table-text" style={{flex : 1}}>Reinforces avaialble: {reinforcementsAmount}</div>
-        <div className="above-table-text" style={{flex : 1}}>Number of Outposts: {outpostsAmount}</div>
+        <div className="above-table-text font-size-mid-titles" style={{flex : 1}}>Reinforcements available: {reinforcementsAmount}</div>
+        <div className="above-table-text font-size-mid-titles" style={{flex : 1}}>Number of Outposts: {outpostsAmount}</div>
       </div>
-
     </div>
 
 

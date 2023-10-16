@@ -10,12 +10,12 @@
 .tooltip-text-box-in-game {
   margin-bottom: 10px;
   padding: 5px;
-  font-size: 20px;
+  /* font-size: 20px; */
   color: white;
 }
 
 .tooltip-button-in-game {
-  background-color: rgb(148, 75, 56);
+  /* background-color: rgb(148, 75, 56); */
   color: #fff;
   border: none;
   border-radius: 4px;

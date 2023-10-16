@@ -14,7 +14,6 @@
 }
 
 .above-table-text {
-    font-size: 1.4vw;
     margin-bottom: 20px;
     text-align: center;
     color: white;
@@ -31,7 +30,6 @@
     height: 90%;
     position: relative;
     overflow: visible; 
-    background-color: rgb(30, 30, 30);
 }
 
 .buy-reinforces-container{
@@ -48,7 +46,6 @@
     font-family: Revenant_text_font;
     width: 5%;
     height: 80%;
-    font-size: 1vw;
     color: white;
     border: none;
     border-radius: 10px;
@@ -62,12 +59,10 @@
     margin: 5%;
     padding: 1% 3%;
     height: 90%;
-    font-size: 1.2vw;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: rgb(148, 75, 56);
 }
 
 .buy-reinforcement-button-text{
@@ -75,12 +70,10 @@
     margin: 1%;
     height: 90%;
     padding: 1% 3%;
-    font-size: 1.2vw;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: rgb(148, 75, 56);
 }
 
 
@@ -94,10 +87,12 @@
     width: 60%;
     overflow-x: visible;
     background-color: rgb(30, 30, 30);
+    border-radius: 10px;
 }
 
 .player-outpost-list-fields-container
 {
+    background-color: black;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -113,12 +108,12 @@
 
 .player-outpost-list-fields
 {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     flex: 1;
     color: white;
-    padding: 1%;   
-    padding-left: 4%;
-    font-size: 3.5rem;
+    text-align: center;
+    padding: 10px 0px;
+    /* font-size: 3rem; */
     font-family: Revenant_title_font;
 }
 
@@ -139,12 +134,12 @@
 
 .player-outpost-data-element
 {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     flex: 1;
     color: white;
     height: 70px;
     text-align: center;
-    font-size: 1.4rem;
+    /* font-size: 1.4rem; */
     
     font-family: Revenant_text_font;
     display: flex;
@@ -164,7 +159,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    /* font-size: 1rem; */
     font-family: Revenant_text_font;
     background-color: rgb(30, 30, 30);
 }

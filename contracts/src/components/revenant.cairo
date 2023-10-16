@@ -1,7 +1,5 @@
 use starknet::ContractAddress;
-
-// the max of outpost count is 1. 
-const MAX_OUTPOST_COUNT: u32 = 1;
+use RealmsRisingRevenant::constants::OUTPOST_MAX_COUNT;
 
 #[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Revenant {
@@ -29,6 +27,6 @@ impl RevenantImpl of RevenantTrait {
 
     fn assert_can_create_outpost(self: Revenant) {
         assert(self.status == RevenantStatus::started, 'Revenant has not been created');
-        assert(self.outpost_count < MAX_OUTPOST_COUNT, 'You have reach the limit');
+        assert(self.outpost_count < OUTPOST_MAX_COUNT, 'You have reach the limit');
     }
 }

@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde,SerdeLen)]
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Outpost {
     #[key]
     game_id: u32,
@@ -12,7 +12,19 @@ struct Outpost {
     y: u32,
     lifes: u32,
     status: u32,
-    last_affect_event_id: u128,
+    last_affect_event_id: u128
+}
+
+// use to confirm if there's duplicate outpost at a same position
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+struct OutpostPosition {
+    #[key]
+    game_id: u32,
+    #[key]
+    x: u32,
+    #[key]
+    y: u32,
+    entity_id: u128
 }
 
 mod OutpostStatus {

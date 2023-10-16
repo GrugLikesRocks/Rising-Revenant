@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde,SerdeLen)]
+#[derive(Component, Copy, Drop, Serde, SerdeLen)]
 struct Reinforcement {
     #[key]
     game_id: u32,

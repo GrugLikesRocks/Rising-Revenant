@@ -5,20 +5,17 @@ mod reinforce_outpost {
     use traits::Into;
     use dojo::world::Context;
 
-    use RealmsRisingRevenant::components::Game;
+    use RealmsRisingRevenant::components::game::{Game, GameTrait, GameImpl};
     use RealmsRisingRevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-
-    use RealmsRisingRevenant::components::reinforcement::{
-        Reinforcement};
+    use RealmsRisingRevenant::components::reinforcement::Reinforcement;
 
     // this will create a newoutpostat random coordinates
     // TODO: Add Lords Deposit
-    fn execute(ctx: Context, game_id: u32 ,  entity_id: u128,) {
+    fn execute(ctx: Context, game_id: u32, entity_id: u128,) {
         let mut game = get!(ctx.world, game_id, Game);
-
-        assert(game.status, 'game is not running');
+        game.assert_is_playing(ctx.world);
 
         let mut outpost = get!(ctx.world, (game_id, entity_id), (Outpost));
         outpost.assert_existed();
@@ -28,17 +25,12 @@ mod reinforce_outpost {
         let mut reinforcement = get!(ctx.world, (game_id, ctx.origin), Reinforcement);
 
         assert(reinforcement.balance > 0, 'no reinforcement');
- 
-        outpost.lifes += 1; 
-        reinforcement.balance = reinforcement.balance - 1;
-        
-        
 
-        set!(ctx.world, (outpost,reinforcement));
+        outpost.lifes += 1;
+        reinforcement.balance = reinforcement.balance - 1;
+
+        set!(ctx.world, (outpost, reinforcement));
 
         return ();
     }
 }
-
-
-

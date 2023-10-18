@@ -1,4 +1,4 @@
-const GAME_CONFIG: felt252 = 999999999999999;
+const GAME_CONFIG: u128 = 1;
 const OUTPOST_INIT_LIFE: u32 = 5;
 // the max of outpost count is 1. 
 const OUTPOST_MAX_COUNT: u32 = 1;

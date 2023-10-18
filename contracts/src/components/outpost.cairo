@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Outpost {
     #[key]
     game_id: u32,
@@ -16,7 +16,7 @@ struct Outpost {
 }
 
 // use to confirm if there's duplicate outpost at a same position
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct OutpostPosition {
     #[key]
     game_id: u32,

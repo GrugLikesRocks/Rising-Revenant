@@ -1,6 +1,6 @@
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct Game {
     #[key]
     game_id: u32, // increment
@@ -14,16 +14,16 @@ struct Game {
 // Config Components ---------------------------------------------------------------------
 
 // This will track the number of games played
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct GameTracker {
     #[key]
-    entity_id: u128, // FIXED
+    entity_id: u128,
     count: u32
 }
 
 // Components to check ---------------------------------------------------------------------
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct GameEntityCounter {
     #[key]
     game_id: u32,
@@ -70,3 +70,4 @@ impl GameImpl of GameTrait {
         assert(self.status != GameStatus::not_created, 'Game not exist');
     }
 }
+

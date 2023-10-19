@@ -1,7 +1,7 @@
 use starknet::ContractAddress;
 use RealmsRisingRevenant::constants::OUTPOST_MAX_COUNT;
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Revenant {
     #[key]
     game_id: u32,

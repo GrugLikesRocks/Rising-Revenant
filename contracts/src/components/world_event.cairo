@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct WorldEvent {
     #[key]
     game_id: u32,
@@ -30,7 +30,7 @@ struct WorldEvent {
 // }
 
 // This will track the outpost destroied by each event
-#[derive(Component, Copy, Drop, Serde, SerdeLen)]
+#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct WorldEventTracker {
     #[key]
     game_id: u32,

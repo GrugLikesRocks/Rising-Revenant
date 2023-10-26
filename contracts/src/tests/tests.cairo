@@ -68,8 +68,7 @@ mod tests {
 
         let revenant = get!(world, (game_id, revenant_id), Revenant);
         assert(revenant.outpost_count == 1, 'wrong revenant info');
-    // TODO: In test, the owner is always a zero address, don't know why.
-    // assert(revenant.owner == caller, 'Why?');
+        assert(revenant.owner == caller, 'wrong revenant owner');
     }
 
     #[test]
@@ -78,20 +77,19 @@ mod tests {
         let (DefaultWorld{world, caller, revenant_action, test_erc, .. }, game_id) = _init_game();
         let (revenant_id, outpost_id) = _create_revenant(revenant_action, game_id);
         let mut revenant = get!(world, (game_id, revenant_id), Revenant);
-    // TODO: In the test code, `revant.owner` is always the zero address, don't know why. 
-    // 
-    // let purchase_count = 10_u32;
-    // test_erc.approve(revenant_action.contract_address, purchase_count.into());
-    // let purchase_result = revenant_action.purchase_reinforcement(game_id, purchase_count);
-    // assert(purchase_result, 'Failed to purchase');
-    // let reinforcement = get!(world, (game_id, caller), Reinforcement);
-    // assert(reinforcement.balance == purchase_count, 'wrong purchase count');
 
-    // _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
-    // revenant_action.reinforce_outpost(game_id, outpost_id);
+        let purchase_count = 10_u32;
+        test_erc.approve(revenant_action.contract_address, purchase_count.into());
+        let purchase_result = revenant_action.purchase_reinforcement(game_id, purchase_count);
+        assert(purchase_result, 'Failed to purchase');
+        let reinforcement = get!(world, (game_id, caller), Reinforcement);
+        assert(reinforcement.balance == purchase_count, 'wrong purchase count');
 
-    // let outpost = get!(world, (game_id, outpost_id), (Outpost));
-    // assert(outpost.lifes == OUTPOST_INIT_LIFE + 1, 'life value is wrong');
+        _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
+        revenant_action.reinforce_outpost(game_id, outpost_id);
+
+        let outpost = get!(world, (game_id, outpost_id), (Outpost));
+        assert(outpost.lifes == OUTPOST_INIT_LIFE + 1, 'life value is wrong');
     }
 
     #[test]

@@ -41,10 +41,7 @@ struct DefaultWorld {
 // region ---- base method ----
 
 fn _init_world() -> DefaultWorld {
-    // for test erc20, the caller cannot be zero address
-    let caller = starknet::contract_address_const::<0xFFFF>();
-    starknet::testing::set_caller_address(caller);
-    starknet::testing::set_account_contract_address(caller);
+    let caller = starknet::contract_address_const::<0x0>();
 
     // components
     let mut models = array![
@@ -73,9 +70,8 @@ fn _init_world() -> DefaultWorld {
             .deploy_contract('salt', world_event_actions::TEST_CLASS_HASH.try_into().unwrap())
     };
 
-    let constructor_calldata = array![caller.into()];
     let (test_erc_addr, _) = deploy_syscall(
-        FooErc20::TEST_CLASS_HASH.try_into().unwrap(), 0, constructor_calldata.span(), false
+        FooErc20::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
     )
         .expect('error deploy erc');
     let test_erc = IERC20Dispatcher { contract_address: test_erc_addr };

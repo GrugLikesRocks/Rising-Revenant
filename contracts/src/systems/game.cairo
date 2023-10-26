@@ -1,6 +1,13 @@
+use starknet::ContractAddress;
+
 #[starknet::interface]
 trait IGameActions<TContractState> {
-    fn create(self: @TContractState, preparation_phase_interval: u64, event_interval: u64) -> u32;
+    fn create(
+        self: @TContractState,
+        preparation_phase_interval: u64,
+        event_interval: u64,
+        erc_addr: ContractAddress
+    ) -> u32;
 
     fn refresh_status(self: @TContractState, game_id: u32);
 }
@@ -17,7 +24,10 @@ mod game_actions {
     #[external(v0)]
     impl GameActionImpl of IGameActions<ContractState> {
         fn create(
-            self: @ContractState, preparation_phase_interval: u64, event_interval: u64
+            self: @ContractState,
+            preparation_phase_interval: u64,
+            event_interval: u64,
+            erc_addr: ContractAddress,
         ) -> u32 {
             let world = self.world_dispatcher.read();
             let mut game_tracker = get!(world, GAME_CONFIG, (GameTracker));
@@ -33,6 +43,7 @@ mod game_actions {
                 prize,
                 preparation_phase_interval,
                 event_interval,
+                erc_addr,
                 status
             };
             let game_counter = GameEntityCounter {

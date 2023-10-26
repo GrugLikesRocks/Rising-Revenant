@@ -1,5 +1,7 @@
 mod components;
 mod systems;
 mod constants;
-mod tests;
 mod utils;
+
+#[cfg(test)]
+mod tests;

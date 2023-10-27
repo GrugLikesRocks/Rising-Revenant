@@ -12,7 +12,11 @@ trait IRevenantActions<TContractState> {
 
 #[dojo::contract]
 mod revenant_actions {
-    use starknet::{ContractAddress, get_block_info, get_caller_address};
+    use starknet::{ContractAddress, get_block_info, get_caller_address, get_contract_address};
+    use openzeppelin::token::erc20::interface::{
+        IERC20, IERC20Dispatcher, IERC20DispatcherImpl, IERC20DispatcherTrait
+    };
+
     use RealmsRisingRevenant::components::game::{
         Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl
     };
@@ -63,6 +67,13 @@ mod revenant_actions {
             let player = get_caller_address();
             let mut game = get!(world, game_id, Game);
             game.assert_can_create_outpost(world);
+
+            let erc20 = IERC20Dispatcher { contract_address: game.erc_addr };
+            let result = erc20
+                .transfer_from(
+                    sender: player, recipient: get_contract_address(), amount: count.into()
+                );
+            assert(result, 'need approve for erc20');
 
             let mut reinforcements = get!(world, (game_id, player), Reinforcement);
             reinforcements.balance += count;

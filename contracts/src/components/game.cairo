@@ -1,4 +1,5 @@
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
+use starknet::ContractAddress;
 
 #[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct Game {
@@ -8,6 +9,8 @@ struct Game {
     prize: u32,
     preparation_phase_interval: u64,
     event_interval: u64,
+    // The ERC20 token address for increasing reinforcement
+    erc_addr: ContractAddress,
     status: u32
 }
 

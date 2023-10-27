@@ -1,3 +1,5 @@
+// This file is used for testing and local environment development. 
+// In a formal environment, the specified ERC that already exists on the chain should be used.
 #[starknet::contract]
 mod FooErc20 {
     use integer::BoundedInt;

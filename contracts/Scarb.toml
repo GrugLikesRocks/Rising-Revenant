@@ -1,14 +1,14 @@
 [package]
 cairo-version = "2.2.0"
-name = "RealmsRisingRevenant"
+name = "realmsrisingrevenant"
 version = "0.1.0"
 
 [cairo]
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.3.0" }
-openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.7.0-rc.0" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.3.2" }
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.8.0-rc.0" }
 
 [[target.dojo]]
 

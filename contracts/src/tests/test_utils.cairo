@@ -7,23 +7,23 @@ use openzeppelin::token::erc20::interface::{
     IERC20, IERC20Dispatcher, IERC20DispatcherImpl, IERC20DispatcherTrait
 };
 
-use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
-use RealmsRisingRevenant::components::game::{game, game_tracker};
-use RealmsRisingRevenant::components::outpost::outpost;
-use RealmsRisingRevenant::components::reinforcement::Reinforcement;
-use RealmsRisingRevenant::components::revenant::revenant;
-use RealmsRisingRevenant::components::world_event::world_event;
+use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
+use realmsrisingrevenant::components::game::{game, game_tracker};
+use realmsrisingrevenant::components::outpost::outpost;
+use realmsrisingrevenant::components::reinforcement::Reinforcement;
+use realmsrisingrevenant::components::revenant::revenant;
+use realmsrisingrevenant::components::world_event::world_event;
 
-use RealmsRisingRevenant::systems::game::{
+use realmsrisingrevenant::systems::game::{
     game_actions, IGameActionsDispatcher, IGameActionsDispatcherTrait
 };
-use RealmsRisingRevenant::systems::revenant::{
+use realmsrisingrevenant::systems::revenant::{
     revenant_actions, IRevenantActionsDispatcher, IRevenantActionsDispatcherTrait
 };
-use RealmsRisingRevenant::systems::world_event::{
+use realmsrisingrevenant::systems::world_event::{
     world_event_actions, IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
 };
-use RealmsRisingRevenant::tests::foo_erc::FooErc20;
+use realmsrisingrevenant::tests::foo_erc::FooErc20;
 
 const EVENT_BLOCK_INTERVAL: u64 = 3;
 const PREPARE_PHRASE_INTERVAL: u64 = 10;

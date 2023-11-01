@@ -15,10 +15,10 @@ trait IGameActions<TContractState> {
 #[dojo::contract]
 mod game_actions {
     use starknet::{ContractAddress, get_block_info};
-    use RealmsRisingRevenant::components::game::{
+    use realmsrisingrevenant::components::game::{
         Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl
     };
-    use RealmsRisingRevenant::constants::GAME_CONFIG;
+    use realmsrisingrevenant::constants::GAME_CONFIG;
     use super::IGameActions;
 
     #[external(v0)]

@@ -17,18 +17,18 @@ mod revenant_actions {
         IERC20, IERC20Dispatcher, IERC20DispatcherImpl, IERC20DispatcherTrait
     };
 
-    use RealmsRisingRevenant::components::game::{
+    use realmsrisingrevenant::components::game::{
         Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl
     };
-    use RealmsRisingRevenant::components::revenant::{
+    use realmsrisingrevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
-    use RealmsRisingRevenant::components::outpost::{
+    use realmsrisingrevenant::components::outpost::{
         Outpost, OutpostPosition, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use RealmsRisingRevenant::components::reinforcement::Reinforcement;
-    use RealmsRisingRevenant::constants::{MAP_HEIGHT, MAP_WIDTH, OUTPOST_INIT_LIFE};
-    use RealmsRisingRevenant::utils::random::{Random, RandomImpl};
+    use realmsrisingrevenant::components::reinforcement::Reinforcement;
+    use realmsrisingrevenant::constants::{MAP_HEIGHT, MAP_WIDTH, OUTPOST_INIT_LIFE};
+    use realmsrisingrevenant::utils::random::{Random, RandomImpl};
     use super::IRevenantActions;
 
     #[external(v0)]

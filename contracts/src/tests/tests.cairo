@@ -1,3 +1,4 @@
+#[cfg(test)]
 mod tests {
     use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::option::OptionTrait;
@@ -5,33 +6,33 @@ mod tests {
 
     use dojo::world::{IWorldDispatcherTrait, IWorldDispatcher};
 
-    use RealmsRisingRevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
-    use RealmsRisingRevenant::components::game::{
+    use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
+    use realmsrisingrevenant::components::game::{
         Game, game_tracker, GameTracker, GameStatus, GameEntityCounter, GameImpl, GameTrait
     };
-    use RealmsRisingRevenant::components::outpost::{
+    use realmsrisingrevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use RealmsRisingRevenant::components::reinforcement::Reinforcement;
-    use RealmsRisingRevenant::components::revenant::{
+    use realmsrisingrevenant::components::reinforcement::Reinforcement;
+    use realmsrisingrevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
-    use RealmsRisingRevenant::components::world_event::{WorldEvent};
+    use realmsrisingrevenant::components::world_event::{WorldEvent};
 
-    use RealmsRisingRevenant::systems::game::{IGameActionsDispatcher, IGameActionsDispatcherTrait};
-    use RealmsRisingRevenant::systems::revenant::{
+    use realmsrisingrevenant::systems::game::{IGameActionsDispatcher, IGameActionsDispatcherTrait};
+    use realmsrisingrevenant::systems::revenant::{
         IRevenantActionsDispatcher, IRevenantActionsDispatcherTrait
     };
-    use RealmsRisingRevenant::systems::world_event::{
+    use realmsrisingrevenant::systems::world_event::{
         IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
     };
-    use RealmsRisingRevenant::tests::test_utils::{
+    use realmsrisingrevenant::tests::test_utils::{
         DefaultWorld, EVENT_BLOCK_INTERVAL, PREPARE_PHRASE_INTERVAL, _init_world, _init_game,
         _create_revenant, _add_block_number,
     };
 
     #[test]
-    #[available_gas(30000000)]
+    #[available_gas(3000000000)]
     fn test_create_game() {
         let DefaultWorld{world, game_action, caller, .. } = _init_world();
         let game_id = game_action.create(PREPARE_PHRASE_INTERVAL, EVENT_BLOCK_INTERVAL, caller);

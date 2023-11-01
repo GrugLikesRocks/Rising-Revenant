@@ -22,13 +22,6 @@ fn calculate_distance(x1: u32, y1: u32, x2: u32, y2: u32, scale: u32) -> u32 {
     return sqrt(diff_x * diff_x + diff_y * diff_y, scale);
 }
 
-#[test]
-#[available_gas(3000000000)]
-fn test_calculate_distance() {
-    assert(calculate_distance(4, 7, 8, 3, 100) == 5, 'invalid result');
-
-    assert(calculate_distance(1, 1, 1, 1, 100) == 0, 'invalid result');
-}
 
 // Calculates the integer square root of n using Newton's iterative method
 // Multiplies and divides by the scale factor to improve precision during integer division
@@ -53,14 +46,27 @@ fn sqrt(n: u32, scale: u32) -> u32 {
     return x / scale;
 }
 
-#[test]
-#[available_gas(3000000000)]
-fn test_sqrt() {
-    let v1 = 10;
-    let v2 = 25;
-    let v3 = 10000;
+#[cfg(test)]
+mod test {
+    use super::{sqrt, calculate_distance};
 
-    assert(sqrt(v1, 100) == 3, 'invalid result');
-    assert(sqrt(v2, 100) == 5, 'invalid result');
-    assert(sqrt(v3, 100) == 100, 'invalid result');
+    #[test]
+    #[available_gas(3000000000)]
+    fn test_calculate_distance() {
+        assert(calculate_distance(4, 7, 8, 3, 100) == 5, 'invalid result');
+
+        assert(calculate_distance(1, 1, 1, 1, 100) == 0, 'invalid result');
+    }
+
+    #[test]
+    #[available_gas(3000000000)]
+    fn test_sqrt() {
+        let v1 = 10;
+        let v2 = 25;
+        let v3 = 10000;
+
+        assert(sqrt(v1, 100) == 3, 'invalid result');
+        assert(sqrt(v2, 100) == 5, 'invalid result');
+        assert(sqrt(v3, 100) == 100, 'invalid result');
+    }
 }

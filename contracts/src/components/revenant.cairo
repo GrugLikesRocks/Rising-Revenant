@@ -1,5 +1,5 @@
 use starknet::ContractAddress;
-use RealmsRisingRevenant::constants::OUTPOST_MAX_COUNT;
+use realmsrisingrevenant::constants::OUTPOST_MAX_COUNT;
 
 #[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Revenant {

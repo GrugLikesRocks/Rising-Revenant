@@ -20,21 +20,21 @@ impl RandomImpl of RandomTrait {
         let seed256: u256 = seed.into();
         let s0 = splitmix(seed256.low);
         let s1 = splitmix(s0);
-        
-		Random {s0, s1}
+
+        Random { s0, s1 }
     }
 
-	fn next(ref self: Random) -> u128 {
+    fn next(ref self: Random) -> u128 {
         let result = (rotl(self.s0 * 5, 7) * 9) & U64;
 
         let mut s1 = (self.s1 ^ self.s0) & U64;
         let s0 = (rotl(self.s0, 24) ^ s1 ^ (s1 * 65536)) & U64;
         s1 = (rotl(s1, 37) & U64);
 
-		self.s0 = s0;
-		self.s1 = s1;
+        self.s0 = s0;
+        self.s1 = s1;
 
-		s0
+        s0
     }
 
     fn next_u32(ref self: Random, min: u32, max: u32) -> u32 {
@@ -79,17 +79,22 @@ fn pow2(mut i: u128) -> u128 {
     }
 }
 
-#[test]
-#[available_gas(3000000000)]
-fn test_random() { 
-    let seed = starknet::get_tx_info().unbox().transaction_hash;
-	let mut random = RandomImpl::new(seed);
-   
- 	let mut next = random.next_u32(30, 99);
-    assert(next >= 30, 'Wrong random number range');
-    assert(next <= 99, 'Wrong random number range');
-	
-	next = random.next_u32(12, 29);
-	assert(next >= 12, 'Wrong random number range');
-    assert(next <= 29, 'Wrong random number range');
+#[cfg(test)]
+mod test {
+    use super::RandomImpl;
+
+    #[test]
+    #[available_gas(3000000000)]
+    fn test_random() {
+        let seed = starknet::get_tx_info().unbox().transaction_hash;
+        let mut random = RandomImpl::new(seed);
+
+        let mut next = random.next_u32(30, 99);
+        assert(next >= 30, 'Wrong random number range');
+        assert(next <= 99, 'Wrong random number range');
+
+        next = random.next_u32(12, 29);
+        assert(next >= 12, 'Wrong random number range');
+        assert(next <= 29, 'Wrong random number range');
+    }
 }

@@ -4,50 +4,136 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Outpost: (() => {
-      const name = "Outpost";
+    Game: (() => {
       return defineComponent(
         world,
         {
-          owner: RecsType.Number,
-          name: RecsType.Number,
-          x: RecsType.Number,
-          y: RecsType.Number,
-          lifes: RecsType.Number,
+          game_id: RecsType.Number,
+          start_block_number: RecsType.Number,
+          prize: RecsType.Number,
+          preparation_phase_interval: RecsType.Number,
+          event_interval: RecsType.Number,
+          erc_addr: RecsType.String,
           status: RecsType.Number,
-          last_affect_event_id: RecsType.Number,
         },
         {
           metadata: {
-            name: name,
+            name: "Game",
+            types: [],
           },
         }
       );
     })(),
-
-    Revenant: (() => {
-      const name = "Revenant";
+    GameEntityCounter: (() => {
       return defineComponent(
         world,
         {
-          owner: RecsType.Number,
-          name: RecsType.Number,
+          game_id: RecsType.Number,
+          revenant_count: RecsType.Number,
+          outpost_count: RecsType.Number,
+          event_count: RecsType.Number,
+          outpost_exists_count: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: "GameEntityCounter",
+            types: [],
+          },
+        }
+      );
+    })(),
+    GameTracker: (() => {
+      return defineComponent(
+        world,
+        { entity_id: RecsType.BigInt, count: RecsType.Number },
+        {
+          metadata: {
+            name: "GameTracker",
+            types: [],
+          },
+        }
+      );
+    })(),
+    Outpost: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          entity_id: RecsType.BigInt,
+          owner: RecsType.String,
+          name: RecsType.BigInt,
+          x: RecsType.Number,
+          y: RecsType.Number,
+          lifes: RecsType.Number,
+          status: RecsType.Number,
+          last_affect_event_id: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            name: "Outpost",
+            types: [],
+          },
+        }
+      );
+    })(),
+    OutpostPosition: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          x: RecsType.Number,
+          y: RecsType.Number,
+          entity_id: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            name: "OutpostPosition",
+            types: [],
+          },
+        }
+      );
+    })(),
+    Reinforcement: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          owner: RecsType.String,
+          balance: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: "Reinforcement",
+            types: [],
+          },
+        }
+      );
+    })(),
+    Revenant: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          entity_id: RecsType.BigInt,
+          owner: RecsType.String,
+          name: RecsType.BigInt,
           outpost_count: RecsType.Number,
           status: RecsType.Number,
         },
         {
           metadata: {
-            name: name,
+            name: "Revenant",
+            types: [],
           },
         }
       );
     })(),
-
     WorldEvent: (() => {
-      const name = "WorldEvent";
       return defineComponent(
         world,
         {
+          game_id: RecsType.Number,
+          entity_id: RecsType.BigInt,
           x: RecsType.Number,
           y: RecsType.Number,
           radius: RecsType.Number,
@@ -56,176 +142,24 @@ export function defineContractComponents(world: World) {
         },
         {
           metadata: {
-            name: name,
+            name: "WorldEvent",
+            types: [],
           },
         }
       );
     })(),
-
-    Game: (() => {
-      const name = "Game";
+    WorldEventTracker: (() => {
       return defineComponent(
         world,
         {
-          start_block_number: RecsType.Number,
-          prize: RecsType.Number,
-          status: RecsType.Number,
+          game_id: RecsType.Number,
+          event_id: RecsType.BigInt,
+          outpost_id: RecsType.BigInt,
         },
         {
           metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    GameTracker: (() => {
-      const name = "GameTracker";
-      return defineComponent(
-        world,
-        {
-          count: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    GameEntityCounter: (() => {
-      const name = "GameEntityCounter";
-      return defineComponent(
-        world,
-        {
-          revenant_count: RecsType.Number,
-          outpost_count: RecsType.Number,
-          event_count: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    Reinforcement: (() => {
-      const name = "Reinforcement";
-      return defineComponent(
-        world,
-        {
-          balance: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
-    ClientCameraPosition: (() => {
-      const name = "ClientCameraPosition";
-      return defineComponent(
-        world,
-        {
-          x: RecsType.Number,
-          y: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    ClientClickPosition: (() => {
-      const name = "ClientClickPosition";
-      return defineComponent(
-        world,
-        {
-          xFromOrigin: RecsType.Number,
-          yFromOrigin: RecsType.Number,
-
-          xFromMiddle: RecsType.Number,
-          yFromMiddle: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    ClientOutpostData: (() => {
-      const name = "ClientOutpostData";
-      return defineComponent(
-        world,
-        {
-          id : RecsType.Number,
-          owned: RecsType.Boolean,
-          event_effected: RecsType.Boolean,
-          selected: RecsType.Boolean,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    ClientGameData: (() => {
-      const name = "ClientGameData";
-      return defineComponent(
-        world,
-        {
-          current_game_state : RecsType.Number,
-          user_account_address : RecsType.String,
-          current_game_id : RecsType.Number,
-          current_block_number : RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    AuthStatus: (() => {
-      const name = "AuthStatus";
-      return defineComponent(
-        world,
-        {
-          is_authorized: RecsType.Boolean,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-
-    AuthRole: (() => {
-      const name = "AuthRole";
-      return defineComponent(
-        world,
-        {
-          id: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
+            name: "WorldEventTracker",
+            types: [],
           },
         }
       );

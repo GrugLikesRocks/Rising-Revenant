@@ -3,15 +3,11 @@ import {
   defineEnterSystem,
   defineSystem,
   getComponentValueStrict,
-  setComponent,
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
-import {
-  Assets,
-  GAME_CONFIG,
-  PREPARATION_PHASE_BLOCK_COUNT as PREPARATION_PHASE_BLOCK_COUNT,
-} from "../constants";
+import {setEntityGroup, Assets} from "../constants";
+
 import { drawPhaserLayer } from "./eventSystems/eventEmitter";
 
 export const mapSpawn = (layer: PhaserLayer) => {
@@ -28,6 +24,15 @@ export const mapSpawn = (layer: PhaserLayer) => {
   defineEnterSystem(world, [Has(Game)], ({ entity }) => {
     const mapObj = objectPool.get(entity, "Sprite");
 
+    const phaserScene = layer.scenes.Main.phaserScene;
+
+    const mapGroup = phaserScene.add.group();
+    const _entityGroup = phaserScene.add.group();
+
+    setEntityGroup(_entityGroup);
+
+    // _entityGroup.setBlendMode(Phaser.BlendModes.MULTIPLY);
+
     mapObj.setComponent({
       id: "animation",
       once: (sprite) => {
@@ -35,26 +40,20 @@ export const mapSpawn = (layer: PhaserLayer) => {
         sprite.depth = -2;
         camera.phaserCamera.setBounds(0, 0, sprite.width, sprite.height);
         camera.centerOn(sprite.width / 2, sprite.height / 2);
+
+
+        mapGroup.add(sprite);
       },
     });
+
+
+    // //console.log("THIS IS HOW MANY IN THE MAP GROUP", mapGroup.getLength());
+    // //console.log("THIS IS HOW MANY IN THE ENTITY GROUP", _entityGroup.getLength());
+
   });
 
   defineSystem(world, [Has(ClientGameData)], ({ entity }) => {
     const clientGameData = getComponentValueStrict(ClientGameData, entity);
-
-    // if (
-    //   Number(gameComp.start_block_number) + PREPARATION_PHASE_BLOCK_COUNT >=
-    //     clientGameData.current_block_number + 1 &&
-    //   clientGameData.current_game_state === 1
-    // ) {
-    //   return;
-    // } else {
-    //   if (clientGameData.current_game_state === 1) {
-    //     drawPhaserLayer.emit("toggleVisibility", true);
-    //   } else {
-    //     return;
-    //   }
-    // }
 
     if (clientGameData.current_game_state === 1)
     {

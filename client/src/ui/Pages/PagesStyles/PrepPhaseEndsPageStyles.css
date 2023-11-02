@@ -1,0 +1,28 @@
+.ppe-page-container {
+    width: 100%;
+    height: 100%;
+    background-image: url("Page_Bg/PROFILE_PAGE_BG.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    user-select: none;
+}
+
+.ppe-page-container h1 {
+    text-align: center;
+    color: white;
+
+    font-family: Zelda;
+    font-weight: 100;
+
+    font-size: 4rem;
+}
+
+.hover-effect:hover
+{
+    cursor: pointer;
+}

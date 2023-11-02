@@ -2,10 +2,9 @@ import {
   Has,
   defineSystem,
   getComponentValueStrict,
-  } from "@latticexyz/recs";
+} from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { Assets } from "../constants";
-import { SCALE } from "../constants";
+import { Assets, SCALE, getEntityGroup } from "../constants";
 
 export const spawnOutposts = (layer: PhaserLayer) => {
 
@@ -38,34 +37,44 @@ export const spawnOutposts = (layer: PhaserLayer) => {
       id: "texture",
       once: (sprite) => {
 
-        sprite.depth = 0;
-
-        if (outpostClientData.selected)
-        {
+        if (outpostClientData.selected) {
           sprite.setTexture(Assets.CaslteSelectedAsset);
+
+          sprite.depth = 1;
         }
-        else
-        {
-          if (outpostDojoData.lifes <= 0) {
-            sprite.setTexture(Assets.CastleDestroyedAsset);
+        else {
+
+          if (outpostClientData.visible === false) 
+          {
+                sprite.setVisible(false);
           }
-          else {
-            if (!outpostClientData.event_effected) {
-              if (outpostClientData.owned) {
-                sprite.setTexture(Assets.CastleHealthySelfAsset);
-              } else {
-                sprite.setTexture(Assets.CastleHealthyEnemyAsset);
-              }
+          else
+          {
+            sprite.depth = 0;
+            sprite.setVisible(true);
+
+            if (outpostDojoData.lifes <= 0) {
+              sprite.setTexture(Assets.CastleDestroyedAsset);
             }
             else {
-              sprite.setTexture(Assets.CastleDamagedAsset);
+              if (!outpostClientData.event_effected) {
+                if (outpostClientData.owned) {
+                  sprite.setTexture(Assets.CastleHealthySelfAsset);
+                } else {
+                  sprite.setTexture(Assets.CastleHealthyEnemyAsset);
+                }
+              }
+              else {
+                sprite.setTexture(Assets.CastleDamagedAsset);
+              }
             }
           }
         }
 
-        // sprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
         sprite.scale = SCALE;
+
       },
     });
+
   });
 };

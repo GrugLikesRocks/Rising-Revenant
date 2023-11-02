@@ -11,7 +11,7 @@ import {
 } from "@latticexyz/recs";
 
 
-import { tooltipEvent,setTooltipArray } from "./eventSystems/eventEmitter";
+import { setTooltipArray } from "./eventSystems/eventEmitter";
 import { GAME_CONFIG } from "../constants";
 
 export const clickManager = (layer: PhaserLayer) => {
@@ -22,7 +22,7 @@ export const clickManager = (layer: PhaserLayer) => {
     },
 
     networkLayer: {
-      components: { Outpost, ClientClickPosition, ClientCameraPosition, ClientOutpostData },
+      components: { Outpost, ClientClickPosition, ClientCameraPosition },
     },
   } = layer;
 
@@ -57,12 +57,17 @@ export const clickManager = (layer: PhaserLayer) => {
       entity
     );
 
+    let zoomVal:number = 0;
+
+    camera.zoom$.subscribe((zoom) => {zoomVal = zoom;});
+  
+
     if (positionCenterCam === undefined) { return; }
 
-    let positionX = positionClick.xFromMiddle + positionCenterCam.x;
-    let positionY = positionClick.yFromMiddle + positionCenterCam.y;
+    let positionX = (positionClick.xFromMiddle/zoomVal) + positionCenterCam.x;
+    let positionY = (positionClick.yFromMiddle/zoomVal) + positionCenterCam.y;
 
-    let foundEntity: EntityIndex[] =[]; // store the found entity
+    let foundEntity: EntityIndex[] = []; // store the found entity
 
     for (const outpostEntityValue of outpostArray) {
       const playerObj = objectPool.get(outpostEntityValue, "Sprite");
@@ -88,29 +93,11 @@ export const clickManager = (layer: PhaserLayer) => {
 
     }
 
-    // setTooltipArray.emit("setToolTipArray",foundEntity);
     if (foundEntity.length > 0)
     {
       setTooltipArray.emit("setToolTipArray",foundEntity);
     }
 
-    // if (foundEntity) {
-
-    //   tooltipEvent.emit(
-    //     "spawnTooltip",
-    //     positionClick.xFromOrigin,
-    //     positionClick.yFromOrigin,
-    //     foundEntity
-    //   );
-    // } else {
-
-    //   tooltipEvent.emit(
-    //     "closeTooltip",
-    //     true,
-    //     positionClick.xFromOrigin,
-    //     positionClick.yFromOrigin
-    //   );
-    // }
   });
 
 };

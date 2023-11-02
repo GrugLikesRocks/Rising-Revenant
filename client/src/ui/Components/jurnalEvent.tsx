@@ -52,6 +52,18 @@ export const JurnalEventComponent : React.FC<JuornalEventProps> = ({ setMenuStat
           <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
           <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
           <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
         </ClickWrapper>
       </div>
     </div>

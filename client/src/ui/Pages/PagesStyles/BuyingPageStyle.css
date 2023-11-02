@@ -71,7 +71,7 @@
 
   width: fit-content;
 
-  border: 2px solid white;
+  border: 2px solid solid var(--borderColour);
   padding: 2px 5px;
 }
 

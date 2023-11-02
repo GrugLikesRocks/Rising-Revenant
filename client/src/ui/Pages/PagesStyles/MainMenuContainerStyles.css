@@ -43,7 +43,7 @@
     width: 60%;
     height: 70%;
     border-radius: 10px;
-    border: 10px solid #a3a3a3; 
+    border: 10px solid solid var(--borderColour); 
     z-index: 1;
 }
 

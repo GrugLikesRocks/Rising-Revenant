@@ -1,5 +1,5 @@
 //libs
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 // styles
 import "./PagesStyles/MainMenuContainerStyles.css"
@@ -8,6 +8,7 @@ import "./PagesStyles/MainMenuContainerStyles.css"
 import { TopBarComponent } from '../Components/mainTopBar';
 import { NavbarComponent } from '../Components/navbar';
 import { JurnalEventComponent } from '../Components/jurnalEvent';
+import { OutpostTooltipComponent } from '../Components/outpostTooltip';
 
 import { ProfilePage } from './profilePage';
 import { RulesPage } from './rulesPage';
@@ -37,10 +38,25 @@ export enum MenuState {
 export const MainMenuContainer = () => {
     const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
     const [gamePhase, setGamePhase] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(true);
 
     const handleIconClick = (newMenuState: MenuState) => {
         setCurrentMenuState(newMenuState);
     };
+
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setCurrentMenuState(MenuState.NONE);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
     const handleTopBarClick = () => {
         setCurrentMenuState(MenuState.NONE);
@@ -72,9 +88,10 @@ export const MainMenuContainer = () => {
                 {gamePhase === false && <div className='prep-phase-text'> <h2> Preparation phase ends in <br/> DD: 5 HH: 5 MM: 5 SS: 5</h2></div> };
 
             </div>
-            <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
 
+            <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
             {currentMenuState === MenuState.NONE && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
+            {showTooltip === true && <OutpostTooltipComponent/>}
             <div className='image-test' />
         </>
     );

@@ -55,17 +55,32 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
                                 <h2>X: 2314, Y:5123</h2>
                                 <h2>2</h2>
                                 <div className="item-button"></div>
-                            </div><div className="item-container-profile">
-                                <h2>1</h2>
-                                <h2>X: 2314, Y:5123</h2>
-                                <h2>2</h2>
-                                <div className="item-button"></div>
-                            </div><div className="item-container-profile">
+                            </div>
+                            <div className="item-container-profile">
                                 <h2>1</h2>
                                 <h2>X: 2314, Y:5123</h2>
                                 <h2>2</h2>
                                 <div className="item-button"></div>
                             </div>
+                            <div className="item-container-profile">
+                                <h2>1</h2>
+                                <h2>X: 2314, Y:5123</h2>
+                                <h2>2</h2>
+                                <div className="item-button"></div>
+                            </div>
+                            <div className="item-container-profile">
+                                <h2>1</h2>
+                                <h2>X: 2314, Y:5123</h2>
+                                <h2>2</h2>
+                                <div className="item-button"></div>
+                            </div>
+                            <div className="item-container-profile">
+                                <h2>1</h2>
+                                <h2>X: 2314, Y:5123</h2>
+                                <h2>2</h2>
+                                <div className="item-button"></div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

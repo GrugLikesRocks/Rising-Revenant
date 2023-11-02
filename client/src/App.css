@@ -2,6 +2,8 @@
   overflow: hidden;
 }
 
+
+
 @font-face {
   font-family: "OL";
   src: url("/Fonts/OrticaLinear-Light.woff2") format("woff2");
@@ -10,6 +12,10 @@
 @font-face {
   font-family: "Zelda";
   src: url("/Fonts/The Wild Breath of Zelda.otf") format("opentype");
+}
+
+:root {
+  --borderColour: #a3a3a3;
 }
 
 

@@ -1,9 +1,9 @@
 .stats-page-container {
   width: 100%;
-  height: 100%; 
+  height: 100%;
 
   background-image: url("Page_Bg/STATS_PAGE_BG.png");
-  background-position:  center;
+  background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
 
@@ -18,8 +18,7 @@
   align-items: center;
 }
 
-.title-section h2
-{
+.title-section h2 {
   color: white;
 
   font-family: Zelda;
@@ -74,12 +73,10 @@
   width: 100%;
   height: 85%;
   box-sizing: border-box;
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid var(--borderColour);
 
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
 
-  padding-left: 14px;
-  padding-right: 2px;
   overflow-y: auto;
 }
 
@@ -110,17 +107,14 @@
   color: white;
 }
 
-
-.icon
-{
+.icon {
   height: 1em;
   width: 1em;
   vertical-align: middle;
-  padding-bottom:0.2em;
+  padding-bottom: 0.2em;
   margin: 0px 10px;
 }
 
-.icon:hover
-{
+.icon:hover {
   cursor: pointer;
 }

@@ -88,7 +88,7 @@
 
   width: fit-content;
 
-  border: 2px solid  white;
+  border: 2px solid   var(--borderColour);
   padding: 2px 5px;
   font-family: OL;
 }

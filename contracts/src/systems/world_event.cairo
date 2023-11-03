@@ -11,7 +11,6 @@ trait IWorldEventActions<TContractState> {
 
 #[dojo::contract]
 mod world_event_actions {
-    use starknet::{ContractAddress, get_block_info, get_caller_address};
     use realmsrisingrevenant::components::game::{
         Game, GameEntityCounter, GameStatus, GameTrait, GameImpl
     };
@@ -23,6 +22,7 @@ mod world_event_actions {
     use realmsrisingrevenant::utils::MAX_U32;
     use realmsrisingrevenant::utils::random::{Random, RandomImpl};
     use realmsrisingrevenant::utils;
+    use starknet::{ContractAddress, get_block_info, get_caller_address};
     use super::IWorldEventActions;
 
     #[external(v0)]

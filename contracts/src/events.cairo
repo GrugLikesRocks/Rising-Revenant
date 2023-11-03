@@ -1,9 +1,9 @@
-use dojo::world::{Context, IWorldDispatcherTrait};
-use serde::Serde;
 use array::{ArrayTrait, SpanTrait};
-use starknet::ContractAddress;
+use dojo::world::{Context, IWorldDispatcherTrait};
 use realmsrisingrevenant::components::Position;
 use realmsrisingrevenant::components::WorldEvent;
+use serde::Serde;
+use starknet::ContractAddress;
 
 fn emit(ctx: Context, name: felt252, values: Span<felt252>) {
     let mut keys = array::ArrayTrait::new();

@@ -2,11 +2,25 @@
 version = 1
 
 [[package]]
+name = "cubit"
+version = "1.2.0"
+source = "git+https://github.com/influenceth/cubit#2ccb2536dffa3f15ebd38b755c1be65fde1eab0c"
+
+[[package]]
 name = "dojo"
 version = "0.3.2"
 source = "git+https://github.com/dojoengine/dojo?tag=v0.3.2#a0fa1ad96fb98c088be05da6178f43217891c8c6"
 dependencies = [
  "dojo_plugin",
+]
+
+[[package]]
+name = "dojo_defi"
+version = "0.3.2"
+source = "git+https://github.com/dojoengine/dojo?tag=v0.3.2#a0fa1ad96fb98c088be05da6178f43217891c8c6"
+dependencies = [
+ "cubit",
+ "dojo",
 ]
 
 [[package]]
@@ -23,5 +37,6 @@ name = "realmsrisingrevenant"
 version = "0.1.0"
 dependencies = [
  "dojo",
+ "dojo_defi",
  "openzeppelin",
 ]

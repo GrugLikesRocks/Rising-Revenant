@@ -4,7 +4,9 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 trait IRevenantActions<TContractState> {
     fn create(self: @TContractState, game_id: u32, name: felt252) -> (u128, u128);
 
-    fn purchase_reinforcement(self: @TContractState, game_id: u32, count: u32) -> bool;
+    fn get_current_price(self: @TContractState, game_id: u32) -> u128;
+
+    fn purchase_reinforcement(self: @TContractState, game_id: u32) -> bool;
 
     fn reinforce_outpost(self: @TContractState, game_id: u32, outpost_id: u128);
 }
@@ -12,23 +14,28 @@ trait IRevenantActions<TContractState> {
 
 #[dojo::contract]
 mod revenant_actions {
-    use starknet::{ContractAddress, get_block_info, get_caller_address, get_contract_address};
     use openzeppelin::token::erc20::interface::{
         IERC20, IERC20Dispatcher, IERC20DispatcherImpl, IERC20DispatcherTrait
     };
 
     use realmsrisingrevenant::components::game::{
-        Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl
-    };
-    use realmsrisingrevenant::components::revenant::{
-        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
+        Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl,
     };
     use realmsrisingrevenant::components::outpost::{
         Outpost, OutpostPosition, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use realmsrisingrevenant::components::reinforcement::Reinforcement;
+    use realmsrisingrevenant::components::reinforcement::{
+        Reinforcement, ReinforcementBalance, ReinforcementBalanceImpl, ReinforcementBalanceTrait
+    };
+    use realmsrisingrevenant::components::revenant::{
+        Revenant, RevenantStatus, RevenantImpl, RevenantTrait
+    };
     use realmsrisingrevenant::constants::{MAP_HEIGHT, MAP_WIDTH, OUTPOST_INIT_LIFE};
     use realmsrisingrevenant::utils::random::{Random, RandomImpl};
+    use starknet::{
+        ContractAddress, get_block_info, get_caller_address, get_contract_address,
+        get_block_timestamp
+    };
     use super::IRevenantActions;
 
     #[external(v0)]
@@ -62,22 +69,36 @@ mod revenant_actions {
             (entity_id, outpost_id)
         }
 
-        fn purchase_reinforcement(self: @ContractState, game_id: u32, count: u32) -> bool {
+        fn get_current_price(self: @ContractState, game_id: u32) -> u128 {
+            let world = self.world_dispatcher.read();
+            let mut game = get!(world, game_id, Game);
+            game.assert_can_create_outpost(world);
+
+            let balance = get!(world, game_id, ReinforcementBalance);
+            return balance.get_reinforcement_price(world, game_id);
+        }
+
+        fn purchase_reinforcement(self: @ContractState, game_id: u32) -> bool {
             let world = self.world_dispatcher.read();
             let player = get_caller_address();
             let mut game = get!(world, game_id, Game);
             game.assert_can_create_outpost(world);
 
+            let mut reinforcemetn_balance = get!(world, game_id, ReinforcementBalance);
+            let current_price = reinforcemetn_balance.get_reinforcement_price(world, game_id);
+
             let erc20 = IERC20Dispatcher { contract_address: game.erc_addr };
             let result = erc20
                 .transfer_from(
-                    sender: player, recipient: get_contract_address(), amount: count.into()
+                    sender: player, recipient: get_contract_address(), amount: current_price.into()
                 );
             assert(result, 'need approve for erc20');
 
             let mut reinforcements = get!(world, (game_id, player), Reinforcement);
-            reinforcements.balance += count;
-            set!(world, (reinforcements));
+            reinforcements.balance += 1;
+            reinforcemetn_balance.count += 1;
+
+            set!(world, (reinforcements, reinforcemetn_balance));
 
             true
         }

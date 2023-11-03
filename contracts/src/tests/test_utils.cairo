@@ -1,18 +1,17 @@
-use starknet::{ContractAddress, syscalls::deploy_syscall};
+use dojo::test_utils::spawn_test_world;
 
 use dojo::world::{IWorldDispatcherTrait, IWorldDispatcher};
-use dojo::test_utils::spawn_test_world;
 
 use openzeppelin::token::erc20::interface::{
     IERC20, IERC20Dispatcher, IERC20DispatcherImpl, IERC20DispatcherTrait
 };
-
-use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
 use realmsrisingrevenant::components::game::{game, game_tracker};
 use realmsrisingrevenant::components::outpost::outpost;
 use realmsrisingrevenant::components::reinforcement::Reinforcement;
 use realmsrisingrevenant::components::revenant::revenant;
 use realmsrisingrevenant::components::world_event::world_event;
+
+use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
 
 use realmsrisingrevenant::systems::game::{
     game_actions, IGameActionsDispatcher, IGameActionsDispatcherTrait
@@ -24,6 +23,7 @@ use realmsrisingrevenant::systems::world_event::{
     world_event_actions, IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
 };
 use realmsrisingrevenant::tests::foo_erc::FooErc20;
+use starknet::{ContractAddress, syscalls::deploy_syscall};
 
 const EVENT_BLOCK_INTERVAL: u64 = 3;
 const PREPARE_PHRASE_INTERVAL: u64 = 10;
@@ -97,7 +97,7 @@ fn _create_revenant(revenant_action: IRevenantActionsDispatcher, game_id: u32) -
 
 fn _add_block_number(number: u64) -> u64 {
     let mut block_number = starknet::get_block_info().unbox().block_number;
-    block_number += PREPARE_PHRASE_INTERVAL + 1;
+    block_number += number;
     starknet::testing::set_block_number(block_number);
     block_number
 }

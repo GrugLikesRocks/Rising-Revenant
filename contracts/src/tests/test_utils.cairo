@@ -9,6 +9,7 @@ use realmsrisingrevenant::components::game::{game, game_tracker};
 use realmsrisingrevenant::components::outpost::outpost;
 use realmsrisingrevenant::components::reinforcement::Reinforcement;
 use realmsrisingrevenant::components::revenant::revenant;
+use realmsrisingrevenant::components::trade::trade;
 use realmsrisingrevenant::components::world_event::world_event;
 
 use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
@@ -18,6 +19,9 @@ use realmsrisingrevenant::systems::game::{
 };
 use realmsrisingrevenant::systems::revenant::{
     revenant_actions, IRevenantActionsDispatcher, IRevenantActionsDispatcherTrait
+};
+use realmsrisingrevenant::systems::trade::{
+    trade_actions, ITradeActionsDispatcher, ITradeActionsDispatcherTrait
 };
 use realmsrisingrevenant::systems::world_event::{
     world_event_actions, IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
@@ -34,6 +38,7 @@ struct DefaultWorld {
     caller: ContractAddress,
     game_action: IGameActionsDispatcher,
     revenant_action: IRevenantActionsDispatcher,
+    trade_action: ITradeActionsDispatcher,
     world_event_action: IWorldEventActionsDispatcher,
     test_erc: IERC20Dispatcher,
 }
@@ -49,6 +54,7 @@ fn _init_world() -> DefaultWorld {
         game_tracker::TEST_CLASS_HASH,
         outpost::TEST_CLASS_HASH,
         revenant::TEST_CLASS_HASH,
+        trade::TEST_CLASS_HASH,
         world_event::TEST_CLASS_HASH
     ];
 
@@ -65,6 +71,11 @@ fn _init_world() -> DefaultWorld {
             .deploy_contract('salt', revenant_actions::TEST_CLASS_HASH.try_into().unwrap())
     };
 
+    let trade_action = ITradeActionsDispatcher {
+        contract_address: world
+            .deploy_contract('salt', trade_actions::TEST_CLASS_HASH.try_into().unwrap())
+    };
+
     let world_event_action = IWorldEventActionsDispatcher {
         contract_address: world
             .deploy_contract('salt', world_event_actions::TEST_CLASS_HASH.try_into().unwrap())
@@ -76,7 +87,25 @@ fn _init_world() -> DefaultWorld {
         .expect('error deploy erc');
     let test_erc = IERC20Dispatcher { contract_address: test_erc_addr };
 
-    DefaultWorld { world, caller, game_action, revenant_action, world_event_action, test_erc }
+    // init admin user
+    let admin = starknet::contract_address_const::<0xABCD>();
+    world.grant_owner(admin, 'Game');
+    world.grant_owner(admin, 'GameTracker');
+    world.grant_owner(admin, 'GameEntityCounter');
+    world.grant_owner(admin, 'Outpost');
+    world.grant_owner(admin, 'OutpostPosition');
+    world.grant_owner(admin, 'Reinforcement');
+    world.grant_owner(admin, 'Revenant');
+    world.grant_owner(admin, 'WorldEvent');
+    world.grant_owner(admin, 'WorldEventTracker');
+    world.grant_owner(admin, 'ReinforcementBalance');
+    world.grant_owner(admin, 'Trade');
+
+    test_erc.transfer(admin, 0x100000000000000_u256);
+
+    DefaultWorld {
+        world, caller, game_action, revenant_action, trade_action, world_event_action, test_erc
+    }
 }
 
 fn _init_game() -> (DefaultWorld, u32) {

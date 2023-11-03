@@ -7,8 +7,8 @@ version = "0.1.0"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.3.2" }
-dojo_defi = { git = "https://github.com/dojoengine/dojo", tag = "v0.3.2" }
+dojo = { git = "https://github.com/dojoengine/dojo", rev = "bbdd5f22a8238cfa17212df217b339712e4e714c" }
+dojo_defi = { git = "https://github.com/dojoengine/dojo", rev = "bbdd5f22a8238cfa17212df217b339712e4e714c" }
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.8.0-rc.0" }
 
 [[target.dojo]]

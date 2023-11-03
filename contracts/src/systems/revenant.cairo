@@ -4,9 +4,9 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 trait IRevenantActions<TContractState> {
     fn create(self: @TContractState, game_id: u32, name: felt252) -> (u128, u128);
 
-    fn get_current_price(self: @TContractState, game_id: u32) -> u128;
+    fn get_current_price(self: @TContractState, game_id: u32, count: u32) -> u128;
 
-    fn purchase_reinforcement(self: @TContractState, game_id: u32) -> bool;
+    fn purchase_reinforcement(self: @TContractState, game_id: u32, count: u32) -> bool;
 
     fn reinforce_outpost(self: @TContractState, game_id: u32, outpost_id: u128);
 }
@@ -69,23 +69,24 @@ mod revenant_actions {
             (entity_id, outpost_id)
         }
 
-        fn get_current_price(self: @ContractState, game_id: u32) -> u128 {
+        fn get_current_price(self: @ContractState, game_id: u32, count: u32) -> u128 {
             let world = self.world_dispatcher.read();
             let mut game = get!(world, game_id, Game);
             game.assert_can_create_outpost(world);
 
             let balance = get!(world, game_id, ReinforcementBalance);
-            return balance.get_reinforcement_price(world, game_id);
+            return balance.get_reinforcement_price(world, game_id, count);
         }
 
-        fn purchase_reinforcement(self: @ContractState, game_id: u32) -> bool {
+        fn purchase_reinforcement(self: @ContractState, game_id: u32, count: u32) -> bool {
             let world = self.world_dispatcher.read();
             let player = get_caller_address();
             let mut game = get!(world, game_id, Game);
             game.assert_can_create_outpost(world);
 
             let mut reinforcemetn_balance = get!(world, game_id, ReinforcementBalance);
-            let current_price = reinforcemetn_balance.get_reinforcement_price(world, game_id);
+            let current_price = reinforcemetn_balance
+                .get_reinforcement_price(world, game_id, count);
 
             let erc20 = IERC20Dispatcher { contract_address: game.erc_addr };
             let result = erc20
@@ -95,8 +96,8 @@ mod revenant_actions {
             assert(result, 'need approve for erc20');
 
             let mut reinforcements = get!(world, (game_id, player), Reinforcement);
-            reinforcements.balance += 1;
-            reinforcemetn_balance.count += 1;
+            reinforcements.balance += count;
+            reinforcemetn_balance.count += count;
 
             set!(world, (reinforcements, reinforcemetn_balance));
 

@@ -79,16 +79,16 @@ mod tests {
         let (revenant_id, outpost_id) = _create_revenant(revenant_action, game_id);
         let mut revenant = get!(world, (game_id, revenant_id), Revenant);
 
-        let price = revenant_action.get_current_price(game_id);
-
+        let purchase_count = 10_u32;
+        let price = revenant_action.get_current_price(game_id, purchase_count);
         test_erc.approve(revenant_action.contract_address, price.into());
-        let purchase_result = revenant_action.purchase_reinforcement(game_id);
+        let purchase_result = revenant_action.purchase_reinforcement(game_id, purchase_count);
         assert(purchase_result, 'Failed to purchase');
         let reinforcement = get!(world, (game_id, caller), Reinforcement);
-        assert(reinforcement.balance == 1, 'wrong purchase count');
+        assert(reinforcement.balance == purchase_count, 'wrong purchase count');
 
         starknet::testing::set_block_timestamp(starknet::get_block_timestamp() + 100);
-        let price2 = revenant_action.get_current_price(game_id);
+        let price2 = revenant_action.get_current_price(game_id, purchase_count);
         assert(price2 > price, 'wrong price');
 
         _add_block_number(PREPARE_PHRASE_INTERVAL + 1);

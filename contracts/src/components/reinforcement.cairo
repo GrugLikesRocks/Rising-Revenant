@@ -18,7 +18,7 @@ struct ReinforcementBalance {
     game_id: u32,
     target_price: u128,
     start_timestamp: u64,
-    count: u128,
+    count: u32,
 }
 
 const target_price: u128 = 10;
@@ -28,7 +28,7 @@ const max_sellable: u128 = 1000000000;
 #[generate_trait]
 impl ReinforcementBalanceImpl of ReinforcementBalanceTrait {
     fn get_reinforcement_price(
-        self: ReinforcementBalance, world: IWorldDispatcher, game_id: u32
+        self: ReinforcementBalance, world: IWorldDispatcher, game_id: u32, count: u32
     ) -> u128 {
         let balance_info = get!(world, (game_id), ReinforcementBalance);
 
@@ -42,12 +42,21 @@ impl ReinforcementBalanceImpl of ReinforcementBalanceTrait {
             time_scale: FixedTrait::new(decay_constant, false),
         };
 
-        let price = vrgda
-            .get_vrgda_price(
-                FixedTrait::new_unscaled(time_since_start / 60, false),
-                FixedTrait::new_unscaled(balance_info.count, false)
-            );
+        let time = FixedTrait::new_unscaled(time_since_start / 60, false);
+        let mut total_price = 0_u128;
+        let mut p = 0_u32;
+        loop {
+            if p == count {
+                break;
+            }
+            let price = vrgda
+                .get_vrgda_price(
+                    time, FixedTrait::new_unscaled((balance_info.count + p).into(), false)
+                );
+            total_price += price.try_into().unwrap();
+            p += 1;
+        };
 
-        price.try_into().unwrap()
+        total_price
     }
 }

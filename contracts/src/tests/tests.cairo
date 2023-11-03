@@ -1,12 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::option::OptionTrait;
-    use starknet::{ContractAddress, syscalls::deploy_syscall};
 
     use dojo::world::{IWorldDispatcherTrait, IWorldDispatcher};
-
-    use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
+    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use realmsrisingrevenant::components::game::{
         Game, game_tracker, GameTracker, GameStatus, GameEntityCounter, GameImpl, GameTrait
     };
@@ -17,11 +14,17 @@ mod tests {
     use realmsrisingrevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
+    use realmsrisingrevenant::components::trade::{Trade, TradeStatus};
     use realmsrisingrevenant::components::world_event::{WorldEvent};
+
+    use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
 
     use realmsrisingrevenant::systems::game::{IGameActionsDispatcher, IGameActionsDispatcherTrait};
     use realmsrisingrevenant::systems::revenant::{
         IRevenantActionsDispatcher, IRevenantActionsDispatcherTrait
+    };
+    use realmsrisingrevenant::systems::trade::{
+        ITradeActionsDispatcher, ITradeActionsDispatcherTrait
     };
     use realmsrisingrevenant::systems::world_event::{
         IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
@@ -30,6 +33,7 @@ mod tests {
         DefaultWorld, EVENT_BLOCK_INTERVAL, PREPARE_PHRASE_INTERVAL, _init_world, _init_game,
         _create_revenant, _add_block_number,
     };
+    use starknet::{ContractAddress, syscalls::deploy_syscall};
 
     #[test]
     #[available_gas(3000000000)]
@@ -80,11 +84,16 @@ mod tests {
         let mut revenant = get!(world, (game_id, revenant_id), Revenant);
 
         let purchase_count = 10_u32;
-        test_erc.approve(revenant_action.contract_address, purchase_count.into());
+        let price = revenant_action.get_current_price(game_id, purchase_count);
+        test_erc.approve(revenant_action.contract_address, price.into());
         let purchase_result = revenant_action.purchase_reinforcement(game_id, purchase_count);
         assert(purchase_result, 'Failed to purchase');
         let reinforcement = get!(world, (game_id, caller), Reinforcement);
         assert(reinforcement.balance == purchase_count, 'wrong purchase count');
+
+        starknet::testing::set_block_timestamp(starknet::get_block_timestamp() + 100);
+        let price2 = revenant_action.get_current_price(game_id, purchase_count);
+        assert(price2 > price, 'wrong price');
 
         _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
         revenant_action.reinforce_outpost(game_id, outpost_id);
@@ -166,5 +175,70 @@ mod tests {
 
         let game = get!(world, (game_id), Game);
         assert(game.status == GameStatus::ended, 'wrong game status');
+    }
+
+    #[test]
+    #[available_gas(30000000000)]
+    fn test_create_and_revoke_trade() {
+        let (DefaultWorld{world, caller, revenant_action, trade_action, test_erc, .. }, game_id) =
+            _init_game();
+        let (revenant_id, _) = _create_revenant(revenant_action, game_id);
+
+        // Create seller's reinforcement balance
+        let purchase_count = 10_u32;
+        let price = revenant_action.get_current_price(game_id, purchase_count);
+        test_erc.approve(revenant_action.contract_address, price.into());
+        revenant_action.purchase_reinforcement(game_id, purchase_count);
+        let reinforcement = get!(world, (game_id, caller), Reinforcement);
+        assert(reinforcement.balance == purchase_count, 'wrong init purchase count');
+
+        // Test Create Trade. the seller's reinforcement should decrease by 1
+        _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
+        let trade_id = trade_action.create(game_id, price);
+        let trade = get!(world, (game_id, trade_id), Trade);
+        assert(trade.status == TradeStatus::selling, 'wrong trade status');
+        assert(trade.price == price, 'wrong trade price');
+        let reinforcement = get!(world, (game_id, caller), Reinforcement);
+        assert(reinforcement.balance == purchase_count - 1, 'failed create trade');
+
+        // Test Revoke Trade
+        trade_action.revoke(game_id, trade_id);
+        let trade = get!(world, (game_id, trade_id), Trade);
+        assert(trade.status == TradeStatus::revoked, 'wrong trade status');
+        let reinforcement = get!(world, (game_id, caller), Reinforcement);
+        assert(reinforcement.balance == purchase_count, 'failed revoke trade');
+    }
+
+    #[test]
+    #[available_gas(30000000000)]
+    fn test_purchase_trade() {
+        let (DefaultWorld{world, caller, revenant_action, trade_action, test_erc, .. }, game_id) =
+            _init_game();
+        let (revenant_id, _) = _create_revenant(revenant_action, game_id);
+
+        // Create buyer
+        let buyer = starknet::contract_address_const::<0xABCD>();
+        starknet::testing::set_contract_address(buyer);
+        let (buyer_revenant_id, _) = _create_revenant(revenant_action, game_id);
+        starknet::testing::set_contract_address(caller);
+        let buyer_revenant = get!(world, (game_id, buyer_revenant_id), Revenant);
+        assert(buyer_revenant.owner == buyer, 'wrong buyer revenant');
+
+        let purchase_count = 10_u32;
+        let price = revenant_action.get_current_price(game_id, purchase_count);
+        test_erc.approve(revenant_action.contract_address, price.into());
+        revenant_action.purchase_reinforcement(game_id, purchase_count);
+
+        _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
+
+        // Test Purchase. the buyer's reinforcement should increase from 0 to 1
+        let trade_id = trade_action.create(game_id, price); // create trade by seller
+        let buyer_reinforcement = get!(world, (game_id, buyer), Reinforcement);
+        assert(buyer_reinforcement.balance == 0, 'wrong buyer purchase count');
+        starknet::testing::set_contract_address(buyer); // switch to buyer 
+        test_erc.approve(trade_action.contract_address, price.into());
+        trade_action.purchase(game_id, buyer_revenant_id, trade_id);
+        let buyer_reinforcement = get!(world, (game_id, buyer), Reinforcement);
+        assert(buyer_reinforcement.balance == 1, 'failed purchase trade');
     }
 }

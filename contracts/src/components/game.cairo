@@ -34,6 +34,7 @@ struct GameEntityCounter {
     outpost_count: u32,
     event_count: u32,
     outpost_exists_count: u32,
+    trade_count: u32,
 }
 
 mod GameStatus {

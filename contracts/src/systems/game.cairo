@@ -14,11 +14,12 @@ trait IGameActions<TContractState> {
 
 #[dojo::contract]
 mod game_actions {
-    use starknet::{ContractAddress, get_block_info};
     use realmsrisingrevenant::components::game::{
         Game, GameStatus, GameTracker, GameEntityCounter, GameTrait, GameImpl
     };
+    use realmsrisingrevenant::components::reinforcement::{ReinforcementBalance, target_price};
     use realmsrisingrevenant::constants::GAME_CONFIG;
+    use starknet::{ContractAddress, get_block_info, get_block_timestamp};
     use super::IGameActions;
 
     #[external(v0)]
@@ -51,11 +52,18 @@ mod game_actions {
                 revenant_count: 0,
                 outpost_count: 0,
                 event_count: 0,
-                outpost_exists_count: 0
+                outpost_exists_count: 0,
+                trade_count: 0,
             };
             let game_tracker = GameTracker { entity_id: GAME_CONFIG, count: game_id };
+            let reinforcement_balance = ReinforcementBalance {
+                game_id,
+                target_price: target_price,
+                start_timestamp: get_block_timestamp(),
+                count: 0,
+            };
 
-            set!(world, (game, game_counter, game_tracker));
+            set!(world, (game, game_counter, game_tracker, reinforcement_balance));
 
             return (game_id);
         }

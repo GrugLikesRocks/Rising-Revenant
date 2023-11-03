@@ -13,7 +13,6 @@ export function getFirstComponentByType(entities: any[] | null | undefined, type
             if (foundComponent) return foundComponent;
         }
     }
-
     return null;
 }
 

@@ -1,19 +1,60 @@
-query getEntities {
-  entities(keys: ["%"]) {
-    edges {
-      node {
-        keys
-        components {
-          __typename
-          ... on Moves {
-            remaining
-          }
-          ... on Position {
-            x
-            y
+ query getEntities {
+    entities(keys: ["%"]) {
+      edges {
+        node {
+          keys
+          models {
+            __typename
+            ... on GameTracker {
+              count
+            }
+            ... on GameEntityCounter {
+              revenant_count
+              outpost_count
+              event_count
+              outpost_exists_count
+            }
+            ... on Game {
+              start_block_number
+              prize
+              preparation_phase_interval
+              event_interval
+              erc_addr
+              status
+            }
+            ... on Outpost {
+              owner
+              name_outpost
+              x
+              y
+              lifes
+              status
+              last_affect_event_id
+            }
+            ... on OutpostPosition {
+              entity_id
+            }
+            ... on Reinforcement {
+              balance
+            }
+            ... on Revenant {
+              owner
+              name_revenant
+              outpost_count
+              status
+            }
+            ... on WorldEvent {
+              x
+              y
+              radius
+              destroy_count
+              block_number
+            }
+            ... on WorldEventTracker {
+              outpost_id
+            }
           }
         }
       }
     }
   }
-}

@@ -36,7 +36,7 @@ export enum MenuState {
 }
 
 export const MainMenuContainer = () => {
-    const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
+    const [currentMenuState, setCurrentMenuState] = useState(MenuState.BUY_REV);
     const [gamePhase, setGamePhase] = useState(false);
     const [showTooltip, setShowTooltip] = useState(true);
 

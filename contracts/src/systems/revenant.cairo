@@ -49,7 +49,7 @@ mod revenant_actions {
                 game_id,
                 entity_id,
                 owner: player,
-                name: name,
+                name_revenant: name,
                 outpost_count: 1,
                 status: RevenantStatus::started
             };
@@ -141,7 +141,7 @@ mod revenant_actions {
             x,
             y,
             owner: player,
-            name: 'Outpost',
+            name_outpost: 'Outpost',
             lifes: OUTPOST_INIT_LIFE,
             status: OutpostStatus::created,
             last_affect_event_id: 0

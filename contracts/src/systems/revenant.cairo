@@ -63,7 +63,7 @@ mod revenant_actions {
 
 
 
-            set!(world, (revenant, game_data, reinforcement));
+            set!(world, (revenant, game_data));
 
             let outpost_id = create_outpost(world, game_id);
             (entity_id, outpost_id)

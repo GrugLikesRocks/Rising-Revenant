@@ -952,7 +952,7 @@
     {
       "name": "revenant_actions",
       "address": "0x4afb8ecb9513d031c5c4dda51b9196031aa5b011a66193c6c39cae2881b7a6c",
-      "class_hash": "0x3844e1e661a6ebbc8c13620844aac5c081c3ef397968c64642032926242f285",
+      "class_hash": "0x745fe0dfc7dca45f7d0cbb9c6a90331223e259d6a53e7b8199d8548967e6c69",
       "abi": [
         {
           "type": "impl",
@@ -1080,7 +1080,7 @@
     {
       "name": "world_event_actions",
       "address": "0x307671e27ab1824edc6244142fb035a84e37feb14850d521d99dc994dd9b0fe",
-      "class_hash": "0x6b0dd1a42df1948cdb04d1d9e1ce85b83f475f40ad561c5b4ed6b27690ba7c5",
+      "class_hash": "0xb4b37135e4e6b16ecdb1c100edf70e020079713772d0e3f9c77109dba021e3",
       "abi": [
         {
           "type": "impl",
@@ -1815,8 +1815,8 @@
           "key": false
         },
         {
-          "name": "name",
-          "type": "u128",
+          "name": "name_outpost",
+          "type": "felt252",
           "key": false
         },
         {
@@ -1845,7 +1845,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x32aca152e1c80a8516de8089af81bb57d862fdf41ffef1e3d258aa9f2692ddc",
+      "class_hash": "0x47271999090258bf981d3ac5379deafced027209456f1f3ff5cec6627fa779e",
       "abi": [
         {
           "type": "function",
@@ -2396,7 +2396,7 @@
           "key": false
         },
         {
-          "name": "name",
+          "name": "name_revenant",
           "type": "felt252",
           "key": false
         },
@@ -2411,7 +2411,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x512cb6c214d2a311db7470fafb7258f33aeb0e41794f053b16cea58ae0d910e",
+      "class_hash": "0x6d0b1a92070b7edc31fdbd613785cb48ca1339e899ddccb0c642ef9d560bb11",
       "abi": [
         {
           "type": "function",

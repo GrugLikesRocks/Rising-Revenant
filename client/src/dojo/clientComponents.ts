@@ -49,6 +49,7 @@ export function defineClientComponents(world: World) {
 			owned: RecsType.Boolean,
 			event_effected: RecsType.Boolean,
 			selected: RecsType.Boolean,
+			visible: RecsType.Boolean,
 		  },
 		  {
 			metadata: {

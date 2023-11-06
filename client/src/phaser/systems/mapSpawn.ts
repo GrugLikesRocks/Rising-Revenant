@@ -31,11 +31,9 @@ export const mapSpawn = (layer: PhaserLayer) => {
 
     setEntityGroup(_entityGroup);
 
-    // _entityGroup.setBlendMode(Phaser.BlendModes.MULTIPLY);
-
     mapObj.setComponent({
       id: "animation",
-      once: (sprite) => {
+      once: (sprite:any) => {
         sprite.setTexture(Assets.MapPicture);
         sprite.depth = -2;
         camera.phaserCamera.setBounds(0, 0, sprite.width, sprite.height);
@@ -47,8 +45,8 @@ export const mapSpawn = (layer: PhaserLayer) => {
     });
 
 
-    // //console.log("THIS IS HOW MANY IN THE MAP GROUP", mapGroup.getLength());
-    // //console.log("THIS IS HOW MANY IN THE ENTITY GROUP", _entityGroup.getLength());
+    //console.log("THIS IS HOW MANY IN THE MAP GROUP", mapGroup.getLength());
+    //console.log("THIS IS HOW MANY IN THE ENTITY GROUP", _entityGroup.getLength());
 
   });
 

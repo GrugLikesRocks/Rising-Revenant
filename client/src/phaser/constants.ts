@@ -28,12 +28,11 @@ export const MAP_HEIGHT = 5164;
 export const PREPARATION_PHASE_BLOCK_COUNT = 10;
 export const EVENT_PHASE_BLOCK_COUNT =3;
 
-export const GAME_CONFIG : EntityIndex = 999999999999999 as EntityIndex;
+export const GAME_CONFIG : EntityIndex = 1 as EntityIndex;
 export const SCALE = 0.1;
 
 
 
-//private isnt a thing in typescript
 let entityGroup: EntityIndex;
 
 export function setEntityGroup(newEntityGroup: EntityIndex): void {
@@ -49,8 +48,6 @@ export const ROWS_NUMBER = 35;
 
 export const TILE_WIDTH = MAP_WIDTH / COLOUMNS_NUMBER;
 export const TILE_HEIGHT = MAP_HEIGHT / ROWS_NUMBER;
-
-
 
 const tileArray: EntityIndex[][] = new Array(COLOUMNS_NUMBER * ROWS_NUMBER).fill([])
     .map(() => new Array<EntityIndex>());

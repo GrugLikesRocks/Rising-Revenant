@@ -19,8 +19,9 @@ export const BuyRevenantPage: React.FC<BuyRevPageProps> = ({ setMenuState }) =>
     const {
         account: { account },
         networkLayer: {
-          systemCalls: { create_game},
+          systemCalls: { create_game}
         },
+        
       } = useDojo();
 
     const closePage = () => {
@@ -33,11 +34,23 @@ export const BuyRevenantPage: React.FC<BuyRevPageProps> = ({ setMenuState }) =>
         {
             account: account,
             preparation_phase_interval: 4,
-            event_interval: 4,
+            event_interval: revenantNumber,
             erc_addr: account.address
         }
 
         create_game(createGameProps);
+    };
+
+    const checkGame = async () => {
+        
+        // const {
+        //     data: { gameModels },
+        // } = await graphSdk().getGame({event_interval: revenantNumber})
+
+        // console.log(gameModels);
+
+
+        // setRevenantNumber(revenantNumber +1);
     };
     
     return (
@@ -47,7 +60,7 @@ export const BuyRevenantPage: React.FC<BuyRevPageProps> = ({ setMenuState }) =>
                 <div className="amount-section">
                     <div className="button-style" style={{aspectRatio: "1/1", width: "8%", textAlign: "center"}}> - </div>
                     <h2>{revenantNumber}</h2>
-                    <div  className="button-style" style={{aspectRatio: "1/1", width: "8%", textAlign: "center"}}> + </div>
+                    <div  className="button-style"  onMouseDown={() => {checkGame()}}  style={{aspectRatio: "1/1", width: "8%", textAlign: "center"}}> + </div>
                 </div>
                 <div className="button-style" onClick={createGame}>Summon (Tot: 50 $LORDS)</div>
             </ClickWrapper>

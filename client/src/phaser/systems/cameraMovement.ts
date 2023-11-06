@@ -140,7 +140,7 @@ export const cameraManager = (layer: PhaserLayer) => {
 
       playerObj.setComponent({
         id: "texture",
-        once: (sprite) => {
+        once: (sprite:any) => {
 
           //get the disatnce from the center cam to the sprite
           let distanceX = Math.abs(sprite.x - newCamPos.x);  //wtf is this

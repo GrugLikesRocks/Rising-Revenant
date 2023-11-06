@@ -41,7 +41,7 @@ export const phaserConfig = {
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
                     key: Assets.MapPicture,
-                    path: "src/assets/Outpost_Icons/rev_map_big.png",
+                    path: "src/assets/rev_map_big.png",
                 }
             },
             maps: {

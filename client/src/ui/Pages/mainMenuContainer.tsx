@@ -1,5 +1,5 @@
 //libs
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // styles
 import "./PagesStyles/MainMenuContainerStyles.css"
@@ -19,7 +19,9 @@ import { StatsPage } from './statsPage';
 import { WinnerPage } from './winnerPage';
 import { BuyReinforcementPage } from './buyReinforcementsPage';
 import { PrepPhaseEndsPage } from './preparationPhaseEndsPage';
-import {BuyRevenantPage} from "./summonRevenantPage";
+import { BuyRevenantPage } from "./summonRevenantPage";
+
+import { DebugPage } from './debugPage';
 
 export enum MenuState {
     NONE,
@@ -32,7 +34,8 @@ export enum MenuState {
     WINNER,
     BUY_REINF,
     PREP_PHASE_SCENE,
-    BUY_REV
+    BUY_REV,
+    Debug
 }
 
 export const MainMenuContainer = () => {
@@ -44,19 +47,29 @@ export const MainMenuContainer = () => {
         setCurrentMenuState(newMenuState);
     };
 
+
+    // this only needs to be like this for the debug, once the game ships take out the dependency
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setCurrentMenuState(MenuState.NONE);
             }
+    
+            if (event.key === 'd') {
+                if (currentMenuState === MenuState.Debug) {
+                    setCurrentMenuState(MenuState.NONE);
+                } else {
+                    setCurrentMenuState(MenuState.Debug);
+                }
+            }
         };
-
+    
         window.addEventListener('keydown', handleKeyPress);
-
+    
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, []);
+    }, [currentMenuState]); 
 
     const handleTopBarClick = () => {
         setCurrentMenuState(MenuState.NONE);
@@ -81,17 +94,21 @@ export const MainMenuContainer = () => {
                             {currentMenuState === MenuState.BUY_REINF && <BuyReinforcementPage setMenuState={setCurrentMenuState} />}
                             {currentMenuState === MenuState.PREP_PHASE_SCENE && <PrepPhaseEndsPage setMenuState={setCurrentMenuState} />}
                             {currentMenuState === MenuState.BUY_REV && <BuyRevenantPage setMenuState={setCurrentMenuState} />}
+                            {currentMenuState === MenuState.Debug && <DebugPage setMenuState={setCurrentMenuState} />}
+
                         </div>
                     )}
                 </div>
-                
-                {gamePhase === false && <div className='prep-phase-text'> <h2> Preparation phase ends in <br/> DD: 5 HH: 5 MM: 5 SS: 5</h2></div> };
+
+                {gamePhase === false && <div className='prep-phase-text'> <h2> Preparation phase ends in <br /> DD: 5 HH: 5 MM: 5 SS: 5</h2></div>};
 
             </div>
 
             <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
+
             {currentMenuState === MenuState.NONE && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
-            {showTooltip === true && <OutpostTooltipComponent/>}
+            {showTooltip === true && <OutpostTooltipComponent />}
+            
             <div className='image-test' />
         </>
     );

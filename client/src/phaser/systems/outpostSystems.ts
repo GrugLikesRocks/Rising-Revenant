@@ -28,14 +28,14 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
     outpostObj.setComponent({
       id: "position",
-      once: (sprite) => {
+      once: (sprite:any) => {
         sprite.setPosition(outpostDojoData.x - (sprite.width * SCALE) / 2, outpostDojoData.y - (sprite.height * SCALE) / 2);
       },
     });
 
     outpostObj.setComponent({
       id: "texture",
-      once: (sprite) => {
+      once: (sprite:any) => {
 
         if (outpostClientData.selected) {
           sprite.setTexture(Assets.CaslteSelectedAsset);

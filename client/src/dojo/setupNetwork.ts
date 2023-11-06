@@ -5,7 +5,8 @@ import { RPCProvider, Query, } from "@dojoengine/core";
 import { Account, num } from "starknet";
 import { GraphQLClient } from 'graphql-request';
 import { getSdk } from '../generated/graphql';
-import manifest from "../../../contracts/target/dev/manifest.json";
+
+import manifest from "../../manifest.json";
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 
@@ -15,6 +16,7 @@ export async function setupNetwork() {
 
     // Create a new RPCProvider instance.
     const provider = new RPCProvider(VITE_PUBLIC_WORLD_ADDRESS, manifest, VITE_PUBLIC_NODE_URL);
+
 
     // Return the setup object.
     return {

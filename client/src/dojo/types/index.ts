@@ -25,10 +25,6 @@ export interface ReinforceOutpostProps extends SystemSigner {
     outpost_id: num.BigNumberish;
 }
 
-export interface CreateOutpostProps extends SystemSigner {
-    game_id: num.BigNumberish;
-}
-
 export interface CreateEventProps extends SystemSigner {
     game_id: num.BigNumberish;
 }

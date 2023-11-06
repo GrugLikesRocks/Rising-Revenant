@@ -1,19 +1,69 @@
- query getEntities {
-    entities(keys: ["%"]) {
-      edges {
-        node {
+query getEntities {
+  entities(keys: ["%"]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on GameTracker {
+            count
+          }
+          ... on GameEntityCounter {
+            revenant_count
+            outpost_count
+            event_count
+            outpost_exists_count
+          }
+          ... on Game {
+            start_block_number
+            prize
+            preparation_phase_interval
+            event_interval
+            erc_addr
+            status
+          }
+          ... on Outpost {
+            owner
+            name_outpost
+            x
+            y
+            lifes
+            status
+            last_affect_event_id
+          }
+          ... on OutpostPosition {
+            entity_id
+          }
+          ... on Reinforcement {
+            balance
+          }
+          ... on Revenant {
+            owner
+            name_revenant
+            outpost_count
+            status
+          }
+          ... on WorldEvent {
+            x
+            y
+            radius
+            destroy_count
+            block_number
+          }
+        }
+      }
+    }
+  }
+}
+
+query getGame($event_interval: u64!) {
+  gameModels(where: { event_interval: $event_interval }) {
+    edges {
+      node {
+        entity {
           keys
           models {
             __typename
-            ... on GameTracker {
-              count
-            }
-            ... on GameEntityCounter {
-              revenant_count
-              outpost_count
-              event_count
-              outpost_exists_count
-            }
             ... on Game {
               start_block_number
               prize
@@ -22,39 +72,127 @@
               erc_addr
               status
             }
-            ... on Outpost {
-              owner
-              name_outpost
-              x
-              y
-              lifes
-              status
-              last_affect_event_id
-            }
-            ... on OutpostPosition {
-              entity_id
-            }
-            ... on Reinforcement {
-              balance
-            }
-            ... on Revenant {
-              owner
-              name_revenant
-              outpost_count
-              status
-            }
-            ... on WorldEvent {
-              x
-              y
-              radius
-              destroy_count
-              block_number
-            }
-            ... on WorldEventTracker {
-              outpost_id
-            }
           }
         }
       }
     }
   }
+}
+
+query getGameEntity($key: String!) {
+  entities(keys: [$key]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on Game {
+            start_block_number
+            prize
+            preparation_phase_interval
+            event_interval
+            erc_addr
+            status
+          }
+        }
+      }
+    }
+  }
+}
+
+query getOutpostEntity($game_id: String!, $entity_id: String!) {
+  entities(keys: [$game_id, $entity_id]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on Revenant {
+            owner
+            name_revenant
+            outpost_count
+            status
+          }
+          ... on Outpost {
+            owner
+            name_outpost
+            x
+            y
+            lifes
+            status
+            last_affect_event_id
+          }
+        }
+      }
+    }
+  }
+}
+
+query getGameTracker($config_id: String!) {
+  entities(keys: [$config_id]) {
+    edges {
+      node {
+        keys
+        models {
+          ... on GameTracker {
+            count
+          }
+        }
+      }
+    }
+  }
+}
+
+query getGameEntityCounter($game_id: String!) {
+  entities(keys: [$game_id]) {
+    edges {
+      node {
+        keys
+        models {
+          ... on GameEntityCounter {
+            revenant_count
+            outpost_count
+            event_count
+            outpost_exists_count
+          }
+        }
+      }
+    }
+  }
+}
+
+query getReinforcement($game_id: String!, $owner: String!) {
+  entities(keys: [$game_id, $owner]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on Reinforcement {
+            balance
+          }
+        }
+      }
+    }
+  }
+}
+
+query getWorldEventEntity($game_id: String!, $entity_id: String!) {
+  entities(keys: [$game_id, $entity_id]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on WorldEvent {
+            x
+            y
+            radius
+            destroy_count
+            block_number
+          }
+        }
+      }
+    }
+  }
+}

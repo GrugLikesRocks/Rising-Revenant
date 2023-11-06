@@ -6,6 +6,8 @@ import { MenuState } from "../Pages/mainMenuContainer";
 import { ClickWrapper } from "../clickWrapper";
 
 
+
+
 interface BRPageProps {
     setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
 }
@@ -29,6 +31,7 @@ export const BuyReinforcementPage: React.FC<BRPageProps> = ({ setMenuState }) =>
                 </div>
                 <div className="button-style" onClick={closePage}>Reinforce (Tot: 250 $LORDS)</div>
             </ClickWrapper>
+
             <div className="footer-text">1 Reinforcement = 5 $LORDS</div>
         </div>
     )

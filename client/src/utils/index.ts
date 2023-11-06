@@ -1,4 +1,4 @@
-import { Direction } from "../dojo/createSystemCalls";
+
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -22,22 +22,9 @@ export function extractAndCleanKey(entities?: any[] | null | undefined): string 
     return entities[0].keys.replace(/,/g, '');
 }
 
-export function updatePositionWithDirection(direction: Direction, value: { x: number, y: number }) {
-    switch (direction) {
-        case Direction.Left:
-            value.x--;
-            break;
-        case Direction.Right:
-            value.x++;
-            break;
-        case Direction.Up:
-            value.y--;
-            break;
-        case Direction.Down:
-            value.y++;
-            break;
-        default:
-            throw new Error("Invalid direction provided");
-    }
-    return value;
+
+export function addPrefix0x(input: string | number): string {
+    // Add '0x' prefix to the input
+    return `0x${input}`;
 }
+

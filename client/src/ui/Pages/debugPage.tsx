@@ -15,6 +15,7 @@ import {
     getComponentValue,
     getComponentValueStrict,
 } from "@latticexyz/recs";
+import { createSystemCalls } from "../../dojo/createSystemCalls";
 
 
 
@@ -28,6 +29,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
         account: { account },
         networkLayer: {
           network: {contractComponents}
+          
         },
         
       } = useDojo();
@@ -38,9 +40,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     };
 
     const outpostArray = useEntityQuery([Has(contractComponents.Outpost)])
-    const compOutpost = getComponentValueStrict(contractComponents.Outpost, outpostArray[0]);
    
-
     return (
         <ClickWrapper className="revenant-jurnal-page-container">
             <h1 style={{ color: "white" }}>Debug Menu</h1>

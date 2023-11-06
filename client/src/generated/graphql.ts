@@ -1028,19 +1028,12 @@ export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter', revenant_count?: any | null, outpost_count?: any | null, event_count?: any | null, outpost_exists_count?: any | null } | { __typename: 'GameTracker', count?: any | null } | { __typename: 'Outpost', owner?: any | null, name_outpost?: any | null, x?: any | null, y?: any | null, lifes?: any | null, status?: any | null, last_affect_event_id?: any | null } | { __typename: 'OutpostPosition', entity_id?: any | null } | { __typename: 'Reinforcement', balance?: any | null } | { __typename: 'Revenant', owner?: any | null, name_revenant?: any | null, outpost_count?: any | null, status?: any | null } | { __typename: 'WorldEvent', x?: any | null, y?: any | null, radius?: any | null, destroy_count?: any | null, block_number?: any | null } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
-export type GetGameQueryVariables = Exact<{
-  event_interval: Scalars['u64']['input'];
-}>;
-
-
-export type GetGameQuery = { __typename?: 'Query', gameModels?: { __typename?: 'GameConnection', edges?: Array<{ __typename?: 'GameEdge', node?: { __typename?: 'Game', entity?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null } | null> | null } | null };
-
 export type GetGameEntityQueryVariables = Exact<{
   key: Scalars['String']['input'];
 }>;
 
 
-export type GetGameEntityQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+export type GetGameEntityQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', game_id?: any | null, start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter', game_id?: any | null, revenant_count?: any | null, outpost_count?: any | null, event_count?: any | null, outpost_exists_count?: any | null } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
 export type GetOutpostEntityQueryVariables = Exact<{
   game_id: Scalars['String']['input'];
@@ -1055,14 +1048,7 @@ export type GetGameTrackerQueryVariables = Exact<{
 }>;
 
 
-export type GetGameTrackerQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename?: 'Game' } | { __typename?: 'GameEntityCounter' } | { __typename?: 'GameTracker', count?: any | null } | { __typename?: 'Outpost' } | { __typename?: 'OutpostPosition' } | { __typename?: 'Reinforcement' } | { __typename?: 'Revenant' } | { __typename?: 'WorldEvent' } | { __typename?: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
-
-export type GetGameEntityCounterQueryVariables = Exact<{
-  game_id: Scalars['String']['input'];
-}>;
-
-
-export type GetGameEntityCounterQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename?: 'Game' } | { __typename?: 'GameEntityCounter', revenant_count?: any | null, outpost_count?: any | null, event_count?: any | null, outpost_exists_count?: any | null } | { __typename?: 'GameTracker' } | { __typename?: 'Outpost' } | { __typename?: 'OutpostPosition' } | { __typename?: 'Reinforcement' } | { __typename?: 'Revenant' } | { __typename?: 'WorldEvent' } | { __typename?: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+export type GetGameTrackerQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename?: 'Game' } | { __typename?: 'GameEntityCounter' } | { __typename?: 'GameTracker', entity_id?: any | null, count?: any | null } | { __typename?: 'Outpost' } | { __typename?: 'OutpostPosition' } | { __typename?: 'Reinforcement' } | { __typename?: 'Revenant' } | { __typename?: 'WorldEvent' } | { __typename?: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
 export type GetReinforcementQueryVariables = Exact<{
   game_id: Scalars['String']['input'];
@@ -1140,30 +1126,6 @@ export const GetEntitiesDocument = gql`
   }
 }
     `;
-export const GetGameDocument = gql`
-    query getGame($event_interval: u64!) {
-  gameModels(where: {event_interval: $event_interval}) {
-    edges {
-      node {
-        entity {
-          keys
-          models {
-            __typename
-            ... on Game {
-              start_block_number
-              prize
-              preparation_phase_interval
-              event_interval
-              erc_addr
-              status
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `;
 export const GetGameEntityDocument = gql`
     query getGameEntity($key: String!) {
   entities(keys: [$key]) {
@@ -1173,12 +1135,20 @@ export const GetGameEntityDocument = gql`
         models {
           __typename
           ... on Game {
+            game_id
             start_block_number
             prize
             preparation_phase_interval
             event_interval
             erc_addr
             status
+          }
+          ... on GameEntityCounter {
+            game_id
+            revenant_count
+            outpost_count
+            event_count
+            outpost_exists_count
           }
         }
       }
@@ -1223,26 +1193,8 @@ export const GetGameTrackerDocument = gql`
         keys
         models {
           ... on GameTracker {
+            entity_id
             count
-          }
-        }
-      }
-    }
-  }
-}
-    `;
-export const GetGameEntityCounterDocument = gql`
-    query getGameEntityCounter($game_id: String!) {
-  entities(keys: [$game_id]) {
-    edges {
-      node {
-        keys
-        models {
-          ... on GameEntityCounter {
-            revenant_count
-            outpost_count
-            event_count
-            outpost_exists_count
           }
         }
       }
@@ -1294,20 +1246,15 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const GetEntitiesDocumentString = print(GetEntitiesDocument);
-const GetGameDocumentString = print(GetGameDocument);
 const GetGameEntityDocumentString = print(GetGameEntityDocument);
 const GetOutpostEntityDocumentString = print(GetOutpostEntityDocument);
 const GetGameTrackerDocumentString = print(GetGameTrackerDocument);
-const GetGameEntityCounterDocumentString = print(GetGameEntityCounterDocument);
 const GetReinforcementDocumentString = print(GetReinforcementDocument);
 const GetWorldEventEntityDocumentString = print(GetWorldEventEntityDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     getEntities(variables?: GetEntitiesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetEntitiesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEntitiesQuery>(GetEntitiesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getEntities', 'query');
-    },
-    getGame(variables: GetGameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGameQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGameQuery>(GetGameDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGame', 'query');
     },
     getGameEntity(variables: GetGameEntityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGameEntityQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGameEntityQuery>(GetGameEntityDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGameEntity', 'query');
@@ -1317,9 +1264,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getGameTracker(variables: GetGameTrackerQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGameTrackerQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGameTrackerQuery>(GetGameTrackerDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGameTracker', 'query');
-    },
-    getGameEntityCounter(variables: GetGameEntityCounterQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGameEntityCounterQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGameEntityCounterQuery>(GetGameEntityCounterDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGameEntityCounter', 'query');
     },
     getReinforcement(variables: GetReinforcementQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetReinforcementQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetReinforcementQuery>(GetReinforcementDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getReinforcement', 'query');

@@ -56,28 +56,6 @@ query getEntities {
   }
 }
 
-query getGame($event_interval: u64!) {
-  gameModels(where: { event_interval: $event_interval }) {
-    edges {
-      node {
-        entity {
-          keys
-          models {
-            __typename
-            ... on Game {
-              start_block_number
-              prize
-              preparation_phase_interval
-              event_interval
-              erc_addr
-              status
-            }
-          }
-        }
-      }
-    }
-  }
-}
 
 query getGameEntity($key: String!) {
   entities(keys: [$key]) {
@@ -87,6 +65,7 @@ query getGameEntity($key: String!) {
         models {
           __typename
           ... on Game {
+            game_id
             start_block_number
             prize
             preparation_phase_interval
@@ -94,11 +73,19 @@ query getGameEntity($key: String!) {
             erc_addr
             status
           }
+          ... on GameEntityCounter {
+            game_id
+            revenant_count
+            outpost_count
+            event_count
+            outpost_exists_count
+          }
         }
       }
     }
   }
 }
+
 
 query getOutpostEntity($game_id: String!, $entity_id: String!) {
   entities(keys: [$game_id, $entity_id]) {
@@ -135,25 +122,8 @@ query getGameTracker($config_id: String!) {
         keys
         models {
           ... on GameTracker {
+          entity_id
             count
-          }
-        }
-      }
-    }
-  }
-}
-
-query getGameEntityCounter($game_id: String!) {
-  entities(keys: [$game_id]) {
-    edges {
-      node {
-        keys
-        models {
-          ... on GameEntityCounter {
-            revenant_count
-            outpost_count
-            event_count
-            outpost_exists_count
           }
         }
       }

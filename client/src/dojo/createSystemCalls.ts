@@ -35,8 +35,6 @@ export function createSystemCalls(
     }: ClientComponents
 ) {
 
-    //noti setup  here
-
     const notify = (message: string) => toast(message, {
         position: "top-right",
         autoClose: 5000,
@@ -56,9 +54,9 @@ export function createSystemCalls(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
             console.log(receipt)
 
             notify('Game Created!')

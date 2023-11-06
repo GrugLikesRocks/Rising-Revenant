@@ -39,14 +39,13 @@ export enum MenuState {
 }
 
 export const MainMenuContainer = () => {
-    const [currentMenuState, setCurrentMenuState] = useState(MenuState.BUY_REV);
+    const [currentMenuState, setCurrentMenuState] = useState(MenuState.WINNER);
     const [gamePhase, setGamePhase] = useState(false);
     const [showTooltip, setShowTooltip] = useState(true);
 
     const handleIconClick = (newMenuState: MenuState) => {
         setCurrentMenuState(newMenuState);
     };
-
 
     // this only needs to be like this for the debug, once the game ships take out the dependency
     useEffect(() => {
@@ -107,7 +106,7 @@ export const MainMenuContainer = () => {
             <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
 
             {currentMenuState === MenuState.NONE && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
-            {showTooltip === true && <OutpostTooltipComponent />}
+            {currentMenuState === MenuState.NONE  && <OutpostTooltipComponent />}
             
             <div className='image-test' />
         </>

@@ -61,7 +61,7 @@ mod revenant_actions {
                 status: RevenantStatus::started
             };
 
-            let reinforcement = Reinforcement { game_id, owner: player, balance: 0 };
+
 
             set!(world, (revenant, game_data, reinforcement));
 

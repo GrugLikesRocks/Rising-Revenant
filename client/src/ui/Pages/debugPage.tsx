@@ -21,7 +21,7 @@ import { createSystemCalls } from "../../dojo/createSystemCalls";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getGameTrackerEntity } from "../../dojo/testQueries";
 import { getFullOutpostGameData, getGameEntitiesSpecific, getOutpostEntitySpecific } from "../../dojo/testCalls";
-import { addPrefix0x } from "../../utils";
+import {  decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 interface DebugPageProps {
@@ -37,6 +37,10 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     },
   } = useDojo();
+
+
+
+
 
   const summonRev = async () => {
     const gameTrackerComp = getComponentValueStrict(
@@ -68,19 +72,34 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     const game_id: number = gameTrackerComp.count;
 
-    await getFullOutpostGameData(graphSdk, addPrefix0x(gameTrackerComp.count));
-    // console.log("entity", entity);
+    const gameEntityCounterComp = getComponentValueStrict(
+      contractComponents.GameEntityCounter,
+      getEntityIdFromKeys([BigInt(game_id)])
+    );
 
+    const data = await getFullOutpostGameData(graphSdk,decimalToHexadecimal(game_id),gameEntityCounterComp.revenant_count);
 
-
+    console.log(data);
   }
-      
-  const closePage = () => {
-    setMenuState(MenuState.NONE);
-  };
 
+  
   const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
   const revenantArray = useEntityQuery([Has(contractComponents.Revenant)]);
+
+
+
+  const printAllSavedDataRevenants = () => {
+    for (let index = 0; index < revenantArray.length; index++) {
+      const element = revenantArray[index];
+      const revData = getComponentValueStrict(contractComponents.Revenant, element);
+      const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+      // const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+      console.log("game entity at id ", element);
+      console.log(revData);
+      console.log(outpostData);
+      // console.log(clientOutpostData);
+    }
+  } 
 
 
   //#region  Game Data Debug
@@ -105,7 +124,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     const game_count:any = await getGameTrackerEntity();
     console.log("game count", game_count);
 
-    const data = await getGameEntitiesSpecific(graphSdk, addPrefix0x(game_count));
+    const data = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(game_count));
     console.log("game entity data", data);
     
     console.log("\n\n");
@@ -143,9 +162,11 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     console.log("\nend of array of client outpost Data\n\n")
   }
-
-
   //#endregion 
+
+
+  const realAmountOfOutposts = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData,  decimalToHexadecimal(GAME_CONFIG)).current_game_id)).outpost_count
+
   return (
     <ClickWrapper className="revenant-jurnal-page-container">
       <h1 style={{ color: "white" }}>Debug Menu</h1>
@@ -161,8 +182,9 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
         <div className="data-container">
           <div className="button-style-debug" onMouseDown={() => {summonRev()}}>Create a new revenant</div>
           <div className="content-holder">
-            <h3>There are currently {outpostArray.length} outposts</h3>
+            <h3>There are currently {outpostArray.length} outposts and {revenantArray.length} revenants (~{realAmountOfOutposts})</h3>
             <button onMouseDown={() => {queryAllRevenantData()}}>Fetch all Data</button>
+            <button onMouseDown={() => {printAllSavedDataRevenants()}}>Print Data saved</button>
           </div>
         </div>
 
@@ -172,7 +194,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
             <h3>There are currently {gameArray.length} games (1)</h3>
             <h3>There are currently {gameTrackerArray.length} game tracker (1)</h3>
             <h3>There are currently {gameEntityCounterArray.length} game entity counter (1)</h3>
-            <h3>Current Game id is {getComponentValueStrict(clientComponents.ClientGameData, addPrefix0x(GAME_CONFIG)).current_game_id} and should be {getComponentValueStrict(contractComponents.GameTracker, addPrefix0x(GAME_CONFIG)).count}</h3>
+            <h3>Current Game id is {getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_id} and should be {getComponentValueStrict(contractComponents.GameTracker, decimalToHexadecimal(GAME_CONFIG)).count}</h3>
           </div>
         </div>
 
@@ -182,7 +204,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
             <h3>There are currently {clientCameraArray.length} camera entity (1) </h3>
             <h3>There are currently {clientClickArray.length} click entity (1) </h3>
             <h3>There are currently {clientGameArray.length} client game (1) </h3>
-            <h3>There are currently {clientOutpostArray.length} client outpost data  (~{getComponentValueStrict(contractComponents.GameEntityCounter, addPrefix0x(getComponentValueStrict(clientComponents.ClientGameData,  addPrefix0x(GAME_CONFIG)).current_game_id)).outpost_count})</h3>
+            <h3>There are currently {clientOutpostArray.length} client outpost data  (~{realAmountOfOutposts})</h3>
           </div>
         </div>
 

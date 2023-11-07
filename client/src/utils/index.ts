@@ -23,8 +23,18 @@ export function extractAndCleanKey(entities?: any[] | null | undefined): string 
 }
 
 
-export function addPrefix0x(input: string | number): string {
-    // Add '0x' prefix to the input
-    return `0x${input}`;
+// export function addPrefix0x(input: string | number): string {
+//     // Add '0x' prefix to the input
+//     return `0x${input}`;
+// }
+
+export function decimalToHexadecimal(number: number): string {
+    if (isNaN(number) || !isFinite(number)) {
+        throw new Error("Input must be a valid number");
+    }
+
+    // Using toString with base 16 to convert the number to hexadecimal
+    const hexadecimalString = number.toString(16).toUpperCase();
+    return `0x${hexadecimalString}`;
 }
 

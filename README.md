@@ -68,7 +68,7 @@ After cloning the project:
 
 2. **Terminal 2 - Contracts:**
 
-``` cd client && sozo build && sozo migrate && torii --world  0x3f23569fa8121b52ea2f3ae32173befc30a6feefb2342c77b27ef679d8f5343 ```
+``` cd client && sozo build && sozo migrate && torii --world  0x283d2b1d06dd40ed89de441a8a8074a78842e3e51d59a98aece7141415cc8c8 ```
 
 3. **Terminal 3 - Client:**
 

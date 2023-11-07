@@ -4,6 +4,7 @@ import { CreateGameProps, CreateRevenantProps } from "../dojo/types";
 import { ClickWrapper } from "./clickWrapper";
 import {
   createComponentStructure,
+  getFullOutpostGameData,
   getGameEntitiesSpecific,
   getOutpostEntitySpecific,
 } from "../dojo/testCalls";
@@ -21,7 +22,7 @@ import { uuid } from "@latticexyz/utils";
 import { ComponentValue } from "@latticexyz/recs/lib/types";
 import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { getGameTrackerEntity } from "../dojo/testQueries";
-import { addPrefix0x } from "../utils";
+import {  decimalToHexadecimal } from "../utils";
 
 
 import { GameEntityCounter } from "../generated/graphql";
@@ -101,7 +102,6 @@ const LoadingComponent = ({
     account: { account },
     networkLayer: {
       systemCalls: { create_game, create_revenant },
-      components: { Game, GameEntityCounter, GameTracker },
       network: { graphSdk, contractComponents, clientComponents },
     },
   } = useDojo();
@@ -158,8 +158,6 @@ const LoadingComponent = ({
       console.log(craftedEdgeGT)
       setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
 
-
-
       const componentSchemaClientClick = {
         "xFromOrigin": 0,
         "yFromOrigin": 0,
@@ -187,7 +185,7 @@ const LoadingComponent = ({
       componentName = "ClientGameData";
 
       craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, keys, componentName);
-      setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
+      setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
     }
 
 
@@ -197,6 +195,9 @@ const LoadingComponent = ({
       if (last_game_id === 0 || last_game_id === undefined) {
         console.log("creating game");
         await createGame();
+
+        
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         last_game_id = 1;
       }
 
@@ -209,28 +210,57 @@ const LoadingComponent = ({
       const componentName = "GameTracker";
 
       const craftedEdgeGT = createComponentStructure(componentSchema, keys, componentName);
-      setComponentFromGraphQLEntity(contractComponents, craftedEdgeGT)
+      setComponentFromGraphQLEntity(contractComponents, craftedEdgeGT);
 
-      const entityEdge = await getGameEntitiesSpecific(graphSdk, addPrefix0x(last_game_id));
-      setComponentFromGraphQLEntity(contractComponents, entityEdge)
+      const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(last_game_id));
+
+      setComponentFromGraphQLEntity(contractComponents, entityEdge);
 
       await createClientComponent(last_game_id);
 
-      return addPrefix0x(last_game_id);
+      return {
+        hexLastGameId: decimalToHexadecimal(last_game_id),
+        revenantCount: entityEdge.node.models[1].revenant_count
+      };
+      
     };
 
-    const fetchTheRevenant = async (game_id: string) => {
-      const entity = await getOutpostEntitySpecific(graphSdk, game_id, "0x1");
-      // console.log("\n\n\nThios is for the revenant");
-      // console.log(entity);
+    const fetchTheRevenant = async (game_id: string, rev_amount: number) => {
+      // const entity = await getOutpostEntitySpecific(graphSdk, game_id, "0x1");
+      const data = await getFullOutpostGameData(graphSdk, game_id, rev_amount);
+      
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        setComponentFromGraphQLEntity(contractComponents, element);
+
+        const owner = element.node.models[1].owner;
+        let owned = false;
+        
+        if (owner === account.address) { owned = true;}
+        
+        const componentSchemaClientOutpostData = {
+          "id": 1,
+          "owned": owned,
+          "event_effected": false,
+          "selected": false,
+          "visible": false
+        };
+  
+        const keys = ["0x1", decimalToHexadecimal(index + 1)];
+        const componentName = "ClientOutpostData";
+  
+        const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
+        setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
+      }
+  
 
       setLoading(false);
     };
 
     const orderOfOperations = async () => {
       await preloadImages();
-      const game_id = await fetchTheCurrentGame();
-      await fetchTheRevenant(game_id);
+      const entity_data = await fetchTheCurrentGame();
+      await fetchTheRevenant(entity_data.hexLastGameId, entity_data.revenantCount);
     };
 
     console.log("Loading data...");

@@ -95,12 +95,16 @@ query getOutpostEntity($game_id: String!, $entity_id: String!) {
         models {
           __typename
           ... on Revenant {
+            game_id
+            entity_id
             owner
             name_revenant
             outpost_count
             status
           }
           ... on Outpost {
+            game_id
+            entity_id
             owner
             name_outpost
             x

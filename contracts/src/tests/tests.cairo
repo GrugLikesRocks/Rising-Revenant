@@ -91,6 +91,9 @@ mod tests {
         let reinforcement = get!(world, (game_id, caller), Reinforcement);
         assert(reinforcement.balance == purchase_count, 'wrong purchase count');
 
+        let game_counter = get!(world, (game_id), GameEntityCounter);
+        assert(game_counter.reinforcement_count == purchase_count, 'wrong reinforcement count');
+
         starknet::testing::set_block_timestamp(starknet::get_block_timestamp() + 100);
         let price2 = revenant_action.get_current_price(game_id, purchase_count);
         assert(price2 > price, 'wrong price');
@@ -100,6 +103,9 @@ mod tests {
 
         let outpost = get!(world, (game_id, outpost_id), (Outpost));
         assert(outpost.lifes == OUTPOST_INIT_LIFE + 1, 'life value is wrong');
+
+        let game_counter = get!(world, (game_id), GameEntityCounter);
+        assert(game_counter.reinforcement_count == purchase_count - 1, 'wrong reinforcement count');
     }
 
     #[test]

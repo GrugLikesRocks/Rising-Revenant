@@ -61,8 +61,6 @@ mod revenant_actions {
                 status: RevenantStatus::started
             };
 
-
-
             set!(world, (revenant, game_data));
 
             let outpost_id = create_outpost(world, game_id);
@@ -81,7 +79,7 @@ mod revenant_actions {
         fn purchase_reinforcement(self: @ContractState, game_id: u32, count: u32) -> bool {
             let world = self.world_dispatcher.read();
             let player = get_caller_address();
-            let mut game = get!(world, game_id, Game);
+            let (mut game, mut game_counter) = get!(world, game_id, (Game, GameEntityCounter));
             game.assert_can_create_outpost(world);
 
             let mut reinforcemetn_balance = get!(world, game_id, ReinforcementBalance);
@@ -98,8 +96,9 @@ mod revenant_actions {
             let mut reinforcements = get!(world, (game_id, player), Reinforcement);
             reinforcements.balance += count;
             reinforcemetn_balance.count += count;
+            game_counter.reinforcement_count += count;
 
-            set!(world, (reinforcements, reinforcemetn_balance));
+            set!(world, (reinforcements, reinforcemetn_balance, game_counter));
 
             true
         }
@@ -107,7 +106,7 @@ mod revenant_actions {
         fn reinforce_outpost(self: @ContractState, game_id: u32, outpost_id: u128) {
             let world = self.world_dispatcher.read();
             let player = get_caller_address();
-            let mut game = get!(world, game_id, Game);
+            let (mut game, mut game_counter) = get!(world, game_id, (Game, GameEntityCounter));
             game.assert_is_playing(world);
 
             let mut outpost = get!(world, (game_id, outpost_id), (Outpost));
@@ -120,9 +119,10 @@ mod revenant_actions {
             assert(reinforcement.balance > 0, 'no reinforcement');
 
             outpost.lifes += 1;
-            reinforcement.balance = reinforcement.balance - 1;
+            reinforcement.balance -= 1;
+            game_counter.reinforcement_count -= 1;
 
-            set!(world, (outpost, reinforcement));
+            set!(world, (outpost, reinforcement, game_counter));
 
             return ();
         }

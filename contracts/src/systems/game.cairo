@@ -53,6 +53,7 @@ mod game_actions {
                 outpost_count: 0,
                 event_count: 0,
                 outpost_exists_count: 0,
+                reinforcement_count: 0,
                 trade_count: 0,
             };
             let game_tracker = GameTracker { entity_id: GAME_CONFIG, count: game_id };

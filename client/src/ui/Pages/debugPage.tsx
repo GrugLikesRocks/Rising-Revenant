@@ -85,19 +85,20 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
   
   const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
   const revenantArray = useEntityQuery([Has(contractComponents.Revenant)]);
-
-
+  const clientOutpostArray = useEntityQuery([Has(clientComponents.ClientOutpostData)]);
 
   const printAllSavedDataRevenants = () => {
     for (let index = 0; index < revenantArray.length; index++) {
       const element = revenantArray[index];
+     
       const revData = getComponentValueStrict(contractComponents.Revenant, element);
       const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
-      // const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-      console.log("game entity at id ", element);
+      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+      console.log("game entity at id ", element, clientOutpostData[index]);
+      
       console.log(revData);
       console.log(outpostData);
-      // console.log(clientOutpostData);
+      console.log(clientOutpostData);
     }
   } 
 
@@ -113,6 +114,9 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     console.log(gameTrackerArray[0]);
 
     let comp = getComponentValueStrict(contractComponents.Game, gameArray[0]);
+
+
+
     console.log("game entity", comp);
     comp = getComponentValueStrict(contractComponents.GameEntityCounter, gameEntityCounterArray[0]);
     console.log("game entity counter", comp);
@@ -140,7 +144,6 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
   const clientClickArray = useEntityQuery([Has(clientComponents.ClientClickPosition)]);
   const clientGameArray = useEntityQuery([Has(clientComponents.ClientGameData)]);
   const clientCameraArray = useEntityQuery([Has(clientComponents.ClientCameraPosition)]);
-  const clientOutpostArray = useEntityQuery([Has(clientComponents.ClientOutpostData)]);
 
   const printEntitiesOfClientdata = () => {
     console.log(clientClickArray[0]);
@@ -148,6 +151,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     console.log(clientCameraArray[0]);
 
     let comp = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]);
+    getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
     console.log("client game entity", comp);
     comp = getComponentValueStrict(clientComponents.ClientClickPosition, clientClickArray[0]);
     console.log("click entity counter", comp);

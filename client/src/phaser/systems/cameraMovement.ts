@@ -1,5 +1,5 @@
 
-import { COLOUMNS_NUMBER, SCALE, compareAdjacentIndexes, getAdjacentIndexes, getAdjacentIndexesAllDirections, getEntityArrayAtIndex, getMoveDirection, getTileIndex } from "../constants";
+import { COLOUMNS_NUMBER, GAME_CONFIG, SCALE, compareAdjacentIndexes, getAdjacentIndexes, getAdjacentIndexesAllDirections, getEntityArrayAtIndex, getMoveDirection, getTileIndex } from "../constants";
 
 import { PhaserLayer } from "..";
 
@@ -15,6 +15,10 @@ import {
   HasValue,
   getEntitiesWithValue,
 } from "@latticexyz/recs";
+import { createComponentStructure,setComponentQuick } from "../../dojo/testCalls";
+import { setComponentFromGraphQLEntity } from "@dojoengine/utils";
+import { decimalToHexadecimal } from "../../utils";
+
 
 export const cameraManager = (layer: PhaserLayer) => {
   const {
@@ -23,14 +27,17 @@ export const cameraManager = (layer: PhaserLayer) => {
       Main: { camera, objectPool },
     },
     networkLayer: {
-      components: { ClientCameraPosition, Outpost, ClientOutpostData },
+      network: { clientComponents},
+      components: { ClientCameraPosition, Outpost, ClientOutpostData,ClientGameData },
     },
   } = layer;
 
   defineSystem(world, [Has(ClientCameraPosition)], ({ entity }) => {
     const newCamPos = getComponentValue(ClientCameraPosition, entity);    //get the cam entity
 
-    if (!newCamPos) {   //check if its true
+    const clientGameData = getComponentValue(ClientGameData, entity);
+
+    if (!newCamPos || clientGameData) {   //check if its true
       return;
     }
 
@@ -43,11 +50,13 @@ export const cameraManager = (layer: PhaserLayer) => {
     //therefore new index
     if (newCamPos.tile_index !== index) {    //if a new index then set the new outpost
 
-      setComponent(ClientCameraPosition, entity, {   //set the new index
-        x: newCamPos.x,
-        y: newCamPos.y,
-        tile_index: index,
-      });
+    
+      setComponentQuick({
+        "x": newCamPos.x,
+        "y": newCamPos.y,
+        "tile_index": index,
+      }, ["0x1"], "ClientCameraPosition", clientComponents)
+
 
       const direction = getMoveDirection(newCamPos.tile_index, index);  //get the direction it went
 
@@ -70,8 +79,7 @@ export const cameraManager = (layer: PhaserLayer) => {
           for (const entity of entityArray) {
             const clientData = getComponentValueStrict(ClientOutpostData, entity);
             if (!clientData.selected) {
-              clientData.visible = true;
-              setComponent(ClientOutpostData, entity, clientData);
+              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], clientData, clientComponents);
             }
           }
         }
@@ -81,18 +89,16 @@ export const cameraManager = (layer: PhaserLayer) => {
           for (const entity of entityArray) {
             const clientData = getComponentValueStrict(ClientOutpostData, entity);
             if (!clientData.selected) {
-              clientData.visible = false;
-              setComponent(ClientOutpostData, entity, clientData);
+              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": false},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], clientData, clientComponents);
             }
           }
         }
       } 
       else {
         console.log("nuke option")   //else nuke it and start the array again, slower
-        nukeOption(newCamPos.tile_index, index);
+        nukeOption(newCamPos.tile_index, index, clientGameData.current_game_id);
       }
     }
-
 
     const outpostEntities = getEntitiesWithValue(ClientOutpostData, { visible: true});
     const outpostArray = Array.from(outpostEntities);
@@ -104,10 +110,9 @@ export const cameraManager = (layer: PhaserLayer) => {
       spriteTransform(entity, newCamPos);
     }
   });
+  
 
-
-
-  function nukeOption(originalIndex: number, newIndex: number) {
+  function nukeOption(originalIndex: number, newIndex: number, game_id: number) {
     const originalIndexAdjacentIndexes = getAdjacentIndexesAllDirections(originalIndex, COLOUMNS_NUMBER);
 
     // loop through all the adjacent indexes
@@ -115,8 +120,8 @@ export const cameraManager = (layer: PhaserLayer) => {
       const entityArray = getEntityArrayAtIndex(index);
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
-        clientData.visible = false;
-        setComponent(ClientOutpostData, entity, clientData);
+
+        setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": false},  [decimalToHexadecimal(game_id), decimalToHexadecimal(clientData.id)], clientData, clientComponents);
       }
     }
 
@@ -127,14 +132,13 @@ export const cameraManager = (layer: PhaserLayer) => {
       const entityArray = getEntityArrayAtIndex(index);
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
-        clientData.visible = true;
-        setComponent(ClientOutpostData, entity, clientData);
+
+        setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(game_id), decimalToHexadecimal(clientData.id)], clientData, clientComponents);
       }
     }
   }
 
   function spriteTransform(outpostEntityValue: EntityIndex, newCamPos: any) {
-
 
       const playerObj = objectPool.get(outpostEntityValue, "Sprite");
 

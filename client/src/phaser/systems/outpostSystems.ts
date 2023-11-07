@@ -2,9 +2,10 @@ import {
   Has,
   defineSystem,
   getComponentValueStrict,
+  getComponentValue
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { Assets, SCALE, getEntityGroup } from "../constants";
+import { Assets, SCALE } from "../constants";
 
 export const spawnOutposts = (layer: PhaserLayer) => {
 
@@ -18,9 +19,13 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     },
   } = layer;
 
-  defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
+  defineSystem(world, [Has(Outpost)], ({ entity }) => {
+
+    console.log(entity)
     const outpostDojoData = getComponentValueStrict(Outpost, entity);
-    const outpostClientData = getComponentValueStrict(ClientOutpostData, entity);
+    const outpostClientData = getComponentValue(ClientOutpostData, entity);
+
+    if (outpostClientData === undefined) {return}
 
     const outpostObj = objectPool.get(entity, "Sprite");
 

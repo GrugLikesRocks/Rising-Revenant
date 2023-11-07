@@ -13,6 +13,7 @@ import {
 
 import { setTooltipArray } from "./eventSystems/eventEmitter";
 import { GAME_CONFIG } from "../constants";
+import { setComponentQuick } from "../../dojo/testCalls";
 
 export const clickManager = (layer: PhaserLayer) => {
   const {
@@ -22,25 +23,27 @@ export const clickManager = (layer: PhaserLayer) => {
     },
 
     networkLayer: {
+      network: { clientComponents },
       components: { Outpost, ClientClickPosition, ClientCameraPosition },
     },
   } = layer;
 
-  input.pointerdown$.subscribe(({ pointer, event }) => {
+  input.pointerdown$.subscribe(({ pointer }) => {
     if (!pointer) {
-
       return;
     }
 
     let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
     let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
-    setComponent(ClientClickPosition, GAME_CONFIG, {
-      xFromMiddle: clickRelativeToMiddlePointX,
-      yFromMiddle: clickRelativeToMiddlePointY,
-      xFromOrigin: pointer.x,
-      yFromOrigin: pointer.y,
-    });
+    setComponentQuick(
+      {
+      "xFromOrigin":clickRelativeToMiddlePointX,
+      "yFromOrigin":clickRelativeToMiddlePointY,
+      "xFromMiddle":pointer.x,
+      "yFromMiddle":pointer.y 
+      },
+       ["0x1"], "ClientClickPosition", clientComponents);
 
   });
 

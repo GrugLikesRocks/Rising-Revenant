@@ -1,5 +1,6 @@
 import { request, gql } from 'graphql-request';
 import { decimalToHexadecimal } from '../utils';
+import { setComponentFromGraphQLEntity } from '@dojoengine/utils';
 
 
 
@@ -251,3 +252,10 @@ export const getWorldEventEntitySpecific = async (graphSDK_: any, game_id: strin
 }
 
 //#endregion
+
+
+
+export function setComponentQuick(schema:any, keys: string[], componentName: string, components: any) {
+  const component = createComponentStructure(schema, keys, componentName);
+  setComponentFromGraphQLEntity(components, component);
+}

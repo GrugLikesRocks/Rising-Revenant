@@ -12,6 +12,7 @@ export function defineClientComponents(world: World) {
 		  {
 			x: RecsType.Number,
 			y: RecsType.Number,
+			tile_index: RecsType.Number,
 		  },
 		  {
 			metadata: {

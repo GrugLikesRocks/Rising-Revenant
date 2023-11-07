@@ -8,6 +8,8 @@ import {
   } from "@latticexyz/recs";
   import { PhaserLayer } from "..";
   import { GAME_CONFIG } from "../constants";
+import { setComponentQuick } from "../../dojo/testCalls";
+import { decimalToHexadecimal } from "../../utils";
 
   export const eventManager = (layer: PhaserLayer) => {
     const {
@@ -16,6 +18,7 @@ import {
         Main: { objectPool },
       },
       networkLayer: {
+        network: { clientComponents },
         components: { Outpost, WorldEvent, ClientOutpostData , GameEntityCounter, ClientGameData},
       },
     } = layer;
@@ -24,7 +27,8 @@ import {
 
     
       const dataEvent = getComponentValueStrict(WorldEvent, entity);
-  
+      const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+
       if (!dataEvent) {  // this doesnt make sense
         return;
       }
@@ -66,16 +70,14 @@ import {
         
         if (outpostEntityData.last_affect_event_id === gameEntityCounter.event_count)
         {
-          // //console.log("\n\nis this even hitting")
-          // //console.log("if this is then this si the last effect ", outpostEntityData.last_affect_event_id)
-          // //console.log("and this si the current last event ", gameEntityCounter.event_count)
-
-          setComponent(ClientOutpostData, outpostEntityValue, {
-            id: outpostClientData.id,
-            owned: outpostClientData.owned,
-            event_effected: false,
-            selected: outpostClientData.selected,
-          });
+          
+          setComponentQuick(
+            {
+              "id": outpostClientData.id,
+              "owned": outpostClientData.owned,
+              "event_effected": false,
+              "selected": outpostClientData.selected,
+            },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
         
           continue;
         }
@@ -90,22 +92,25 @@ import {
   
             if (distance <= radius) {
 
-              setComponent(ClientOutpostData, outpostEntityValue, {
-                id: outpostClientData.id,
-                owned: outpostClientData.owned,
-                event_effected: true,
-                selected: outpostClientData.selected,
-              });
-
+              setComponentQuick(
+                {
+                  "id": outpostClientData.id,
+                  "owned": outpostClientData.owned,
+                  "event_effected": true,
+                  "selected": outpostClientData.selected,
+                },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
+            
             } 
             else 
             {
-              setComponent(ClientOutpostData, outpostEntityValue, {
-                id: outpostClientData.id,
-                owned: outpostClientData.owned,
-                event_effected: false,
-                selected: outpostClientData.selected,
-              });
+
+              setComponentQuick(
+                {
+                  "id": outpostClientData.id,
+                  "owned": outpostClientData.owned,
+                  "event_effected": false,
+                  "selected": outpostClientData.selected,
+                },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
 
             }
           },

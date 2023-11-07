@@ -101,7 +101,7 @@ const LoadingComponent = ({
   const {
     account: { account },
     networkLayer: {
-      systemCalls: { create_game, create_revenant },
+      systemCalls: { create_game },
       network: { graphSdk, contractComponents, clientComponents },
     },
   } = useDojo();
@@ -148,6 +148,7 @@ const LoadingComponent = ({
       const componentSchemaClientCamera = {
         "x": MAP_WIDTH / 2,
         "y": MAP_HEIGHT / 2,
+        "tile_index": 2,
       };
 
       let keys = ["0x1"];
@@ -231,15 +232,15 @@ const LoadingComponent = ({
       
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        setComponentFromGraphQLEntity(contractComponents, element);
 
         const owner = element.node.models[1].owner;
+        const key = element.node.models[1].entity_id;
         let owned = false;
         
         if (owner === account.address) { owned = true;}
         
         const componentSchemaClientOutpostData = {
-          "id": 1,
+          "id": +key,
           "owned": owned,
           "event_effected": false,
           "selected": false,
@@ -251,6 +252,9 @@ const LoadingComponent = ({
   
         const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
         setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
+
+
+        setComponentFromGraphQLEntity(contractComponents, element);
       }
   
 

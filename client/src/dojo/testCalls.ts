@@ -1,3 +1,14 @@
+import { request, gql } from 'graphql-request';
+
+
+
+
+
+
+
+
+
+
 interface DataFormatted {
   allKeys: string[];
   gameModels: any[];
@@ -25,44 +36,110 @@ const getDataFormatted = (entities: any, typename: string): DataFormatted => {
 
 
 
-//#region GAME RELATED DATABASE CALLS
 
-export const getGameEntitiesSpecific = async (graphSDK_: any, key_: string) => {
-  const {
-    data: { entities },
-  } = await graphSDK_().getGameEntity({ key: key_ })
+interface Model {
+  __typename: string;
+}
 
+interface Node {
+  keys: string[];
+  models: Model[];
+}
 
-  const {allKeys, gameModels} = getDataFormatted(entities, "Game")
-  const {allKeys: allKeysCounter, gameModels: gameModelsCounter} = getDataFormatted(entities, "GameEntityCounter")
+interface Data {
+  node: Node;
+}
 
-  console.log(allKeys)
-  console.log(gameModels)
+function removeModelsByTypename(data: Data, typenamesToRemove: string[]): Data {
+  const updatedData: Data = { ...data };
 
-  console.log(allKeysCounter)
-  console.log(gameModelsCounter)
+  if (updatedData.node && updatedData.node.models) {
+    updatedData.node.models = updatedData.node.models.filter(
+      (model) => !typenamesToRemove.includes(model.__typename)
+    );
+  }
 
-  return {allKeys, gameModels, allKeysCounter, gameModelsCounter};
+  return updatedData;
 }
 
 
 
-// export const getGameTrackerSpecific = async (graphSDK_: any, config_id_: string) => {
-//   const {
-//     data: { entities },
-//   } = await graphSDK_().getGameTracker({ config_id: config_id_ })
-  
-//   console.log("\n\n\n entity counter")
-//   console.log(entities)
 
-//   const {allKeys, gameModels} = getDataFormatted(entities, "GameTracker")
 
-//   console.log(allKeys)
-//   console.log(gameModels)
-//   console.log("\n\n\n")
+interface ComponentSchema {
+  [key: string]: any;
+}
 
-//   return {allKeys, gameModels};
-// }
+export function createComponentStructure(componentSchema: ComponentSchema, keys: string[], componentName: string): any {
+  return {
+      "node": {
+          "keys": keys,
+          "models": [
+              {
+                  "__typename": componentName,
+                  ...componentSchema
+              }
+          ]
+      }
+  };
+}
+
+
+
+
+
+
+
+//#region GAME RELATED DATABASE CALLS
+
+export const getGameEntitiesSpecific = async (graphSDK_: any, key_: string) => {
+  let {
+    data: { entities },
+  } = await graphSDK_().getGameEntity({ key: key_ })
+
+
+  const adjustedStartPoint =  entities.edges[0];
+  const newData = removeModelsByTypename(adjustedStartPoint, ["GameTracker"])
+
+  return newData;
+}
+
+ export async function getGameTrackerEntity() {
+  const query = gql`
+    query getEntities {
+      entities(keys: ["0x1"]) {
+        edges {
+          node {
+            keys
+            models {
+              __typename
+              ... on GameTracker {
+                count
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const endpoint = 'http://127.0.0.1:8080/graphql'; 
+
+  try {
+    const data: any = await request(endpoint, query);
+
+    const gameTrackerCount: number | undefined = data!.entities.edges
+    .find(edge => edge.node.models.some((model: any) => model.__typename === "GameTracker"))
+    ?.node.models.find((model: any) => model.__typename === "GameTracker")?.count;
+
+    return gameTrackerCount;
+
+  } catch (error) {
+    console.error('Error executing GraphQL query:', error);
+    throw error;
+  }
+}
+
 
 
 //#endregion
@@ -74,6 +151,10 @@ export const getOutpostEntitySpecific = async (graphSDK_: any, game_id: string, 
     data: { entities },
   } = await graphSDK_().getOutpostEntity({ game_id: game_id, entity_id: entity_id })
 
+  console.log("\n\n\n\n")
+  console.log(entities)
+  console.log("\n\n\n\n")
+
   const {allKeys: allKeysOutpost, gameModels: gameModelsOutpost} = getDataFormatted(entities, "Outpost")
   const {allKeys: allKeysRev, gameModels: gameModelsRev} = getDataFormatted(entities, "Revenant")
 
@@ -81,7 +162,12 @@ export const getOutpostEntitySpecific = async (graphSDK_: any, game_id: string, 
 }
 
 export const getFullOutpostGameData = async (graphSDK_: any, game_id: string) => {
-   
+  const {
+    data: { entities },
+  } = await graphSDK_().getOutpostEntityAll({ game_id: game_id })
+
+  console.log(entities)
+
 }
 
 

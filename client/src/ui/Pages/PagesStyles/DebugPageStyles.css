@@ -8,31 +8,28 @@
   background-repeat: no-repeat;
 }
 
-
-.buttons-holder
-{
+.buttons-holder {
   width: 100%;
   height: 80%;
 
   overflow-y: auto;
-
-  /* background-color: aliceblue; */
 }
 
-.data-container
-{
-  height: 5%;
+.data-container {
+  height: fit-content;
   width: 100%;
-  /* background-color: rgb(207, 39, 39); */
 
   display: flex;
   flex-direction: row;
 
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+
+  padding: 10px;
+  border: 1px solid white;
+  box-sizing: border-box;
 }
 
-.button-style-debug
-{
+.button-style-debug {
   width: 15%;
   height: 100%;
 
@@ -44,23 +41,25 @@
 
   text-align: center;
 
+  box-sizing: border-box;
 }
 
-.content-holder
-{
+.button-style-debug:hover {
+  cursor: pointer;
+}
+
+.content-holder {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   text-align: center;
 
   width: 85%;
-
-  /* background-color: aquamarine; */
-  
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.content-holder h3
-{
+.content-holder h3 {
   flex: 1;
 
   color: white;

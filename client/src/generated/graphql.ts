@@ -1043,6 +1043,13 @@ export type GetOutpostEntityQueryVariables = Exact<{
 
 export type GetOutpostEntityQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost', owner?: any | null, name_outpost?: any | null, x?: any | null, y?: any | null, lifes?: any | null, status?: any | null, last_affect_event_id?: any | null } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant', owner?: any | null, name_revenant?: any | null, outpost_count?: any | null, status?: any | null } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
+export type GetOutpostEntityAllQueryVariables = Exact<{
+  game_id: Scalars['String']['input'];
+}>;
+
+
+export type GetOutpostEntityAllQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost', owner?: any | null, name_outpost?: any | null, x?: any | null, y?: any | null, lifes?: any | null, status?: any | null, last_affect_event_id?: any | null } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant', owner?: any | null, name_revenant?: any | null, outpost_count?: any | null, status?: any | null } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+
 export type GetGameTrackerQueryVariables = Exact<{
   config_id: Scalars['String']['input'];
 }>;
@@ -1185,6 +1192,35 @@ export const GetOutpostEntityDocument = gql`
   }
 }
     `;
+export const GetOutpostEntityAllDocument = gql`
+    query getOutpostEntityAll($game_id: String!) {
+  entities(keys: [$game_id]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on Revenant {
+            owner
+            name_revenant
+            outpost_count
+            status
+          }
+          ... on Outpost {
+            owner
+            name_outpost
+            x
+            y
+            lifes
+            status
+            last_affect_event_id
+          }
+        }
+      }
+    }
+  }
+}
+    `;
 export const GetGameTrackerDocument = gql`
     query getGameTracker($config_id: String!) {
   entities(keys: [$config_id]) {
@@ -1248,6 +1284,7 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 const GetEntitiesDocumentString = print(GetEntitiesDocument);
 const GetGameEntityDocumentString = print(GetGameEntityDocument);
 const GetOutpostEntityDocumentString = print(GetOutpostEntityDocument);
+const GetOutpostEntityAllDocumentString = print(GetOutpostEntityAllDocument);
 const GetGameTrackerDocumentString = print(GetGameTrackerDocument);
 const GetReinforcementDocumentString = print(GetReinforcementDocument);
 const GetWorldEventEntityDocumentString = print(GetWorldEventEntityDocument);
@@ -1261,6 +1298,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getOutpostEntity(variables: GetOutpostEntityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetOutpostEntityQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetOutpostEntityQuery>(GetOutpostEntityDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getOutpostEntity', 'query');
+    },
+    getOutpostEntityAll(variables: GetOutpostEntityAllQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetOutpostEntityAllQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetOutpostEntityAllQuery>(GetOutpostEntityAllDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getOutpostEntityAll', 'query');
     },
     getGameTracker(variables: GetGameTrackerQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGameTrackerQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGameTrackerQuery>(GetGameTrackerDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getGameTracker', 'query');

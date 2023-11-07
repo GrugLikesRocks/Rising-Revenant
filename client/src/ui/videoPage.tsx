@@ -2,15 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { CreateGameProps, CreateRevenantProps } from "../dojo/types";
 import { ClickWrapper } from "./clickWrapper";
-import { getGameEntitiesSpecific, getOutpostEntitySpecific } from "../dojo/testCalls";
+import {
+  createComponentStructure,
+  getGameEntitiesSpecific,
+  getOutpostEntitySpecific,
+} from "../dojo/testCalls";
 
-import { Component, Entity, Metadata, Schema, setComponent } from '@latticexyz/recs';
-
+import {
+  EntityIndex,
+  Component,
+  Entity,
+  Metadata,
+  Schema,
+  setComponent,
+} from "@latticexyz/recs";
 
 import { uuid } from "@latticexyz/utils";
-import { getEntityIdFromKeys } from "@dojoengine/utils";
+import { ComponentValue } from "@latticexyz/recs/lib/types";
+import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { getGameTrackerEntity } from "../dojo/testQueries";
 import { addPrefix0x } from "../utils";
+
+
+import { GameEntityCounter } from "../generated/graphql";
+import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
 
 export const VideoComponent = ({
   onLoadingComplete,
@@ -20,44 +35,10 @@ export const VideoComponent = ({
   const [loading, setLoading] = useState(true);
   const [showVid, setShowVid] = useState(true);
 
-  // const {
-  //   account: { account },
-  //   networkLayer: {
-  //     systemCalls: { create_game, create_revenant },
-  //     network : { graphSdk }
-  //   }
-  // } = useDojo();
-
-  // const createGame = () => {
-  //   const createGameProps: CreateGameProps =
-  //   {
-  //     account: account,
-  //     preparation_phase_interval: 30,
-  //     event_interval: 30,
-  //     erc_addr: account.address
-  //   }
-
-  //   create_game(createGameProps);
-  // };
-
-
-  // const summonRev = () => {
-  //   const createRevProps: CreateRevenantProps =
-  //   {
-  //     account: account,
-  //     game_id: 1,
-  //     name: "Revenant",
-  //   }
-
-  //   create_revenant(createRevProps);
-  // };
-
   useEffect(() => {
-
     if (loading === false && showVid === false) {
       onLoadingComplete();
     }
-
   }, [showVid, loading]);
 
   return (
@@ -72,31 +53,26 @@ export const VideoComponent = ({
             position: "absolute",
           }}
         >
-          
           <button
-
             onMouseDown={() => {
               setShowVid(false);
             }}
           >
             skip video
           </button>
-          
 
           <button
-
             onMouseDown={() => {
-              const func = async () => {  const num = await getGameTrackerEntity();
+              const func = async () => {
+                const num = await getGameTrackerEntity();
                 console.log(num);
-              }
+              };
 
               func();
             }}
           >
             get game Tracker
           </button>
-
-        
         </div>
       ) : (
         <div
@@ -116,37 +92,30 @@ export const VideoComponent = ({
   );
 };
 
-
-
 const LoadingComponent = ({
   setLoading,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-
   const {
     account: { account },
     networkLayer: {
-      systemCalls : { create_game, create_revenant },
+      systemCalls: { create_game, create_revenant },
       components: { Game, GameEntityCounter, GameTracker },
-      network: { graphSdk },
+      network: { graphSdk, contractComponents, clientComponents },
     },
   } = useDojo();
 
-
   const createGame = async () => {
-    const createGameProps: CreateGameProps =
-    {
+    const createGameProps: CreateGameProps = {
       account: account,
       preparation_phase_interval: 30,
       event_interval: 30,
-      erc_addr: account.address
-    }
+      erc_addr: account.address,
+    };
 
     await create_game(createGameProps);
   };
-
-
 
   useEffect(() => {
     setLoading(true);
@@ -171,83 +140,86 @@ const LoadingComponent = ({
       await Promise.all(imagePromises);
 
       await new Promise((resolve) => setTimeout(resolve, 5000));
-
     };
 
+
+    const createClientComponent = async (game_id: number) => {
+
+      const componentSchemaClientCamera = {
+        "x": MAP_WIDTH / 2,
+        "y": MAP_HEIGHT / 2,
+      };
+
+      let keys = ["0x1"];
+      let componentName = "ClientCameraPosition";
+
+      let craftedEdgeGT = createComponentStructure(componentSchemaClientCamera, keys, componentName);
+
+      console.log(craftedEdgeGT)
+      setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
+
+
+
+      const componentSchemaClientClick = {
+        "xFromOrigin": 0,
+        "yFromOrigin": 0,
+
+        "xFromMiddle": 0,
+        "yFromMiddle": 0,
+      };
+
+      keys = ["0x1"];
+      componentName = "ClientClickPosition";
+
+      craftedEdgeGT = createComponentStructure(componentSchemaClientClick, keys, componentName);
+      setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
+
+
+      //should pro be an enum but 1 is perp and 2 is game
+      const componentSchemaClientGameData = {
+        "current_game_state": 1,
+        "user_account_address": account.address,
+        "current_game_id": game_id,
+        "current_block_number": 50,
+      };
+
+      keys = ["0x1"];
+      componentName = "ClientGameData";
+
+      craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, keys, componentName);
+      setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
+    }
+
+
     const fetchTheCurrentGame = async () => {
-      
-      let gameCount: any = await getGameTrackerEntity();
+      let last_game_id: any = await getGameTrackerEntity();
 
-      if (gameCount === 0 || gameCount === undefined) 
-      {
-          // this is where we would create the game
-          console.log("creating game");
-          await createGame();
-          gameCount = 1;
+      if (last_game_id === 0 || last_game_id === undefined) {
+        console.log("creating game");
+        await createGame();
+        last_game_id = 1;
       }
-     
-      const gameTrackerId = uuid()
-          const gameTrackerKey = getEntityIdFromKeys([BigInt(1)])
 
-          GameTracker.addOverride(gameTrackerId, {
-            entity: gameTrackerKey,
-            value: {
-              count: gameCount,
-            }
-          })
+      const componentSchema = {
+        "entity_id": 1,
+        "count": last_game_id,
+      };
 
-      GameTracker.removeOverride(gameTrackerId);
+      const keys = ["0x1"];
+      const componentName = "GameTracker";
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      const craftedEdgeGT = createComponentStructure(componentSchema, keys, componentName);
+      setComponentFromGraphQLEntity(contractComponents, craftedEdgeGT)
 
-      const {allKeys: allKeysG, gameModels: gameModelsG, allKeysCounter: allKeysGEC, gameModelsCounter: gameModelsGEC} = await getGameEntitiesSpecific(graphSdk, addPrefix0x(gameCount));
+      const entityEdge = await getGameEntitiesSpecific(graphSdk, addPrefix0x(last_game_id));
+      setComponentFromGraphQLEntity(contractComponents, entityEdge)
 
-      const gameId = uuid()
-      const gameKey = getEntityIdFromKeys([BigInt(gameCount)])
+      await createClientComponent(last_game_id);
 
-      Game.addOverride(gameId, {
-        entity: gameKey,
-        value: {
-          start_block_number: gameModelsG[0],
-          prize: gameModelsG[1],
-          preparation_phase_interval: gameModelsG[2],
-          event_interval: gameModelsG[3],
-          erc_addr: gameModelsG[4],
-          status: gameModelsG[5],
-        }
-      })
-
-      Game.removeOverride(gameId);
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////
-
-      const gameEntityCounterId = uuid()
-      const gameEntitycounterKey = getEntityIdFromKeys([BigInt(gameCount)])
-
-      GameEntityCounter.addOverride(gameEntityCounterId, {
-        entity: gameEntitycounterKey,
-        value: {
-          revenant_count: gameModelsGEC[0],
-          outpost_count: gameModelsGEC[1],
-          event_count: gameModelsGEC[2],
-          outpost_exists_count: gameModelsGEC[3],
-        }
-      })
-
-      GameEntityCounter.removeOverride(gameEntityCounterId);
-
-      console.log("this is the loading data")
-      console.log("the number of games on chain right now is: " + gameCount);
-      console.log("this is the data for the game it self")
-      console.log(gameModelsG);
-      console.log("this is the data for the game entity counter")
-      console.log(gameModelsGEC);
-
-      return addPrefix0x(gameCount);
+      return addPrefix0x(last_game_id);
     };
 
     const fetchTheRevenant = async (game_id: string) => {
-
       const entity = await getOutpostEntitySpecific(graphSdk, game_id, "0x1");
       // console.log("\n\n\nThios is for the revenant");
       // console.log(entity);
@@ -255,21 +227,15 @@ const LoadingComponent = ({
       setLoading(false);
     };
 
-
     const orderOfOperations = async () => {
       await preloadImages();
       const game_id = await fetchTheCurrentGame();
       await fetchTheRevenant(game_id);
-    }
+    };
 
-    console.log("preloading images");
+    console.log("Loading data...");
     orderOfOperations();
-
   }, []);
 
-
-  return (
-    <></>
-  )
-}
-
+  return <></>;
+};

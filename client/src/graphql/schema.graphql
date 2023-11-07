@@ -115,6 +115,36 @@ query getOutpostEntity($game_id: String!, $entity_id: String!) {
   }
 }
 
+
+query getOutpostEntityAll($game_id: String!) {
+  entities(keys: [$game_id]) {
+    edges {
+      node {
+        keys
+        models {
+          __typename
+          ... on Revenant {
+            owner
+            name_revenant
+            outpost_count
+            status
+          }
+          ... on Outpost {
+            owner
+            name_outpost
+            x
+            y
+            lifes
+            status
+            last_affect_event_id
+          }
+        }
+      }
+    }
+  }
+}
+
+
 query getGameTracker($config_id: String!) {
   entities(keys: [$config_id]) {
     edges {

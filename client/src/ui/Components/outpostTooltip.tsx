@@ -116,7 +116,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
     else if (selectedIndexFromArray + number < 0) {
       setSelectedIndexFromArray(arrayOfEntities.length - 1);
       setEntityIdSelected(arrayOfEntities[arrayOfEntities.length - 1]);
-      setSelectedIndex(arrayOfEntities.length - 1);
+      setSelectedIndex(arrayOfEntities.length);
       return;
     }
     

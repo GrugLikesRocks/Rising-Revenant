@@ -30,6 +30,10 @@ export async function setupNetwork() {
         // Define the graph SDK instance.
         graphSdk: () => getSdk(new GraphQLClient(VITE_PUBLIC_TORII)),
 
+        call: async (contract: string, system: string, call_data: num.BigNumberish[]) => {
+            return provider.call(contract, system, call_data);
+        },
+
         // Execute function.
         execute: async (signer: Account, contract: string, system: string, call_data: num.BigNumberish[]) => {
             return provider.execute(signer, contract, system, call_data);

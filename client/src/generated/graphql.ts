@@ -1071,7 +1071,7 @@ export type GetWorldEventEntityQueryVariables = Exact<{
 }>;
 
 
-export type GetWorldEventEntityQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant' } | { __typename: 'WorldEvent', x?: any | null, y?: any | null, radius?: any | null, destroy_count?: any | null, block_number?: any | null } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+export type GetWorldEventEntityQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement' } | { __typename: 'Revenant' } | { __typename: 'WorldEvent', game_id?: any | null, entity_id?: any | null, x?: any | null, y?: any | null, radius?: any | null, destroy_count?: any | null, block_number?: any | null } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
 
 export const GetEntitiesDocument = gql`
@@ -1268,6 +1268,8 @@ export const GetWorldEventEntityDocument = gql`
         models {
           __typename
           ... on WorldEvent {
+            game_id
+            entity_id
             x
             y
             radius

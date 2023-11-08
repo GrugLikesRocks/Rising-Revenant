@@ -180,12 +180,6 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     );
     const game_id: number = gameTrackerComp.count;
 
-    const gameEntityCounter = getComponentValueStrict(
-      contractComponents.GameEntityCounter,
-      getEntityIdFromKeys([BigInt(game_id)])
-    );
-    const event_counter: number = gameEntityCounter.event_count;
-
     const createEventProps: CreateEventProps = {
       account: account,
       game_id: game_id,
@@ -193,6 +187,17 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     await create_event(createEventProps);
   };
+
+  const printAllSavedDataEvents = () => {
+    for (let index = 0; index < eventArray.length; index++) {
+      const element = eventArray[index];
+     
+      const eventData = getComponentValueStrict(contractComponents.WorldEvent, element);
+      // console.log("game entity at id ", element);
+      
+      console.log(eventData);
+    }
+  }
 
   //#endregion
 
@@ -244,7 +249,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
           <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div>
           <div className="content-holder">
             <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
-      
+            <button onMouseDown={() => {printAllSavedDataEvents()}}>Print Data saved</button>
           </div>
         </div>
 

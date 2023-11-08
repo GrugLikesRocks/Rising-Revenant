@@ -203,7 +203,7 @@ export const getReinforcementSpecific = async (graphSDK_: any, game_id: string, 
   } = await graphSDK_().getReinforcement({ game_id: game_id, owner: owner })
 
 
-  console.log("this is the entities in the reinforcment call", entities)
+  console.log("this is the entities in the reinforcmetn call", entities)
   // const { allKeys, gameModels } = getDataFormatted(entities, "Reinforcement")
 
   return entities;
@@ -224,6 +224,96 @@ export const getWorldEventEntitySpecific = async (graphSDK_: any, game_id: strin
 
   return { allKeys, gameModels };
 }
+
+export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_index: number, start_index: number = 1) => {
+
+  try {
+    let arrOfEntities: any[] = [];
+
+    for (let index = start_index; index < end_index + 1; index++) {
+      // const {
+      //   data: { entities },
+      // } = await graphSDK_().getWorldEventEntity({ game_id: game_id, entity_id: decimalToHexadecimal(index) });
+
+      const entities: any = await getEventEntity(game_id, decimalToHexadecimal(index));
+
+      console.log("this is the entities in the event call", entities)
+
+      const stuff = createComponentStructure({
+        "block_number": entities[0].node.models[2].block_number,
+        "destroy_count": entities[0].node.models[2].destroy_count,
+        "entity_id": entities[0].node.models[2].entity_id,
+        "game_id": entities[0].node.models[2].game_id,
+        "radius": entities[0].node.models[2].radius,
+        "x": entities[0].node.models[2].x,
+        "y":entities[0].node.models[2].y,
+
+      }, [entities[0].node.keys[0],entities[0].node.keys[1]], "WorldEvent")
+
+      console.log(stuff)
+
+      arrOfEntities.push(stuff);
+    }
+
+    return arrOfEntities;
+  } catch (error) {
+    console.error('Error fetching outpost game data:', error);
+    throw error;
+  }
+};
+
+// function removeModels(inputObject: any): any {
+//   if (inputObject && inputObject.node && inputObject.node.models) {
+//       inputObject.node.models = inputObject.node.models.filter(model => !model.__typename);
+//   }
+//   return inputObject;
+// }
+
+
+
+
+export async function getEventEntity(game_id: string, entity_id: string) {
+  const query = gql`
+  query getEntities {
+    entities(keys: ["${game_id}", "${entity_id}"]) {
+      edges {
+        node {
+          keys
+          models {
+            __typename
+             ... on WorldEvent {
+              game_id
+              entity_id
+              x
+              y
+              radius
+              destroy_count
+              block_number
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+  const endpoint = 'http://127.0.0.1:8080/graphql';
+
+  try {
+    const data: any = await request(endpoint, query);
+
+    console.log("this is the data for the event", data);
+
+    const gameTrackerCount = data.entities.edges;
+    console.log("this is the game tracker count", gameTrackerCount);
+
+    return gameTrackerCount;
+
+  } catch (error) {
+    console.error('Error executing GraphQL query:', error);
+    throw error;
+  }
+}
+
 
 //#endregion
 

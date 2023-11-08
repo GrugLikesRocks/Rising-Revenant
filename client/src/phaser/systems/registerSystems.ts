@@ -11,5 +11,5 @@ export const registerSystems = (layer: PhaserLayer) => {
     mapSpawn(layer);
     spawnOutposts(layer);
     clickManager(layer);
-    eventManager(layer);
+    // eventManager(layer);
 };

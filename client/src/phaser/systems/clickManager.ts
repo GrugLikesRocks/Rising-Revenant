@@ -133,23 +133,18 @@ export const clickManager = (layer: PhaserLayer) => {
           const maxX = minX + OUTPOST_WIDTH;
           const maxY = minY + OUTPOST_HEIGHT;
 
-          console.log("this is the min and max", minX, maxX, minY, maxY)
-          console.log("this is the position", positionX, positionY)
-
           if (
             positionX >= minX &&
             positionX <= maxX &&
             positionY >= minY &&
             positionY <= maxY
           ) {
-            console.log("pls get here")
             foundEntity.push(outpostEntityValue);
           }
     }
 
     if (foundEntity.length > 0)
     {
-      console.log("found entity", foundEntity)
       setTooltipArray.emit("setToolTipArray",foundEntity);
     }
 

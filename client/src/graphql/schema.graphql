@@ -189,6 +189,8 @@ query getWorldEventEntity($game_id: String!, $entity_id: String!) {
         models {
           __typename
           ... on WorldEvent {
+            game_id
+            entity_id
             x
             y
             radius

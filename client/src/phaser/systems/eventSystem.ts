@@ -25,7 +25,6 @@ import { decimalToHexadecimal } from "../../utils";
   
     defineSystem(world, [Has(WorldEvent)], ({ entity }) => {
 
-    
       const dataEvent = getComponentValueStrict(WorldEvent, entity);
       const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
 

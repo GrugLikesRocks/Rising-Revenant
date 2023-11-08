@@ -1,6 +1,6 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import { ClientComponents } from "./createClientComponents";
-import { getEntityIdFromKeys, hexToAscii , getEvents, setComponentsFromEvents} from "@dojoengine/utils";
+import { getEntityIdFromKeys, hexToAscii} from "@dojoengine/utils";
 import { uuid } from "@latticexyz/utils";
 import { getComponentValue, getComponentValueStrict, Components, Schema,setComponent } from "@latticexyz/recs";
 
@@ -54,9 +54,9 @@ export function createSystemCalls(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            setComponentsFromEvents(contractComponents,
-                getEvents(receipt)
-            );
+            // setComponentsFromEvents(contractComponents,
+            //     getEvents(receipt)
+            // );
             console.log(receipt)
 
             notify('Game Created!')
@@ -248,7 +248,6 @@ export function createSystemCalls(
             Outpost.removeOverride(outpostData);
         }
     };
-
 
     return {
 

@@ -13,26 +13,38 @@ type Props = {
 
 export const PhaserLayer = ({ networkLayer }: Props) => {
  
-  const { phaserLayer, ref } = usePhaserLayer({ networkLayer });
-
-  useEffect(() => {
+    const { phaserLayer, ref } = usePhaserLayer({ networkLayer });
+    const [isVisible, setIsVisible] = useState(false);  // visibility of the tooltip
+  
+  
+    useEffect(() => {
       if (phaserLayer) {
-          store.setState({ phaserLayer });
-
-          console.log("Setting phaser layer");
+        store.setState({ phaserLayer });
+  
+        console.log("Setting phaser layer");
       }
-  }, [phaserLayer]);
-
-  return (
-      <div
-          ref={ref}
-          style={{
-              position: "absolute",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-          }}
-      />
-  );
+    }, [phaserLayer]);
+  
+  
+    const visibilitySet = (visibility: boolean) => 
+    {
+      setIsVisible(visibility);
+    }
+  
+    useEffect(() => {
+      drawPhaserLayer.on("toggleVisibility", visibilitySet);
+  
+      return () => {
+        drawPhaserLayer.off("toggleVisibility", visibilitySet);
+      };
+    }, []);
+    return (
+        <div>
+          {isVisible ? (
+            <div ref={ref} className="phaser-layer-original" />
+          ) : (
+            <div className="phaser-layer-substitute" />
+          )}
+        </div>
+      );
 };

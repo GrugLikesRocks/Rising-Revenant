@@ -1,10 +1,10 @@
 //libs
 import React, { useState, useEffect } from 'react';
 import {
-    EntityIndex,
-    Has,
-    getComponentValue,
-    getComponentValueStrict,
+  EntityIndex,
+  Has,
+  getComponentValue,
+  getComponentValueStrict,
 } from "@latticexyz/recs";
 import { store } from '../../store/store';
 
@@ -38,254 +38,271 @@ import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from '../../phaser/constants';
 import { useWASDKeys } from '../../phaser/systems/eventSystems/keyPressListener';
 
 export enum MenuState {
-    NONE,
-    PROFILE,
-    STATS,
-    SETTINGS,
-    TRADES,
-    RULES,
-    REV_JURNAL,
-    WINNER,
-    BUY_REINF,
-    PREP_PHASE_SCENE,
-    BUY_REV,
-    Debug
+  NONE,
+  PROFILE,
+  STATS,
+  SETTINGS,
+  TRADES,
+  RULES,
+  REV_JURNAL,
+  WINNER,
+  BUY_REINF,
+  PREP_PHASE_SCENE,
+  BUY_REV,
+  Debug
 }
 
 //this needs an event for the gamephase so it redraws this is called form the mapspawn script
 
 export const MainMenuContainer = () => {
-    const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
-    const [gamePhase, setGamePhase] = useState(false);
-    const [showTooltip, setShowTooltip] = useState(true);
+  const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
+  const [gamePhase, setGamePhase] = useState(3);
 
-    const keysDown = useWASDKeys();
+  const keysDown = useWASDKeys();
 
-    const {
-        account: { account },
-        networkLayer: {
-            network: { graphSdk, contractComponents, clientComponents },
-        },
-    } = useDojo();
+  const {
+    account: { account },
+    networkLayer: {
+      network: { graphSdk, contractComponents, clientComponents },
+    },
+  } = useDojo();
 
-    const CAMERA_SPEED = 10;
+  const CAMERA_SPEED = 10;
 
-    const layers = store((state) => {
-        return {
-          phaserLayer: state.phaserLayer,
-        };
-      });
+  const layers = store((state) => {
+    return {
+      phaserLayer: state.phaserLayer,
+    };
+  });
 
-    const {
-      scenes: {
-        Main: { camera },
+  const {
+    scenes: {
+      Main: { camera },
+    }
+  } = layers.phaserLayer;
+
+  let prevX: number = 0;
+  let prevY: number = 0;
+
+  const handleIconClick = (newMenuState: MenuState) => {
+    setCurrentMenuState(newMenuState);
+  };
+
+  // this only needs to be like this for the debug, once the game ships take out the dependency
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setCurrentMenuState(MenuState.NONE);
       }
-    } = layers.phaserLayer;
-  
-    let prevX: number = 0;
-    let prevY: number = 0;
 
-    const handleIconClick = (newMenuState: MenuState) => {
-        setCurrentMenuState(newMenuState);
+      if (event.key === 'j') {
+        if (currentMenuState === MenuState.Debug) {
+          setCurrentMenuState(MenuState.NONE);
+        } else {
+          setCurrentMenuState(MenuState.Debug);
+        }
+      }
+
+
+      if (event.key === 'r') {
+        setCurrentMenuState(MenuState.BUY_REINF);
+      }
+
+
+      if (event.key === 't') {
+        setGamePhase(getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_state);
+        setCurrentMenuState(MenuState.NONE);
+      }
     };
 
-    // this only needs to be like this for the debug, once the game ships take out the dependency
-    useEffect(() => {
-        const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                setCurrentMenuState(MenuState.NONE);
-            }
+    window.addEventListener('keydown', handleKeyPress);
 
-            if (event.key === 'j') {
-                if (currentMenuState === MenuState.Debug) {
-                    setCurrentMenuState(MenuState.NONE);
-                } else {
-                    setCurrentMenuState(MenuState.Debug);
-                }
-            }
-        };
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [currentMenuState]);
 
-        window.addEventListener('keydown', handleKeyPress);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log('Running code every 10 seconds');
+      getUpdatedGameData();
 
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [currentMenuState]);
+    }, 10000);
 
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            console.log('Running code every 10 seconds');
-            getUpdatedGameData();
+    const getUpdatedGameData = async () => {
 
-        }, 10000);
+      const clientGameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
 
-        const getUpdatedGameData = async () => {
+      const gameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(clientGameComp.current_game_id));
+      const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(gameComp.current_game_id));
 
-            const clientGameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+      const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
 
-            const gameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(clientGameComp.current_game_id));
-            const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(gameComp.current_game_id));
+      const revenantCount = entityEdge.node.models[1].revenant_count;
+      const outpostCount = entityEdge.node.models[1].outpost_count;
+      const eventCount = entityEdge.node.models[1].event_count;
 
-            const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
+      if (revenantCount > gameEntityCounter.revenant_count || outpostCount > gameEntityCounter.outpost_count) {
 
-            const revenantCount = entityEdge.node.models[1].revenant_count;
-            const outpostCount = entityEdge.node.models[1].outpost_count;
-            const eventCount = entityEdge.node.models[1].event_count;
+        for (let index = gameEntityCounter.revenant_count + 1; index < revenantCount + 1; index++) {
 
-            if (revenantCount > gameEntityCounter.revenant_count || outpostCount > gameEntityCounter.outpost_count) {
+          const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), decimalToHexadecimal(index));
 
-                for (let index = gameEntityCounter.revenant_count + 1; index < revenantCount + 1; index++) {
+          const owner = entity.edges[0].node.models[0].owner;
+          const key = +entity.edges[0].node.models.entity_id;
 
-                    const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), decimalToHexadecimal(index));
+          let owned = false;
 
-                    const owner = entity.edges[0].node.models.owner;
-                    const key = +entity.edges[0].node.models.entity_id;
+          console.log(owner)
+          console.log(account.address)
+          if (owner === account.address) { owned = true; }
 
-                    let owned = false;
+          const componentSchemaClientOutpostData = {
+            "id": key,
+            "owned": owned,
+            "event_effected": false,
+            "selected": false,
+            "visible": false
+          };
 
-                    if (owner === account.address) { owned = true; }
+          const keys = ["0x1", decimalToHexadecimal(index)];
+          const componentName = "ClientOutpostData";
 
-                    const componentSchemaClientOutpostData = {
-                        "id": key,
-                        "owned": owned,
-                        "event_effected": false,
-                        "selected": false,
-                        "visible": false
-                    };
-
-                    const keys = ["0x1", decimalToHexadecimal(index)];
-                    const componentName = "ClientOutpostData";
-
-                    const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
-                    setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
+          const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
+          setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
 
 
-                    setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
-                }
-            }
-
-            if (eventCount > gameEntityCounter.event_count) {
-                console.log("new event");
-
-            }
-
-            setComponentFromGraphQLEntity(contractComponents, entityEdge);
+          setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
         }
+      }
 
-        return () => clearInterval(intervalId);
-    }, []);
+      if (eventCount > gameEntityCounter.event_count) {
+        console.log("new event");
 
-    useEffect(() => {
-        let animationFrameId: number;
-    
-        let currentZoomValue = 0;
-    
-        // Subscribe to zoom$ observable
-        const zoomSubscription = camera.zoom$.subscribe((currentZoom :any ) => {
-          currentZoomValue = currentZoom; // Update the current zoom value
-        });
-    
-        const update = () => {
-          const current_pos = getComponentValue(
-            clientComponents.ClientCameraPosition,
-            decimalToHexadecimal(GAME_CONFIG)
-          );
-    
-          if (!current_pos) {
-            console.log("failed");
-            return;
-          }
-    
-          let newX = current_pos.x;
-          let newY = current_pos.y;
-    
-          if (keysDown.W) {
-            newY = current_pos.y - CAMERA_SPEED;
-          }
-          if (keysDown.A) {
-            newX = current_pos.x - CAMERA_SPEED;
-          }
-    
-          if (keysDown.S) {
-            newY = current_pos.y + CAMERA_SPEED;
-          }
-          if (keysDown.D) {
-            newX = current_pos.x + CAMERA_SPEED;
-          }
-    
-          if (newX > MAP_WIDTH - camera.phaserCamera.width / currentZoomValue / 2) {
-            newX = MAP_WIDTH - camera.phaserCamera.width / currentZoomValue / 2;
-          }
-          if (newX < camera.phaserCamera.width / currentZoomValue / 2) {
-            newX = camera.phaserCamera.width / currentZoomValue / 2;
-          }
-          if (
-            newY >
-            MAP_HEIGHT - camera.phaserCamera.height / currentZoomValue / 2
-          ) {
-            newY = MAP_HEIGHT - camera.phaserCamera.height / currentZoomValue / 2;
-          }
-          if (newY < camera.phaserCamera.height / currentZoomValue / 2) {
-            newY = camera.phaserCamera.height / currentZoomValue / 2;
-          }
-    
-          if (newX !== prevX || newY !== prevY) {
-            
+      }
 
-            setComponentQuick({"x": newX, "y": newY, "tile_index": current_pos.tile_index},[decimalToHexadecimal(GAME_CONFIG)], "ClientCameraPosition", clientComponents);
-            
-            prevX = newX;
-            prevY = newY;
-          }
-    
-          animationFrameId = requestAnimationFrame(update);
-        };
-    
-        update();
-    
-        return () => {
-          cancelAnimationFrame(animationFrameId);
-          zoomSubscription.unsubscribe();
-        };
-      }, [keysDown]);
+      setComponentFromGraphQLEntity(contractComponents, entityEdge);
+    }
 
-  
+    return () => clearInterval(intervalId);
+  }, []);
 
-    return (
-        <>
-            <div className="main-page-container-layout">
-                <div className='main-page-topbar'>
-                    <TopBarComponent />
-                </div>
-                <div className='main-page-content'>
-                    {currentMenuState !== MenuState.NONE && (
-                        <div className='page-container'>
-                            {currentMenuState === MenuState.PROFILE && <ProfilePage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.RULES && <RulesPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.SETTINGS && <SettingsPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.TRADES && <TradesPage />}
-                            {currentMenuState === MenuState.STATS && <StatsPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.REV_JURNAL && <RevenantJurnalPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.WINNER && <WinnerPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.BUY_REINF && <BuyReinforcementPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.PREP_PHASE_SCENE && <PrepPhaseEndsPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.BUY_REV && <BuyRevenantPage setMenuState={setCurrentMenuState} />}
-                            {currentMenuState === MenuState.Debug && <DebugPage setMenuState={setCurrentMenuState} />}
+  useEffect(() => {
+    let animationFrameId: number;
 
-                        </div>
-                    )}
-                </div>
+    let currentZoomValue = 0;
 
-                {gamePhase === false && <div className='prep-phase-text'> <h2> Preparation phase ends in <br /> DD: 5 HH: 5 MM: 5 SS: 5</h2></div>};
+    // Subscribe to zoom$ observable
+    const zoomSubscription = camera.zoom$.subscribe((currentZoom: any) => {
+      currentZoomValue = currentZoom; // Update the current zoom value
+    });
+
+    const update = () => {
+      const current_pos = getComponentValue(
+        clientComponents.ClientCameraPosition,
+        decimalToHexadecimal(GAME_CONFIG)
+      );
+
+      if (!current_pos) {
+        console.log("failed");
+        return;
+      }
+
+      let newX = current_pos.x;
+      let newY = current_pos.y;
+
+      if (keysDown.W) {
+        newY = current_pos.y - CAMERA_SPEED;
+      }
+      if (keysDown.A) {
+        newX = current_pos.x - CAMERA_SPEED;
+      }
+
+      if (keysDown.S) {
+        newY = current_pos.y + CAMERA_SPEED;
+      }
+      if (keysDown.D) {
+        newX = current_pos.x + CAMERA_SPEED;
+      }
+
+      if (newX > MAP_WIDTH - camera.phaserCamera.width / currentZoomValue / 2) {
+        newX = MAP_WIDTH - camera.phaserCamera.width / currentZoomValue / 2;
+      }
+      if (newX < camera.phaserCamera.width / currentZoomValue / 2) {
+        newX = camera.phaserCamera.width / currentZoomValue / 2;
+      }
+      if (
+        newY >
+        MAP_HEIGHT - camera.phaserCamera.height / currentZoomValue / 2
+      ) {
+        newY = MAP_HEIGHT - camera.phaserCamera.height / currentZoomValue / 2;
+      }
+      if (newY < camera.phaserCamera.height / currentZoomValue / 2) {
+        newY = camera.phaserCamera.height / currentZoomValue / 2;
+      }
+
+      if (newX !== prevX || newY !== prevY) {
+
+
+        setComponentQuick({ "x": newX, "y": newY, "tile_index": current_pos.tile_index }, [decimalToHexadecimal(GAME_CONFIG)], "ClientCameraPosition", clientComponents);
+
+        prevX = newX;
+        prevY = newY;
+      }
+
+      animationFrameId = requestAnimationFrame(update);
+    };
+
+    update();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      zoomSubscription.unsubscribe();
+    };
+  }, [keysDown]);
+
+  // setGamePhase(getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_state);
+
+  return (
+    <>
+      <div className="main-page-container-layout">
+        <div className='main-page-topbar'>
+          <TopBarComponent />
+        </div>
+
+
+        <div className='main-page-content'>
+          {currentMenuState !== MenuState.NONE && (
+            <div className='page-container'>
+              {currentMenuState === MenuState.PROFILE && <ProfilePage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.RULES && <RulesPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.SETTINGS && <SettingsPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.TRADES && <TradesPage />}
+              {currentMenuState === MenuState.STATS && <StatsPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.REV_JURNAL && <RevenantJurnalPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.WINNER && <WinnerPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.BUY_REINF && <BuyReinforcementPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.PREP_PHASE_SCENE && <PrepPhaseEndsPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.BUY_REV && <BuyRevenantPage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.Debug && <DebugPage setMenuState={setCurrentMenuState} />}
 
             </div>
+          )}
+        </div>
 
-            <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
+        {gamePhase === 1 && <div className='prep-phase-text'> <h2> Preparation phase ends in <br /> DD: 5 HH: 5 MM: 5 SS: 5</h2></div>};
 
-            {currentMenuState === MenuState.NONE && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
-            {currentMenuState === MenuState.NONE && <OutpostTooltipComponent />}
+      </div>
 
-            {/* <div className='image-test' /> */}
-        </>
-    );
+      {gamePhase === 2 && <div className='main-page-topbar'>
+        <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
+
+      </div>
+      }
+
+      {currentMenuState === MenuState.NONE && gamePhase === 2 && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
+      {currentMenuState === MenuState.NONE && gamePhase === 2 && <OutpostTooltipComponent />}
+
+    </>
+  );
 }

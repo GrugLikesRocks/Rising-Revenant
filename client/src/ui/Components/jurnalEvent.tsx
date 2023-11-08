@@ -1,16 +1,36 @@
 import React from "react";
+import {
+  EntityIndex,
+  Has,
+  getComponentValue,
+  getComponentValueStrict,
+} from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+
+
 
 import "./ComponentsStyles/JurnalEventStyles.css";
 
 import { MenuState } from "../Pages/mainMenuContainer";
 
 import { ClickWrapper } from "../clickWrapper";
+import { useDojo } from "../../hooks/useDojo";
 
 interface JuornalEventProps {
     setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
 }
 
 export const JurnalEventComponent : React.FC<JuornalEventProps> = ({ setMenuState }) => {
+
+
+
+  const {
+    networkLayer: {
+      network: { contractComponents, clientComponents },
+    },
+  } = useDojo();
+
+    const outpostsArray = useEntityQuery([Has(clientComponents.ClientOutpostData)]);
 
     const openJurnal = () => {
         setMenuState(MenuState.REV_JURNAL);
@@ -40,30 +60,14 @@ export const JurnalEventComponent : React.FC<JuornalEventProps> = ({ setMenuStat
       <div className="outpost-hit-data-container">
         <h3 className="sub-title">Outpost Status</h3>
         <ClickWrapper className="outpost-hit-list-container">
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4 style={{textDecoration: "line-through"}}>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
-          <h4>Outpost ID: 4852  ||  X:1425, Y:6274 </h4>
+        {outpostsArray.map((entityIndex: EntityIndex) => (
+            <h4>
+              Outpost ID:{" "}
+              {getComponentValueStrict(clientComponents.ClientOutpostData, entityIndex).id} || {" "}
+              X: {getComponentValueStrict(contractComponents.Outpost, entityIndex).x}, Y:{" "}
+              {getComponentValueStrict(contractComponents.Outpost, entityIndex).y}
+            </h4>
+        ))}
         </ClickWrapper>
       </div>
     </div>

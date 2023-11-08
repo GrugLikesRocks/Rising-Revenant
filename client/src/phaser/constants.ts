@@ -33,6 +33,9 @@ export const SCALE = 0.1;
 
 
 
+
+//all the functions below are to either redo or delete as some are not used
+
 let entityGroup: EntityIndex;
 
 export function setEntityGroup(newEntityGroup: EntityIndex): void {
@@ -43,7 +46,7 @@ export function getEntityGroup(): EntityIndex {
     return entityGroup;
 }
 
-export const COLOUMNS_NUMBER = 75;
+export const COLOUMNS_NUMBER = 60;
 export const ROWS_NUMBER = 35;
 
 export const TILE_WIDTH = MAP_WIDTH / COLOUMNS_NUMBER;

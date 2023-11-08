@@ -68,50 +68,7 @@ export function createSystemCalls(
 
     const create_revenant = async ({ account, game_id, name }: CreateRevenantProps) => {
 
-        // const gameTracker = getComponentValueStrict(GameEntityCounter, game_id)
-
-        const gameTracker = 1
-
-        const revenantId = uuid()
-        const revenantAndOutpostKey = getEntityIdFromKeys([BigInt(game_id), BigInt(gameTracker)])
-
-        Revenant.addOverride(revenantId, {
-            entity: revenantAndOutpostKey,
-            value: {
-                owner: account.address,
-                name_revenant: name,
-                outpost_count: 1,
-                status: 1
-            }
-        })
-
-        const outpostId = uuid()
         
-        Outpost.addOverride(outpostId, {
-            entity: revenantAndOutpostKey,
-            value: {
-                owner: account.address,
-                name_outpost: name,
-                x: MAP_WIDTH/2,
-                y: MAP_HEIGHT/2,
-                lifes: 1,
-                status: 1,
-                last_affect_event_id: 0,
-            }
-        })
-
-        const clientOutpostId = uuid()
-        
-        ClientOutpostData.addOverride(clientOutpostId, {
-            entity: revenantAndOutpostKey,
-            value: {
-                id: 1,
-                owned: true,
-                event_effected: false, 
-                selected: false,
-                visible: true,
-            }
-        })
 
         try {
             const tx = await execute(account, "revenant_actions", "create", [game_id, name]);
@@ -128,17 +85,8 @@ export function createSystemCalls(
             notify('Revenant Created!');
         } catch (e) {
             console.log(e)
-            Revenant.removeOverride(revenantId);
-            Outpost.removeOverride(outpostId);
-            ClientOutpostData.removeOverride(clientOutpostId);
 
             notify('Failed to create revenant');
-        }
-        finally
-        {
-            Revenant.removeOverride(revenantId);
-            Outpost.removeOverride(outpostId);
-            ClientOutpostData.removeOverride(clientOutpostId);
         }
     };
 
@@ -230,36 +178,7 @@ export function createSystemCalls(
 
     const create_event = async ({ account, game_id }: CreateEventProps) => {
         
-        const gameTracker = getComponentValueStrict(GameTracker, game_id)
-
-        const worldEventKey = getEntityIdFromKeys([BigInt(game_id), BigInt(gameTracker.event_count)])
-        const worldEventId = uuid()
-
-        WorldEvent.addOverride(
-            worldEventId,
-            {
-                entity: worldEventKey,
-                value: {
-                    x: MAP_WIDTH/2,
-                    y: MAP_HEIGHT/2,
-                    radius: 10,
-                    destroy_count: 0,
-                    block_number: 0,
-                }
-            }
-        )
-
-        const gameTrackerId = uuid();
-        GameTracker.addOverride(
-            gameTrackerId,
-            {
-                entity: getEntityIdFromKeys([BigInt(game_id)]),
-                value: {
-                    event_count: gameTracker.event_count + 1
-                }
-            }
-        )
-
+        
         try {
             const tx = await execute(account, "world_event_actions", "create", [game_id]);
             const receipt = await account.waitForTransaction(
@@ -274,13 +193,6 @@ export function createSystemCalls(
 
         } catch (e) {
             console.log(e)
-            WorldEvent.removeOverride(worldEventId);
-            GameTracker.removeOverride(gameTrackerId);
-        }
-        finally
-        {
-            WorldEvent.removeOverride(worldEventId);
-            GameTracker.removeOverride(gameTrackerId);
         }
     };
 
@@ -334,7 +246,6 @@ export function createSystemCalls(
         {
             ClientOutpostData.removeOverride(clientOutpostId);
             Outpost.removeOverride(outpostData);
-
         }
     };
 

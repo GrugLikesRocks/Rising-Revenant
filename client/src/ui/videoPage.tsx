@@ -62,18 +62,6 @@ export const VideoComponent = ({
             skip video
           </button>
 
-          <button
-            onMouseDown={() => {
-              const func = async () => {
-                const num = await getGameTrackerEntity();
-                console.log(num);
-              };
-
-              func();
-            }}
-          >
-            get game Tracker
-          </button>
         </div>
       ) : (
         <div
@@ -151,12 +139,12 @@ const LoadingComponent = ({
         "tile_index": 2,
       };
 
-      let keys = ["0x1"];
+      const keys = ["0x1"];
       let componentName = "ClientCameraPosition";
 
       let craftedEdgeGT = createComponentStructure(componentSchemaClientCamera, keys, componentName);
 
-      console.log(craftedEdgeGT)
+      // console.log(craftedEdgeGT)
       setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
 
       const componentSchemaClientClick = {
@@ -167,7 +155,6 @@ const LoadingComponent = ({
         "yFromMiddle": 0,
       };
 
-      keys = ["0x1"];
       componentName = "ClientClickPosition";
 
       craftedEdgeGT = createComponentStructure(componentSchemaClientClick, keys, componentName);
@@ -182,7 +169,6 @@ const LoadingComponent = ({
         "current_block_number": 50,
       };
 
-      keys = ["0x1"];
       componentName = "ClientGameData";
 
       craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, keys, componentName);
@@ -197,7 +183,6 @@ const LoadingComponent = ({
         console.log("creating game");
         await createGame();
 
-        
         await new Promise((resolve) => setTimeout(resolve, 5000));
         last_game_id = 1;
       }
@@ -206,18 +191,16 @@ const LoadingComponent = ({
         "entity_id": 1,
         "count": last_game_id,
       };
-
       const keys = ["0x1"];
       const componentName = "GameTracker";
-
       const craftedEdgeGT = createComponentStructure(componentSchema, keys, componentName);
       setComponentFromGraphQLEntity(contractComponents, craftedEdgeGT);
 
       const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(last_game_id));
 
-      setComponentFromGraphQLEntity(contractComponents, entityEdge);
-
       await createClientComponent(last_game_id);
+
+      setComponentFromGraphQLEntity(contractComponents, entityEdge);
 
       return {
         hexLastGameId: decimalToHexadecimal(last_game_id),

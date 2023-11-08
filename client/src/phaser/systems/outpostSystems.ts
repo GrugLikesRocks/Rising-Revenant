@@ -19,7 +19,7 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     },
   } = layer;
 
-  defineSystem(world, [Has(Outpost)], ({ entity }) => {
+  defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
 
     console.log(entity)
     const outpostDojoData = getComponentValueStrict(Outpost, entity);
@@ -44,17 +44,11 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
         if (outpostClientData.selected) {
           sprite.setTexture(Assets.CaslteSelectedAsset);
-
+          
           sprite.depth = 1;
         }
         else {
 
-          if (outpostClientData.visible === false) 
-          {
-                sprite.setVisible(false);
-          }
-          else
-          {
             sprite.depth = 0;
             sprite.setVisible(true);
 
@@ -72,9 +66,13 @@ export const spawnOutposts = (layer: PhaserLayer) => {
               else {
                 sprite.setTexture(Assets.CastleDamagedAsset);
               }
-            }
           }
         }
+
+        if (outpostClientData.visible === false) 
+          {
+              sprite.setVisible(false);
+          }
 
         sprite.scale = SCALE;
 

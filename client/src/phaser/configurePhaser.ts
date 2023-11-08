@@ -7,7 +7,6 @@ import {
 
 import { Sprites, Assets, Scenes } from "./constants";
 
-
 export const phaserConfig = {
     sceneConfig: {
         [Scenes.Main]: defineSceneConfig({

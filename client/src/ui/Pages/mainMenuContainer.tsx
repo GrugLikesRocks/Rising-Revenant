@@ -52,9 +52,10 @@ export enum MenuState {
     Debug
 }
 
+//this needs an event for the gamephase so it redraws this is called form the mapspawn script
 
 export const MainMenuContainer = () => {
-    const [currentMenuState, setCurrentMenuState] = useState(MenuState.WINNER);
+    const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
     const [gamePhase, setGamePhase] = useState(false);
     const [showTooltip, setShowTooltip] = useState(true);
 
@@ -75,14 +76,10 @@ export const MainMenuContainer = () => {
         };
       });
 
-
     const {
       scenes: {
         Main: { camera },
-      },
-      networkLayer: {
-        components: { ClientCameraPosition },
-      },
+      }
     } = layers.phaserLayer;
   
     let prevX: number = 0;
@@ -99,7 +96,7 @@ export const MainMenuContainer = () => {
                 setCurrentMenuState(MenuState.NONE);
             }
 
-            if (event.key === 'd') {
+            if (event.key === 'j') {
                 if (currentMenuState === MenuState.Debug) {
                     setCurrentMenuState(MenuState.NONE);
                 } else {
@@ -191,8 +188,8 @@ export const MainMenuContainer = () => {
         const update = () => {
           const current_pos = getComponentValue(
             clientComponents.ClientCameraPosition,
-            GAME_CONFIG
-          ) || { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 };
+            decimalToHexadecimal(GAME_CONFIG)
+          );
     
           if (!current_pos) {
             console.log("failed");

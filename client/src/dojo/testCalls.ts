@@ -27,7 +27,7 @@ const getDataFormatted = (entities: any, typename: string): DataFormatted => {
     }
   }
 
-  return {allKeys, gameModels};
+  return { allKeys, gameModels };
 }
 
 
@@ -78,18 +78,18 @@ interface Data {
 }
 
 function extractSpecificNode(data: Data, key: string): Edge | null {
-    for (const edge of data.edges) {
-        if (
-            edge.node &&
-            edge.node.keys &&
-            edge.node.keys.length === 1 && // Ensure only one key is present
-            edge.node.keys[0] === key &&
-            edge.node.models
-        ) {
-            return edge;
-        }
+  for (const edge of data.edges) {
+    if (
+      edge.node &&
+      edge.node.keys &&
+      edge.node.keys.length === 1 && // Ensure only one key is present
+      edge.node.keys[0] === key &&
+      edge.node.models
+    ) {
+      return edge;
     }
-    return null;
+  }
+  return null;
 }
 
 
@@ -100,22 +100,17 @@ interface ComponentSchema {
 
 export function createComponentStructure(componentSchema: ComponentSchema, keys: string[], componentName: string): any {
   return {
-      "node": {
-          "keys": keys,
-          "models": [
-              {
-                  "__typename": componentName,
-                  ...componentSchema
-              }
-          ]
-      }
+    "node": {
+      "keys": keys,
+      "models": [
+        {
+          "__typename": componentName,
+          ...componentSchema
+        }
+      ]
+    }
   };
 }
-
-
-
-
-
 
 
 //#region GAME RELATED DATABASE CALLS
@@ -125,21 +120,13 @@ export const getGameEntitiesSpecific = async (graphSDK_: any, key_: string) => {
     data: { entities },
   } = await graphSDK_().getGameEntity({ key: key_ })
 
-  // console.log("singular game entity ask", entities);
-
-  const adjustedStartPoint:any =extractSpecificNode(entities, key_);
-
-  //  console.log ("how is should be", entities.edges[0]);
-
-
-  // console.log("adjusted start point", adjustedStartPoint);
+  const adjustedStartPoint: any = extractSpecificNode(entities, key_);
   const newData = removeModelsByTypename(adjustedStartPoint, ["GameTracker"])
-  // console.log("new data", newData);
 
   return newData;
 }
 
- export async function getGameTrackerEntity() {
+export async function getGameTrackerEntity() {
   const query = gql`
     query getEntities {
       entities(keys: ["0x1"]) {
@@ -158,16 +145,14 @@ export const getGameEntitiesSpecific = async (graphSDK_: any, key_: string) => {
     }
   `;
 
-  const endpoint = 'http://127.0.0.1:8080/graphql'; 
+  const endpoint = 'http://127.0.0.1:8080/graphql';
 
   try {
     const data: any = await request(endpoint, query);
 
     const gameTrackerCount: number | undefined = data!.entities.edges
-    .find(edge => edge.node.models.some((model: any) => model.__typename === "GameTracker"))
-    ?.node.models.find((model: any) => model.__typename === "GameTracker")?.count;
-
-    // console.log("game tracker count", gameTrackerCount);
+      .find(edge => edge.node.models.some((model: any) => model.__typename === "GameTracker"))
+      ?.node.models.find((model: any) => model.__typename === "GameTracker")?.count;
 
     return gameTrackerCount;
 
@@ -188,21 +173,11 @@ export const getOutpostEntitySpecific = async (graphSDK_: any, game_id: string, 
     data: { entities },
   } = await graphSDK_().getOutpostEntity({ game_id: game_id, entity_id: entity_id })
 
-  console.log("singular outpost entity ask", entities);
   return entities
 }
 
-
-
-
 export const getFullOutpostGameData = async (graphSDK_: any, game_id: string, end_index: number, start_index: number = 1) => {
-  
-  //implement after a better way
 
-  // const {
-  //   data: { entities },
-  // } = await graphSDK_().getOutpostEntityAll({ game_id: game_id })
-  
   try {
     let arrOfEntities: any[] = [];
 
@@ -211,12 +186,9 @@ export const getFullOutpostGameData = async (graphSDK_: any, game_id: string, en
         data: { entities },
       } = await graphSDK_().getOutpostEntity({ game_id: game_id, entity_id: decimalToHexadecimal(index) });
 
-      console.log("this si from the inside of the loop", entities.edges[0]);
-
       arrOfEntities.push(entities.edges[0]);
     }
 
-    console.log("very sketchy multi call of the outpost data ", arrOfEntities);
     return arrOfEntities;
   } catch (error) {
     console.error('Error fetching outpost game data:', error);
@@ -230,9 +202,11 @@ export const getReinforcementSpecific = async (graphSDK_: any, game_id: string, 
     data: { entities },
   } = await graphSDK_().getReinforcement({ game_id: game_id, owner: owner })
 
-  const {allKeys, gameModels} = getDataFormatted(entities, "Reinforcement")
 
-  return {allKeys, gameModels};
+  console.log("this is the entities in the reinforcment call", entities)
+  // const { allKeys, gameModels } = getDataFormatted(entities, "Reinforcement")
+
+  return entities;
 }
 
 
@@ -246,16 +220,16 @@ export const getWorldEventEntitySpecific = async (graphSDK_: any, game_id: strin
     data: { entities },
   } = await graphSDK_().getWorldEventEntity({ game_id: game_id, entity_id: entity_id })
 
-  const {allKeys, gameModels} = getDataFormatted(entities, "WorldEvent")
+  const { allKeys, gameModels } = getDataFormatted(entities, "WorldEvent")
 
-  return {allKeys, gameModels};
+  return { allKeys, gameModels };
 }
 
 //#endregion
 
 
 
-export function setComponentQuick(schema:any, keys: string[], componentName: string, components: any) {
+export function setComponentQuick(schema: any, keys: string[], componentName: string, components: any) {
   const component = createComponentStructure(schema, keys, componentName);
   setComponentFromGraphQLEntity(components, component);
 }

@@ -9,7 +9,7 @@ import { ClickWrapper } from "../clickWrapper";
 
 import { useDojo } from "../../hooks/useDojo";
 
-import { CreateRevenantProps } from "../../dojo/types";
+import { CreateRevenantProps, CreateEventProps } from "../../dojo/types";
 
 import {
   EntityIndex,
@@ -33,14 +33,13 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     account: { account },
     networkLayer: {
       network: { contractComponents, clientComponents,graphSdk },
-      systemCalls: { create_game, create_revenant },
+      systemCalls: {  create_revenant, create_event },
 
     },
   } = useDojo();
 
 
-
-
+  //#region Outpost data stuff
 
   const summonRev = async () => {
     const gameTrackerComp = getComponentValueStrict(
@@ -82,7 +81,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     console.log(data);
   }
 
-  
+
   const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
   const revenantArray = useEntityQuery([Has(contractComponents.Revenant)]);
   const clientOutpostArray = useEntityQuery([Has(clientComponents.ClientOutpostData)]);
@@ -101,6 +100,8 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
       console.log(clientOutpostData);
     }
   } 
+
+  //#endregion
 
 
   //#region  Game Data Debug
@@ -138,7 +139,6 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
   //#endregion
 
-  
 
   //#region  Client Data Debug
   const clientClickArray = useEntityQuery([Has(clientComponents.ClientClickPosition)]);
@@ -151,12 +151,12 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
     console.log(clientCameraArray[0]);
 
     let comp = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]);
-    getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
     console.log("client game entity", comp);
     comp = getComponentValueStrict(clientComponents.ClientClickPosition, clientClickArray[0]);
     console.log("click entity counter", comp);
     comp = getComponentValueStrict(clientComponents.ClientCameraPosition, clientCameraArray[0]);
     console.log("camera tracker", comp);
+
     console.log("\n\nstart of array of client outpost Data")
     for (let index = 0; index < clientOutpostArray.length; index++) {
       const element = clientOutpostArray[index];
@@ -169,7 +169,34 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
   //#endregion 
 
 
-  const realAmountOfOutposts = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData,  decimalToHexadecimal(GAME_CONFIG)).current_game_id)).outpost_count
+  //#region event Data stuff
+
+  const eventArray = useEntityQuery([Has(contractComponents.WorldEvent)]);
+
+  const createEvent = async () => {
+    const gameTrackerComp = getComponentValueStrict(
+      contractComponents.GameTracker,
+      getEntityIdFromKeys([BigInt(GAME_CONFIG)])
+    );
+    const game_id: number = gameTrackerComp.count;
+
+    const gameEntityCounter = getComponentValueStrict(
+      contractComponents.GameEntityCounter,
+      getEntityIdFromKeys([BigInt(game_id)])
+    );
+    const event_counter: number = gameEntityCounter.event_count;
+
+    const createEventProps: CreateEventProps = {
+      account: account,
+      game_id: game_id,
+    };
+
+    await create_event(createEventProps);
+  };
+
+  //#endregion
+
+  const gameEntityTracker = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData,  decimalToHexadecimal(GAME_CONFIG)).current_game_id));
 
   return (
     <ClickWrapper className="revenant-jurnal-page-container">
@@ -180,13 +207,14 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
           <div className="button-style-debug">This is a button</div>
           <div className="content-holder">
             <h3>The current address is {account.address}</h3>
+            {/* <h3>The current balance is {getComponentValueStrict(contractComponents.Reinforcement, )}</h3> */}
           </div>
         </div>
 
         <div className="data-container">
           <div className="button-style-debug" onMouseDown={() => {summonRev()}}>Create a new revenant</div>
           <div className="content-holder">
-            <h3>There are currently {outpostArray.length} outposts and {revenantArray.length} revenants (~{realAmountOfOutposts})</h3>
+            <h3>There are currently {outpostArray.length} outposts and {revenantArray.length} revenants (~{gameEntityTracker.outpost_count})</h3>
             <button onMouseDown={() => {queryAllRevenantData()}}>Fetch all Data</button>
             <button onMouseDown={() => {printAllSavedDataRevenants()}}>Print Data saved</button>
           </div>
@@ -208,7 +236,15 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
             <h3>There are currently {clientCameraArray.length} camera entity (1) </h3>
             <h3>There are currently {clientClickArray.length} click entity (1) </h3>
             <h3>There are currently {clientGameArray.length} client game (1) </h3>
-            <h3>There are currently {clientOutpostArray.length} client outpost data  (~{realAmountOfOutposts})</h3>
+            <h3>There are currently {clientOutpostArray.length} client outpost data  (~{gameEntityTracker.outpost_count})</h3>
+          </div>
+        </div>
+
+        <div className="data-container">
+          <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div>
+          <div className="content-holder">
+            <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
+      
           </div>
         </div>
 

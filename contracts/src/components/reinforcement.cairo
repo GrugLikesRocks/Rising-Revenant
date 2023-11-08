@@ -4,15 +4,6 @@ use dojo_defi::dutch_auction::vrgda::{LogisticVRGDA, LogisticVRGDATrait};
 use starknet::{ContractAddress, get_block_timestamp};
 
 #[derive(Model, Copy, Drop, Serde, SerdeLen)]
-struct Reinforcement {
-    #[key]
-    game_id: u32,
-    #[key]
-    owner: ContractAddress,
-    balance: u32
-}
-
-#[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct ReinforcementBalance {
     #[key]
     game_id: u32,

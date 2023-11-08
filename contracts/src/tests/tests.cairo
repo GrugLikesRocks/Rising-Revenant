@@ -10,14 +10,16 @@ mod tests {
     use realmsrisingrevenant::components::outpost::{
         Outpost, OutpostStatus, OutpostImpl, OutpostTrait
     };
-    use realmsrisingrevenant::components::reinforcement::Reinforcement;
+    use realmsrisingrevenant::components::player::PlayerInfo;
     use realmsrisingrevenant::components::revenant::{
         Revenant, RevenantStatus, RevenantImpl, RevenantTrait
     };
     use realmsrisingrevenant::components::trade::{Trade, TradeStatus};
     use realmsrisingrevenant::components::world_event::{WorldEvent};
 
-    use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE};
+    use realmsrisingrevenant::constants::{
+        EVENT_INIT_RADIUS, GAME_CONFIG, OUTPOST_INIT_LIFE, REINFORCEMENT_INIT_COUNT
+    };
 
     use realmsrisingrevenant::systems::game::{IGameActionsDispatcher, IGameActionsDispatcherTrait};
     use realmsrisingrevenant::systems::revenant::{
@@ -88,11 +90,14 @@ mod tests {
         test_erc.approve(revenant_action.contract_address, price.into());
         let purchase_result = revenant_action.purchase_reinforcement(game_id, purchase_count);
         assert(purchase_result, 'Failed to purchase');
-        let reinforcement = get!(world, (game_id, caller), Reinforcement);
-        assert(reinforcement.balance == purchase_count, 'wrong purchase count');
+        let player_info = get!(world, (game_id, caller), PlayerInfo);
+        let expected_purchase_count = REINFORCEMENT_INIT_COUNT + purchase_count;
+        assert(player_info.reinforcement_count == expected_purchase_count, 'wrong purchase count');
 
         let game_counter = get!(world, (game_id), GameEntityCounter);
-        assert(game_counter.reinforcement_count == purchase_count, 'wrong reinforcement count');
+        assert(
+            game_counter.reinforcement_count == expected_purchase_count, 'wrong reinforcement count'
+        );
 
         starknet::testing::set_block_timestamp(starknet::get_block_timestamp() + 100);
         let price2 = revenant_action.get_current_price(game_id, purchase_count);
@@ -105,7 +110,10 @@ mod tests {
         assert(outpost.lifes == OUTPOST_INIT_LIFE + 1, 'life value is wrong');
 
         let game_counter = get!(world, (game_id), GameEntityCounter);
-        assert(game_counter.reinforcement_count == purchase_count - 1, 'wrong reinforcement count');
+        assert(
+            game_counter.reinforcement_count == expected_purchase_count - 1,
+            'wrong reinforcement count'
+        );
     }
 
     #[test]
@@ -195,8 +203,11 @@ mod tests {
         let price = revenant_action.get_current_price(game_id, purchase_count);
         test_erc.approve(revenant_action.contract_address, price.into());
         revenant_action.purchase_reinforcement(game_id, purchase_count);
-        let reinforcement = get!(world, (game_id, caller), Reinforcement);
-        assert(reinforcement.balance == purchase_count, 'wrong init purchase count');
+        let player_info = get!(world, (game_id, caller), PlayerInfo);
+        let expected_purchase_count = REINFORCEMENT_INIT_COUNT + purchase_count;
+        assert(
+            player_info.reinforcement_count == expected_purchase_count, 'wrong init purchase count'
+        );
 
         // Test Create Trade. the seller's reinforcement should decrease by 1
         _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
@@ -204,15 +215,17 @@ mod tests {
         let trade = get!(world, (game_id, trade_id), Trade);
         assert(trade.status == TradeStatus::selling, 'wrong trade status');
         assert(trade.price == price, 'wrong trade price');
-        let reinforcement = get!(world, (game_id, caller), Reinforcement);
-        assert(reinforcement.balance == purchase_count - 1, 'failed create trade');
+        let player_info = get!(world, (game_id, caller), PlayerInfo);
+        assert(
+            player_info.reinforcement_count == expected_purchase_count - 1, 'failed create trade'
+        );
 
         // Test Revoke Trade
         trade_action.revoke(game_id, trade_id);
         let trade = get!(world, (game_id, trade_id), Trade);
         assert(trade.status == TradeStatus::revoked, 'wrong trade status');
-        let reinforcement = get!(world, (game_id, caller), Reinforcement);
-        assert(reinforcement.balance == purchase_count, 'failed revoke trade');
+        let player_info = get!(world, (game_id, caller), PlayerInfo);
+        assert(player_info.reinforcement_count == expected_purchase_count, 'failed revoke trade');
     }
 
     #[test]
@@ -239,12 +252,16 @@ mod tests {
 
         // Test Purchase. the buyer's reinforcement should increase from 0 to 1
         let trade_id = trade_action.create(game_id, price); // create trade by seller
-        let buyer_reinforcement = get!(world, (game_id, buyer), Reinforcement);
-        assert(buyer_reinforcement.balance == 0, 'wrong buyer purchase count');
+        let buyer_info = get!(world, (game_id, buyer), PlayerInfo);
+        assert(
+            buyer_info.reinforcement_count == REINFORCEMENT_INIT_COUNT, 'wrong buyer purchase count'
+        );
         starknet::testing::set_contract_address(buyer); // switch to buyer 
         test_erc.approve(trade_action.contract_address, price.into());
         trade_action.purchase(game_id, buyer_revenant_id, trade_id);
-        let buyer_reinforcement = get!(world, (game_id, buyer), Reinforcement);
-        assert(buyer_reinforcement.balance == 1, 'failed purchase trade');
+        let buyer_info = get!(world, (game_id, buyer), PlayerInfo);
+        assert(
+            buyer_info.reinforcement_count == REINFORCEMENT_INIT_COUNT + 1, 'failed purchase trade'
+        );
     }
 }

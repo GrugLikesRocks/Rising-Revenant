@@ -7,7 +7,7 @@ use openzeppelin::token::erc20::interface::{
 };
 use realmsrisingrevenant::components::game::{game, game_tracker};
 use realmsrisingrevenant::components::outpost::outpost;
-use realmsrisingrevenant::components::reinforcement::Reinforcement;
+use realmsrisingrevenant::components::player::player_info;
 use realmsrisingrevenant::components::revenant::revenant;
 use realmsrisingrevenant::components::trade::trade;
 use realmsrisingrevenant::components::world_event::world_event;
@@ -52,6 +52,7 @@ fn _init_world() -> DefaultWorld {
     let mut models = array![
         game::TEST_CLASS_HASH,
         game_tracker::TEST_CLASS_HASH,
+        player_info::TEST_CLASS_HASH,
         outpost::TEST_CLASS_HASH,
         revenant::TEST_CLASS_HASH,
         trade::TEST_CLASS_HASH,
@@ -92,6 +93,7 @@ fn _init_world() -> DefaultWorld {
     world.grant_owner(admin, 'Game');
     world.grant_owner(admin, 'GameTracker');
     world.grant_owner(admin, 'GameEntityCounter');
+    world.grant_owner(admin, 'PlayerInfo');
     world.grant_owner(admin, 'Outpost');
     world.grant_owner(admin, 'OutpostPosition');
     world.grant_owner(admin, 'Reinforcement');

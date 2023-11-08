@@ -5,7 +5,7 @@ import {
   getComponentValue
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { Assets, SCALE } from "../constants";
+import { Assets, SCALE, addEntityAtIndex, getTileIndex } from "../constants";
 
 export const spawnOutposts = (layer: PhaserLayer) => {
 
@@ -28,6 +28,8 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     if (outpostClientData === undefined) {return}
 
     const outpostObj = objectPool.get(entity, "Sprite");
+
+    addEntityAtIndex(getTileIndex(outpostDojoData.x, outpostDojoData.y), entity);
 
     //can this be merged?
 

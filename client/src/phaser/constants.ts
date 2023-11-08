@@ -29,9 +29,7 @@ export const PREPARATION_PHASE_BLOCK_COUNT = 10;
 export const EVENT_PHASE_BLOCK_COUNT =3;
 
 export const GAME_CONFIG : EntityIndex = 1 as EntityIndex;
-export const SCALE = 0.1;
-
-
+export const SCALE = 0.15;
 
 
 //all the functions below are to either redo or delete as some are not used

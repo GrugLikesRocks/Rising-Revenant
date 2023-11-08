@@ -89,7 +89,7 @@ export const cameraManager = (layer: PhaserLayer) => {
           for (const entity of entityArray) {
             const clientData = getComponentValueStrict(ClientOutpostData, entity);
             if (!clientData.selected) {
-              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
+              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": false},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
             }
           }
         }
@@ -115,7 +115,7 @@ export const cameraManager = (layer: PhaserLayer) => {
     // loop through all the adjacent indexes
     for (const index of originalIndexAdjacentIndexes) {
       const entityArray = getEntityArrayAtIndex(index);
-      console.log("this are the ones to set", entityArray)
+      // console.log("this are the ones to set", entityArray)
 
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
@@ -129,7 +129,7 @@ export const cameraManager = (layer: PhaserLayer) => {
     // loop through all the adjacent indexes
     for (const index of newIndexAdjacentIndexes) {
       const entityArray = getEntityArrayAtIndex(index);
-      console.log("this are the ones to delete", entityArray)
+      // console.log("this are the ones to delete", entityArray)
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
 
@@ -156,19 +156,19 @@ export const cameraManager = (layer: PhaserLayer) => {
           // console.log(totDistance)
           const clientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
 
-          // sprite.alpha = 1;
-          // sprite.setScale(SCALE);
+          sprite.alpha = 1;
+          sprite.setScale(SCALE);
 
-          if (totDistance < 40 || clientData.selected) {
-            sprite.alpha = 1;
-            sprite.setScale(SCALE);
-          } else if (totDistance > 40 && totDistance < 250) {
-            sprite.alpha = 1 - ((totDistance - 40) / (250 - 40));
-            sprite.setScale(SCALE * (1 - ((totDistance - 40) / (250 - 40))));
-          } else {
-            sprite.alpha = 0;
-            sprite.setScale(0);
-          }
+          // if (totDistance < 40 || clientData.selected) {
+          //   sprite.alpha = 1;
+          //   sprite.setScale(SCALE);
+          // } else if (totDistance > 40 && totDistance < 250) {
+          //   sprite.alpha = 1 - ((totDistance - 40) / (250 - 40));
+          //   sprite.setScale(SCALE * (1 - ((totDistance - 40) / (250 - 40))));
+          // } else {
+          //   sprite.alpha = 0;
+          //   sprite.setScale(0);
+          // }
       }});
   }
 }

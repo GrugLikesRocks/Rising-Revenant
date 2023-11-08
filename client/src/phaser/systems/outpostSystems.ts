@@ -5,7 +5,7 @@ import {
   getComponentValue
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
-import { Assets, SCALE, addEntityAtIndex, getTileIndex } from "../constants";
+import { Assets, SCALE, addEntityAtIndex, getTileIndex, setWidthAndHeight } from "../constants";
 
 export const spawnOutposts = (layer: PhaserLayer) => {
 
@@ -71,12 +71,14 @@ export const spawnOutposts = (layer: PhaserLayer) => {
           }
         }
 
-        if (outpostClientData.visible === false) 
-          {
-              sprite.setVisible(false);
-          }
+        // if (outpostClientData.visible === false) 
+        //   {
+        //       sprite.setVisible(false);
+        //   }
 
         sprite.scale = SCALE;
+
+        setWidthAndHeight(sprite.width * SCALE, sprite.height * SCALE);
 
       },
     });

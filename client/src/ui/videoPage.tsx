@@ -211,6 +211,8 @@ const LoadingComponent = ({
 
     const fetchTheRevenant = async (game_id: string, rev_amount: number) => {
       // const entity = await getOutpostEntitySpecific(graphSdk, game_id, "0x1");
+
+
       const data = await getFullOutpostGameData(graphSdk, game_id, rev_amount);
       
       for (let index = 0; index < data.length; index++) {
@@ -243,6 +245,10 @@ const LoadingComponent = ({
 
       setLoading(false);
     };
+
+    const fetchEvents = async () => {
+      
+    }
 
     const orderOfOperations = async () => {
       await preloadImages();

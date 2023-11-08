@@ -38,3 +38,13 @@ export function decimalToHexadecimal(number: number): string {
     return `0x${hexadecimalString}`;
 }
 
+export function truncateString(inputString: string, prefixLength: number): string {
+    if (inputString.length <= prefixLength) {
+        return inputString; // No need to truncate if the string is already short enough
+    }
+
+    const prefix = inputString.substring(0, prefixLength);
+    const suffix = inputString.slice(-3);
+
+    return `${prefix}...${suffix}`;
+}

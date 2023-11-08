@@ -31,6 +31,15 @@ export const EVENT_PHASE_BLOCK_COUNT =3;
 export const GAME_CONFIG : EntityIndex = 1 as EntityIndex;
 export const SCALE = 0.15;
 
+export let OUTPOST_WIDTH = 0;
+export let OUTPOST_HEIGHT = 0;
+
+export function setWidthAndHeight(widht:number, height: number): void {
+    OUTPOST_WIDTH = widht;
+    OUTPOST_HEIGHT = height;
+}
+
+
 
 //all the functions below are to either redo or delete as some are not used
 
@@ -77,7 +86,6 @@ export function addEntityAtIndex(tileIndex: number, entityIndex: EntityIndex): v
 export function getTileIndex(x: number, y: number): number {
     return Math.floor(x / TILE_WIDTH) + Math.floor(y / TILE_HEIGHT) * COLOUMNS_NUMBER;
 }
-
 
 export function getMoveDirection(originalIndex: number, destinationIndex: number): string | null {
     const width = COLOUMNS_NUMBER;   // doenst have to be a var 

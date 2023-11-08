@@ -12,8 +12,10 @@ import {
 
 
 import { setTooltipArray } from "./eventSystems/eventEmitter";
-import { GAME_CONFIG } from "../constants";
+import { GAME_CONFIG, OUTPOST_HEIGHT, OUTPOST_WIDTH, SCALE } from "../constants";
 import { setComponentQuick } from "../../dojo/testCalls";
+import { decimalToHexadecimal } from "../../utils";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 export const clickManager = (layer: PhaserLayer) => {
   const {
@@ -33,15 +35,17 @@ export const clickManager = (layer: PhaserLayer) => {
       return;
     }
 
+
     let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
     let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
+
     setComponentQuick(
       {
-      "xFromOrigin":clickRelativeToMiddlePointX,
-      "yFromOrigin":clickRelativeToMiddlePointY,
-      "xFromMiddle":pointer.x,
-      "yFromMiddle":pointer.y 
+      "xFromOrigin":pointer.x,
+      "yFromOrigin":pointer.y,
+      "xFromMiddle" :clickRelativeToMiddlePointX,
+      "yFromMiddle":clickRelativeToMiddlePointY 
       },
        ["0x1"], "ClientClickPosition", clientComponents);
 
@@ -62,42 +66,90 @@ export const clickManager = (layer: PhaserLayer) => {
 
     let zoomVal:number = 0;
 
-    camera.zoom$.subscribe((zoom) => {zoomVal = zoom;});
+    // camera.zoom$.subscribe((zoom) => {zoomVal = zoom;});
+    // console.log(zoomVal);
   
-
     if (positionCenterCam === undefined) { return; }
 
-    let positionX = (positionClick.xFromMiddle/zoomVal) + positionCenterCam.x;
-    let positionY = (positionClick.yFromMiddle/zoomVal) + positionCenterCam.y;
 
-    let foundEntity: EntityIndex[] = []; // store the found entity
+    //zoom is broken
+    // let positionX = (positionClick.xFromMiddle/zoomVal) + positionCenterCam.x;
+    // let positionY = (positionClick.yFromMiddle/zoomVal) + positionCenterCam.y;
+
+
+    let positionX = (positionClick.xFromMiddle) + positionCenterCam.x;
+    let positionY = (positionClick.yFromMiddle) + positionCenterCam.y;
+
+
+
+    let foundEntity:   EntityIndex[] = []; // store the found entity
+
+    const clientGameData = getComponentValue(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
 
     for (const outpostEntityValue of outpostArray) {
-      const playerObj = objectPool.get(outpostEntityValue, "Sprite");
 
-      playerObj.setComponent({
-        id: "texture",
-        once: (sprite) => {
-          const minX = sprite.x;
-          const minY = sprite.y;
+      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, outpostEntityValue);
 
-          const maxX = minX + sprite.width * sprite.scale;
-          const maxY = minY + sprite.height * sprite.scale;
+      const outpostData = getComponentValueStrict(Outpost, outpostEntityValue);
+
+      // const playerObj = objectPool.get(getEntityIdFromKeys([BigInt(clientGameData.current_game_id ), BigInt(clientOutpostData.id)]), "Sprite");
+
+
+      // this is broken
+      // playerObj.setComponent({
+      //   id: "position",
+      //   once: (sprite) => {
+
+      //     const minX = sprite.x;
+      //     const minY = sprite.y;
+
+      //     const maxX = minX + sprite.width * sprite.scale;
+      //     const maxY = minY + sprite.height * sprite.scale;
+
+      //     console.log(sprite.x)
+      //     console.log("this is the min and max", minX, maxX, minY, maxY)
+      //     console.log("this is the position", positionX, positionY)
+
+      //     if (
+      //       positionX >= minX &&
+      //       positionX <= maxX &&
+      //       positionY >= minY &&
+      //       positionY <= maxY
+      //     ) {
+      //       console.log("pls get here")
+      //       foundEntity.push(outpostEntityValue);
+      //     }
+      //   },
+      // });
+
+
+
+
+      //do this for now but need to find a solution
+
+          const minX = outpostData.x - (OUTPOST_WIDTH / 2);
+          const minY = outpostData.y - (OUTPOST_HEIGHT / 2);
+
+          const maxX = minX + OUTPOST_WIDTH;
+          const maxY = minY + OUTPOST_HEIGHT;
+
+          console.log("this is the min and max", minX, maxX, minY, maxY)
+          console.log("this is the position", positionX, positionY)
+
           if (
             positionX >= minX &&
             positionX <= maxX &&
             positionY >= minY &&
             positionY <= maxY
           ) {
+            console.log("pls get here")
             foundEntity.push(outpostEntityValue);
           }
-        },
-      });
-
     }
 
     if (foundEntity.length > 0)
     {
+      console.log("found entity", foundEntity)
       setTooltipArray.emit("setToolTipArray",foundEntity);
     }
 

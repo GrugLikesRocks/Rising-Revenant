@@ -22,6 +22,8 @@ const IMAGES = ["./revenants/1.png", "./revenants/2.png", "./revenants/3.png", "
 
 export const BuyRevenantPage: React.FC<BuyRevenantPageProps> = ({ setMenuState }) => {
     const [revenantNumber, setRevenantNumber] = useState(5);
+    const [revenantCost, setRevenantCost] = useState(10);
+
     const [backgroundImage, setBackgroundImage] = useState("");
 
     const {
@@ -76,10 +78,10 @@ export const BuyRevenantPage: React.FC<BuyRevenantPageProps> = ({ setMenuState }
                     <h2>{revenantNumber}</h2>
                     <div className="button-style-prep-phase" onMouseDown={() => { setRevenantNumber(revenantNumber + 1)}} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> + </div>
                 </div>
-                <div className="button-style-prep-phase" onMouseDown={() => {summonRev(revenantNumber)}}>Summon (Tot: 50 $LORDS)</div>
+                <div className="button-style-prep-phase" onMouseDown={() => {summonRev(revenantNumber)}}>Summon (Tot: {revenantCost * revenantNumber} $LORDS)</div>
                 {ownReveants.length > 0 &&  <div className="button-style-prep-phase" onMouseDown={() => {setMenuState(PrepPhaseStages.WAIT_TRANSACTION)}}>Move To Next Screen</div>}
             </ClickWrapper>
-            <div className="footer-text" >1 Revenant = 10 $LORDS</div>
+            <div className="footer-text" >1 Revenant = {revenantCost} $LORDS</div>
         </div>
     )
 }

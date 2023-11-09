@@ -80,7 +80,7 @@ export const TopBarComponent = () => {
                 <div className="right-section">
                     <div className="text-section">
                         
-                        {inGame === 2? <h4>Outposts Alive: {numberOfRevenants}/2000</h4> : <h4>Outposts Summoned: {outpostArray.length || "####"}/2000</h4>}
+                        {inGame === 2? <h4>Revenants Alive: {numberOfRevenants}/2000</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
                         <h4>Reinforcement: {reinforcementNumber}</h4>
                     </div>
                     

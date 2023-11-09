@@ -16,6 +16,8 @@ import { decimalToHexadecimal } from "../../utils";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { ClickWrapper } from "../clickWrapper";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
+
+
 interface ProfilePageProps {
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
 }
@@ -24,6 +26,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
   const closePage = () => {
     setMenuState(MenuState.NONE);
   };
+
+  const [text, setText] = useState("");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const {
     account: { account },
@@ -34,27 +39,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
   } = useDojo();
 
   const selectedOutposts = useEntityQuery([Has(clientComponents.ClientOutpostData, { owner: account.address })]);
-
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
   const moveCameraHere = (x: number, y: number) => {
 
     const clientCameraComp = getComponentValueStrict(clientComponents.ClientCameraPosition, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
     
     setComponentQuick({"x": x, "y": y, "tile_index": clientCameraComp.tile_index},[getEntityIdFromKeys([BigInt(GAME_CONFIG)])], "ClientCameraPosition", clientComponents);
-            
   }
 
   const reinforceOutpost = (outpost_id: any) => {
+
     const reinforceOutpostProps: ReinforceOutpostProps = {
       account: account,
-      game_id: 0,
+      game_id: clientGameData.current_game_id,
       outpost_id: outpost_id,
     };
 
     reinforce_outpost(reinforceOutpostProps);
   }
-
 
   return (
     <div className="profile-page-container">
@@ -63,7 +66,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         <div className="title-cart-section">
           <h1>
             {" "}
-            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> 5
+            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).balance}
           </h1>
           <h3>Reinforcement available</h3>
         </div>
@@ -85,12 +88,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <h2>{getComponentValueStrict(clientComponents.ClientOutpostData, outpost).id}</h2>
+                  <h2 onMouseEnter={() => setText("")}>{getComponentValueStrict(clientComponents.ClientOutpostData, outpost).id}</h2>
                   <h2
                     onMouseDown={() => {
                       moveCameraHere(getComponentValueStrict(contractComponents.Outpost, outpost).x, getComponentValueStrict(contractComponents.Outpost, outpost).y);
                       setHoveredIndex(null);
                     }}
+                    onMouseEnter={() => setText("Go Here")}
                   >
                     X: {getComponentValueStrict(contractComponents.Outpost, outpost).x}, Y:{" "}
                     {getComponentValueStrict(contractComponents.Outpost, outpost).y}
@@ -100,11 +104,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
                       reinforceOutpost(getComponentValueStrict(clientComponents.ClientOutpostData, outpost).id);
                       setHoveredIndex(null);
                     }}
+                    onMouseEnter={() => setText("Reinforce")}
                   >
                     {getComponentValueStrict(contractComponents.Outpost, outpost).lifes}
                   </h2>
                   <div className="item-button" style={{ opacity: hoveredIndex === index ? 1 : 0 }}>
-                    {hoveredIndex === index ? "Click To Move Here" : "Reinforce"}
+                    {text}
                   </div>
                 </div>
               ))}

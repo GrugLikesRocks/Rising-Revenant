@@ -54,7 +54,7 @@ export const WaitForTransactionPage: React.FC<WaitForTransactionPageProps> = ({ 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             goNextPage();
-        }, 20000);
+        }, 15000);
 
         return () => clearTimeout(timeoutId);
     }, []);
@@ -66,10 +66,13 @@ export const WaitForTransactionPage: React.FC<WaitForTransactionPageProps> = ({ 
     return (
         <ClickWrapper className="ppe-page-container">
             <h1>
-                PREPARATION PHASE ENDS IN<br />
+                YOUR REVENANTS ARE BEING SUMMONED <br/>READY TO CREATE AN OUTPOST...
+
+                {/* <br />
                 <span onClick={toggleShowBlocks} className="hover-effect">
                     {showBlocks ? `BLOCKS LEFT: ${blocksLeft}` : "DD: 5 HH: 5 MM: 5 SS: 5"}
-                </span>
+                </span> */}
+
             </h1>
         </ClickWrapper>
     );

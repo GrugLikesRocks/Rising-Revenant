@@ -15,7 +15,7 @@ import {
   HasValue,
   getEntitiesWithValue,
 } from "@latticexyz/recs";
-import { createComponentStructure,setComponentQuick } from "../../dojo/testCalls";
+import { createComponentStructure,setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
 import { setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { decimalToHexadecimal } from "../../utils";
 
@@ -72,7 +72,8 @@ export const cameraManager = (layer: PhaserLayer) => {
           for (const entity of entityArray) {
             const clientData = getComponentValueStrict(ClientOutpostData, entity);
             if (!clientData.selected) {
-              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
+
+              setOutpostClientComponent(clientData.id, clientData.owned, clientData.event_effected, clientData.selected, true, clientComponents);
             }
           }
         }
@@ -82,14 +83,14 @@ export const cameraManager = (layer: PhaserLayer) => {
           for (const entity of entityArray) {
             const clientData = getComponentValueStrict(ClientOutpostData, entity);
             if (!clientData.selected) {
-              setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": false},  [decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
+              setOutpostClientComponent(clientData.id, clientData.owned, clientData.event_effected, clientData.selected, false, clientComponents);
             }
           }
         }
       } 
       else {
         console.log("nuke option")   //else nuke it and start the array again, slower
-        nukeOption(newCamPos.tile_index, index, clientGameData.current_game_id);
+        nukeOption(newCamPos.tile_index, index);
       }
     }
 
@@ -102,18 +103,18 @@ export const cameraManager = (layer: PhaserLayer) => {
   });
   
 
-  function nukeOption(originalIndex: number, newIndex: number, game_id: number) {
+  function nukeOption(originalIndex: number, newIndex: number) {
     const originalIndexAdjacentIndexes = getAdjacentIndexesAllDirections(originalIndex, COLOUMNS_NUMBER);
 
     // loop through all the adjacent indexes
     for (const index of originalIndexAdjacentIndexes) {
       const entityArray = getEntityArrayAtIndex(index);
-      // console.log("this are the ones to set", entityArray)
 
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
+        
+        setOutpostClientComponent(clientData.id, clientData.owned, clientData.event_effected, clientData.selected, false, clientComponents);
 
-        setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
       }
     }
 
@@ -126,7 +127,7 @@ export const cameraManager = (layer: PhaserLayer) => {
       for (const entity of entityArray) {
         const clientData = getComponentValueStrict(ClientOutpostData, entity);
 
-        setComponentQuick({"id": clientData.id, "owned": clientData.owned, "event_effected": clientData.event_effected, "selected": clientData.selected, "visible": true},  [decimalToHexadecimal(game_id), decimalToHexadecimal(clientData.id)], "ClientOutpostData", clientComponents);
+        setOutpostClientComponent(clientData.id, clientData.owned, clientData.event_effected, clientData.selected, true, clientComponents);
       }
     }
   }
@@ -149,19 +150,22 @@ export const cameraManager = (layer: PhaserLayer) => {
           // console.log(totDistance)
           const clientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
 
-          sprite.alpha = 1;
-          sprite.setScale(SCALE);
+          // sprite.alpha = 1;
+          // sprite.setScale(SCALE);
+          let min = 80;
+          let max = 350;
 
-          // if (totDistance < 40 || clientData.selected) {
-          //   sprite.alpha = 1;
-          //   sprite.setScale(SCALE);
-          // } else if (totDistance > 40 && totDistance < 250) {
-          //   sprite.alpha = 1 - ((totDistance - 40) / (250 - 40));
-          //   sprite.setScale(SCALE * (1 - ((totDistance - 40) / (250 - 40))));
-          // } else {
-          //   sprite.alpha = 0;
-          //   sprite.setScale(0);
-          // }
+
+          if (totDistance < min || clientData.selected) {
+            sprite.alpha = 1;
+            sprite.setScale(SCALE);
+          } else if (totDistance > min && totDistance < max) {
+            sprite.alpha = 1 - ((totDistance - min) / (max - min));
+            sprite.setScale(SCALE * (1 - ((totDistance - min) / (max - min))));
+          } else {
+            sprite.alpha = 0;
+            sprite.setScale(0);
+          }
       }});
   }
 }

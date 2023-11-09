@@ -321,7 +321,6 @@ export function setComponentQuick(schema: any, keys: string[], componentName: st
 }
 
 
-
 export const setClientGameComponent = async (phase: number, account: string, game_id: number, current_block: number, clientComponents: any) => {
 
   const componentSchemaClientGameData = {
@@ -337,6 +336,24 @@ export const setClientGameComponent = async (phase: number, account: string, gam
   const craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, ["0x1"], "ClientGameData");
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
 }
+
+
+export const setOutpostClientComponent = async (id: number, owned: boolean, event_effected: boolean, disabled: boolean, visible: boolean,clientComponents: any) => {
+
+  const game_id = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)])).current_game_id;
+
+  const componentSchemaClientGameData = {
+    "id": id,
+    "owned": owned,
+    "event_effected": event_effected,
+    "selected": disabled,
+    "visible": visible
+  };
+
+  const craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, [decimalToHexadecimal(game_id), decimalToHexadecimal(id)], "ClientOutpostData");
+  setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
+}
+
 
 export const getUpdatedGameData = async (view_block_count: any, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
 
@@ -366,30 +383,8 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
 
     for (let index = gameEntityCounter.revenant_count + 1; index < revenantCount + 1; index++) {
 
-      const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), decimalToHexadecimal(index));
+      callOutpostUpdate(graphSdk, clientGameComp.current_game_id, index, contractComponents, clientComponents);
 
-      const owner = entity.edges[0].node.models[0].owner;
-      const key = +entity.edges[0].node.models[0].entity_id;
-
-      let owned = false;
-
-      if (owner === address) { owned = true; }
-
-      const componentSchemaClientOutpostData = {
-        "id": key,
-        "owned": owned,
-        "event_effected": false,
-        "selected": false,
-        "visible": false
-      };
-
-      const keys = ["0x1", decimalToHexadecimal(index)];
-      const componentName = "ClientOutpostData";
-
-      const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
-      setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
-
-      setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
     }
   }
 
@@ -404,8 +399,36 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
 }
 
 
-const loadEvents = async (graphSdk: any, game_id: string, event_amount: number, contractComponents: any) => {
 
+
+export const callOutpostUpdate = async (graphSdk: any, game_id: number, entity_id: number, contractComponents: any, clientComponents: any) => {
+
+  const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(game_id), decimalToHexadecimal(entity_id));
+  const gameClientData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+
+  const owner = entity.edges[0].node.models[0].owner;
+  const key = +entity.edges[0].node.models[0].entity_id;
+
+  let owned = false;
+
+  if (owner === gameClientData.user_account_address ) { owned = true; }
+
+  const oldData = getComponentValue(clientComponents.ClientOutpostData, getEntityIdFromKeys([BigInt(game_id),BigInt(key)]));
+  
+  if (oldData === undefined) {
+
+    setOutpostClientComponent(key, owned, false, false, true, clientComponents);
+  }
+  else
+  {
+    setOutpostClientComponent(key, owned, oldData.event_effected, oldData.disabled, oldData.visible, clientComponents);
+  }
+
+  setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
+}
+
+
+const loadEvents = async (graphSdk: any, game_id: string, event_amount: number, contractComponents: any) => {
 
   const data = await getFullEventGameData(graphSdk, game_id, event_amount);
 

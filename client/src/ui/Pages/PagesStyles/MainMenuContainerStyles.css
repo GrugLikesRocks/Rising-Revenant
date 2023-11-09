@@ -21,6 +21,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+
+    position: relative;
 }
 
 .image-test
@@ -45,6 +47,23 @@
     border-radius: 10px;
     border: 10px solid var(--borderColour); 
     z-index: 1;
+}
+
+.confirm-event-button
+{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    
+
+    width: fit-content;
+    height: fit-content;
+
+    padding: 20px 10px;
+
+    background-color: red;
 }
 
 .prep-phase-text

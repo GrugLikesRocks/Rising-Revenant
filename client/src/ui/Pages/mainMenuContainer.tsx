@@ -5,8 +5,10 @@ import {
   Has,
   getComponentValue,
   getComponentValueStrict,
+  HasValue
 } from "@latticexyz/recs";
 import { store } from '../../store/store';
+import { useEntityQuery } from "@latticexyz/react";
 
 
 // styles
@@ -50,6 +52,7 @@ export enum MenuState {
 
 export const MainMenuContainer = () => {
   const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
+  const [showEventButton, setShowEventButton] = useState(false);
 
   const keysDown = useWASDKeys();
 
@@ -81,6 +84,28 @@ export const MainMenuContainer = () => {
   const handleIconClick = (newMenuState: MenuState) => {
     setCurrentMenuState(newMenuState);
   };
+
+  const clientArray = useEntityQuery([Has(clientComponents.ClientGameData)]);
+
+
+  const outpostAliveQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
+  const totalOutposts = useEntityQuery([Has(contractComponents.Outpost)]);
+
+
+
+
+
+  useEffect(() => {
+
+    if (outpostAliveQuery.length >= totalOutposts.length - 1) {
+      console.log("winner");
+      console.log("winner");
+      console.log("winner");
+      console.log("winner");
+      setCurrentMenuState(MenuState.WINNER);
+    }
+
+  }, [outpostAliveQuery]);
 
   // this only needs to be like this for the debug, once the game ships take out the dependency
   useEffect(() => {
@@ -192,6 +217,36 @@ export const MainMenuContainer = () => {
     };
   }, [keysDown]);
 
+  useEffect(() => {
+
+    // const gameClientData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+    // //block_number
+    // const gameTrackerComp = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
+
+    // if (gameTrackerComp.event_count === 0)
+    // {
+    //   setShowEventButton(true)
+    // }
+    // else
+    // {
+
+    //   const lastWorldEvent = getComponentValue(contractComponents.WorldEvent, getEntityIdFromKeys([ BigInt(gameClientData.current_game_id), BigInt(gameTrackerComp.event_count)]));
+
+    //   if (lastWorldEvent === undefined)
+    //   {
+
+    //   }
+    //   else
+    //   {
+    //     setShowEventButton(false);
+    //   }
+
+    //   const currentBlock = gameClientData.current_block;
+
+    // }
+
+  }, [clientArray]);
+
   return (
     <>
       <div className="main-page-container-layout">
@@ -212,6 +267,8 @@ export const MainMenuContainer = () => {
               {currentMenuState === MenuState.Debug && <DebugPage />}
             </div>
           )}
+
+        {showEventButton && <div className='confirm-event-button'>Event</div>}
         </div>
       </div>
 

@@ -21,7 +21,7 @@ interface BuyRevenantPageProps {
 const IMAGES = ["./revenants/1.png", "./revenants/2.png", "./revenants/3.png", "./revenants/4.png", "./revenants/5.png"]
 
 export const BuyRevenantPage: React.FC<BuyRevenantPageProps> = ({ setMenuState }) => {
-    const [revenantNumber, setRevenantNumber] = useState(5);
+    const [revenantNumber, setRevenantNumber] = useState(98);
     const [revenantCost, setRevenantCost] = useState(10);
 
     const [backgroundImage, setBackgroundImage] = useState("");

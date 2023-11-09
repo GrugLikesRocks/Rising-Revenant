@@ -1,6 +1,6 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import { ClientComponents } from "./createClientComponents";
-import { getEntityIdFromKeys, hexToAscii} from "@dojoengine/utils";
+import { getEntityIdFromKeys, getEvents, hexToAscii, setComponentsFromEvents} from "@dojoengine/utils";
 import { uuid } from "@latticexyz/utils";
 import { getComponentValue, getComponentValueStrict, Components, Schema,setComponent } from "@latticexyz/recs";
 
@@ -12,11 +12,12 @@ import { toast } from 'react-toastify';
 
 import manifest from "../../../contracts/target/dev/manifest.json";
 import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
+import { callOutpostUpdate } from "./testCalls";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
-    { execute, contractComponents, clientComponents, call }: SetupNetworkResult,
+    { execute, contractComponents, clientComponents, call ,graphSdk}: SetupNetworkResult,
     {
         Game,
         GameEntityCounter,
@@ -75,10 +76,9 @@ export function createSystemCalls(
                 { retryInterval: 100 }
             )
 
-            console.log(receipt)
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
 
             notify('Revenant Created!');
         } catch (e) {
@@ -119,9 +119,10 @@ export function createSystemCalls(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
 
             notify(`Purchased ${count} reinforcements`);
         } catch (e) {
@@ -136,52 +137,25 @@ export function createSystemCalls(
 
     const reinforce_outpost = async ({ account, game_id, outpost_id }: ReinforceOutpostProps) => {
         
-        const reinforcementId = uuid();
-        const balanceKey =  getEntityIdFromKeys([BigInt(game_id), BigInt(account.address)]);
-
-        const reinforecementBalance = getComponentValue(Reinforcement, balanceKey)
-
-        Reinforcement.addOverride(reinforcementId, {
-            entity:  balanceKey,
-            value: {
-                balance: reinforecementBalance?.balance - 1,
-            }
-        })
-
-        const outpostKey = getEntityIdFromKeys([BigInt(game_id), BigInt(outpost_id)])
-        const outpostData = getComponentValueStrict(Outpost, outpostKey)
-        
-        const outpostId = uuid()
-        
-        Outpost.addOverride(outpostId, {
-            entity: outpostData,
-            value: {
-                lifes: outpostData.lifes + 1
-            }
-        })
-
+    
         try {
             const tx = await execute(account, "revenant_actions", "reinforce_outpost", [game_id, outpost_id]);
             const receipt = await account.waitForTransaction(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
 
             notify('Reinforced Outpost')
         } catch (e) {
             console.log(e)
             notify("Failed to reinforce outpost")
-
-            Reinforcement.removeOverride(reinforcementId)
-            Outpost.removeOverride(outpostId)
         }
         finally
         {
-            Reinforcement.removeOverride(reinforcementId)
-            Outpost.removeOverride(outpostId)
         }
     };
 
@@ -194,9 +168,10 @@ export function createSystemCalls(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
 
             notify('World Event Created!');
 
@@ -207,54 +182,25 @@ export function createSystemCalls(
 
     const confirm_event_outpost = async ({ account, game_id, event_id, outpost_id }: ConfirmEventOutpost) => {
 
-            const clientOutpostId = uuid();
-            const outpostKey = getEntityIdFromKeys([BigInt(game_id),BigInt(outpost_id)]);
-
-            ClientOutpostData.addOverride(
-                clientOutpostId,
-                {
-                    entity: outpostKey,
-                    value: {
-                        event_effected: false, 
-                    }
-                }
-            )
-            
-            const outpostData = getComponentValueStrict(Outpost, outpostKey)
-
-            const outpostId = uuid()
-            Outpost.addOverride(
-                outpostId,
-                {
-                    entity: outpostKey,
-                    value: {
-                        last_affect_event_id: event_id,
-                        lifes: outpostData.lifes - 1
-                    }
-                }
-            )
-            
         try {
-            const tx = await execute(account, "world_event_actions", "create", [game_id, event_id, outpost_id]);
+            const tx = await execute(account, "world_event_actions", "destroy_outpost", [game_id, event_id, outpost_id]);
             const receipt = await account.waitForTransaction(
                 tx.transaction_hash,
                 { retryInterval: 100 }
             )
-            // setComponentsFromEvents(contractComponents,
-            //     getEvents(receipt)
-            // );
+
+            setComponentsFromEvents(contractComponents,
+                getEvents(receipt)
+            );
 
             notify('Confirmed the event')
         } catch (e) {
             console.log(e)
             notify('Failed to confirm event')
-            ClientOutpostData.removeOverride(clientOutpostId);
-            Outpost.removeOverride(outpostData);
         }
         finally
         {
-            ClientOutpostData.removeOverride(clientOutpostId);
-            Outpost.removeOverride(outpostData);
+
         }
     };
 

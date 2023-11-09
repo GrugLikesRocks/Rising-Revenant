@@ -46,7 +46,6 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
     for (let index = 0; index < selectedOutposts.length; index++) {
 
       const element = selectedOutposts[index];
-      console.log("this is in the loop and for elemtne ", element)
       const clientCompData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
       setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected, selected: false, owned: clientCompData.owned })
     }
@@ -71,7 +70,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
     for (let index = 0; index < selectedOutposts.length; index++) {
       const element = selectedOutposts[index];
-      console.log("this is in the loop and for elemtne ", element)
+      
       const clientCompData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
       setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected, selected: false, owned: clientCompData.owned })
     }
@@ -87,17 +86,18 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
   if (arrayOfEntities.length === 0) { return <div></div>; }
 
-  const outpostClientData = getComponentValueStrict(clientComponents.ClientOutpostData, entityIdSelected);
   const revenantData = getComponentValueStrict(contractComponents.Revenant, entityIdSelected);
   const outpostData = getComponentValueStrict(contractComponents.Outpost, entityIdSelected);
 
-  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
-  const gameTrackerData = getComponentValueStrict(contractComponents.GameTracker, decimalToHexadecimal(clientGameData.current_game_id));
+  const outpostClientData = getComponentValueStrict(clientComponents.ClientOutpostData, entityIdSelected);
 
+  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+  
   const ChangeCounter = (number: number) => {
 
     const outpostClientData = getComponentValueStrict(clientComponents.ClientOutpostData, entityIdSelected);
 
+    // just realised this works now for some reason setComponent is what should be use
     setComponent(clientComponents.ClientOutpostData, entityIdSelected, { id: outpostClientData.id, event_effected: outpostClientData.event_effected, selected: false, owned: outpostClientData.owned })
 
     setSelectedIndex(1);
@@ -128,12 +128,14 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
   }
 
   const confirmEvent = async () => {
-      
+
+      const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(clientGameData.current_game_id));
+
       const confirmEventProps: ConfirmEventOutpost = {
         account: account,
         game_id: clientGameData.current_game_id,
         event_id: gameTrackerData.event_count,
-        outpost_id: outpostData.id,
+        outpost_id: outpostClientData.id,
       };
   
       await confirm_event_outpost(confirmEventProps);
@@ -174,7 +176,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
               return (
                 <div>
                   <span style={{ color: 'orange' }}>In Event</span>
-                  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent}}>Confirm Event</ClickWrapper>
+                  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper>
                 </div>
               );
             case 3:
@@ -187,9 +189,9 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
       <div className="revenant-data-container">
         <h1>REVENANT DATA</h1>
-        <h3>Owner: {truncateString(revenantData.owner, 3)}</h3>
-        <h3>Name: Rev Name</h3>
-        <h3>ID: 231</h3>
+        <h3>Owner: {truncateString(revenantData.owner, 5)}</h3>
+        <h3>Name: {`Revenant ${outpostClientData.id}`}</h3>
+        <h3>ID: {outpostClientData.id}</h3>
       </div>
 
       {arrayOfEntities.length > 1 && (

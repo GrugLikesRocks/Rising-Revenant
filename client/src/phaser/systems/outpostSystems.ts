@@ -70,10 +70,10 @@ export const spawnOutposts = (layer: PhaserLayer) => {
           }
         }
 
-        // if (outpostClientData.visible === false) 
-        //   {
-        //       sprite.setVisible(false);
-        //   }
+        if (outpostClientData.visible === false) 
+          {
+              sprite.setVisible(false);
+          }
 
         sprite.scale = SCALE;
 

@@ -8,7 +8,7 @@ import {
   } from "@latticexyz/recs";
   import { PhaserLayer } from "..";
   import { GAME_CONFIG } from "../constants";
-import { setComponentQuick } from "../../dojo/testCalls";
+import { setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
 import { decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
@@ -32,9 +32,6 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
       if (!dataEvent || !clientGameData) {  // this doesnt make sense
         return;
       }
-
-      console.log(dataEvent)
-      console.log("\n\n\n\n\n\n")
 
       const phaserScene = layer.scenes.Main.phaserScene;
 
@@ -65,61 +62,28 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
       const gameEntityCounter = getComponentValueStrict(GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
   
       for (const outpostEntityValue of outpostArray) {
-        console.log(outpostEntityValue)
-        // const outpostClientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
-        // const outpostEntityData = getComponentValueStrict(Outpost, outpostEntityValue);
-  
-        // const playerObj = objectPool.get(outpostEntityValue, "Sprite");
+
+        const outpostClientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
+        const outpostEntityData = getComponentValueStrict(Outpost, outpostEntityValue);
+
+        if (outpostEntityData.last_affect_event_id >= gameEntityCounter.event_count)
+        {
+          setOutpostClientComponent(outpostClientData.id, outpostClientData.owned, false, outpostClientData.selected, outpostClientData.visible, clientComponents ) 
         
-        // if (outpostEntityData.last_affect_event_id === gameEntityCounter.event_count)
-        // {
-          
-        //   setComponentQuick(
-        //     {
-        //       "id": outpostClientData.id,
-        //       "owned": outpostClientData.owned,
-        //       "event_effected": false,
-        //       "selected": outpostClientData.selected,
-        //     },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
-        
-        //   continue;
-        // }
+          continue;
+        }
 
-        // playerObj.setComponent({
-        //   id: "texture",
-        //   once: (sprite: any) => {
+        const distance = Math.sqrt(
+          (Number(outpostEntityData.x) - positionX) ** 2 + (Number(outpostEntityData.y)- positionY) ** 2
+        );
 
-        //     const distance = Math.sqrt(
-        //       (Number(getComponentValueStrict(Outpost, outpostEntityValue).x) - positionX) ** 2 + (Number(getComponentValueStrict(Outpost, outpostEntityValue).y)- positionY) ** 2
-        //     );
-  
-        //     if (distance <= radius) {
-
-        //       setComponentQuick(
-        //         {
-        //           "id": outpostClientData.id,
-        //           "owned": outpostClientData.owned,
-        //           "event_effected": true,
-        //           "selected": outpostClientData.selected,
-        //         },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
-            
-        //     } 
-        //     else 
-        //     {
-
-        //       setComponentQuick(
-        //         {
-        //           "id": outpostClientData.id,
-        //           "owned": outpostClientData.owned,
-        //           "event_effected": false,
-        //           "selected": outpostClientData.selected,
-        //         },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
-
-        //     }
-        //   },
-        // });
-
-
+        if (distance <= radius) {
+          setOutpostClientComponent(outpostClientData.id, outpostClientData.owned, true, outpostClientData.selected, outpostClientData.visible, clientComponents ) 
+        }
+        else 
+        {
+          setOutpostClientComponent(outpostClientData.id, outpostClientData.owned, false, outpostClientData.selected, outpostClientData.visible, clientComponents ) 
+        }
       }
     });
   };

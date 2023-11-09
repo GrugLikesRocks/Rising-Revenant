@@ -7,11 +7,13 @@ import {
     Has,
     getComponentValue,
     getComponentValueStrict,
-  } from "@latticexyz/recs";
-  import { useEntityQuery } from "@latticexyz/react";
+    HasValue,
+} from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
 import { useDojo } from "../../hooks/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
+import { truncateString } from "../../utils";
 
 
 export const TopBarComponent = () => {
@@ -22,53 +24,67 @@ export const TopBarComponent = () => {
     const [Jackpot, setJackpot] = useState(2000);
 
     const [reinforcementNumber, setReinforcementNumber] = useState(0);
-
+    const [userAddress, setUserAddress] = useState("");
 
     const {
         networkLayer: {
-          network: { contractComponents, clientComponents },
+            network: { contractComponents, clientComponents },
         },
-      } = useDojo();
-    
+    } = useDojo();
 
     const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
+    const outpostAliveQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
+    const clientGameData = useEntityQuery([Has(clientComponents.ClientGameData)]);
 
-    const gameClientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
-    const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-    
 
-      useEffect(() => {
 
-        if (gameData === undefined)
-        {
+    useEffect(() => {
+
+        if (inGame === 2) {
+            const aliveRevs = outpostArray.length - outpostAliveQuery.length;
+
+            setNumberOfRevenants(aliveRevs);
+        }
+
+    }, [outpostAliveQuery]);
+
+    // const clientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+    // setInGame(clientData.current_game_state);
+
+    useEffect(() => {
+
+        const gameClientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+        const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
+        const balance = getComponentValue(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
+
+        if (gameData === undefined) {
             return;
         }
         setJackpot(gameData.prize);
-        setInGame(gameData.game_state);
+        setInGame(gameData.current_game_state);
 
         setNumberOfRevenants(outpostArray.length);
 
-        const balance = getComponentValue(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
 
-        if (balance === undefined)
-        {
+        if (balance === undefined) {
+            console.error("balance is undefined");
             setReinforcementNumber(0);
         }
-        else
-        {
+        else {
             setReinforcementNumber(balance.balance);
         }
 
-      }, [outpostArray, gameData]);
+        setUserAddress(gameClientData.user_account_address);
 
+    }, [outpostArray, clientGameData]);
 
     return (
         <div className="top-bar-container-layout">
-            <div style={{  width: "100%", height: "30%" }}></div>
+            <div style={{ width: "100%", height: "30%" }}></div>
             <div className="top-bar-content-section">
                 <div className="left-section">
                     <div className="left-section-image-div">
-                       <div className="logo-img"></div>
+                        <div className="logo-img"></div>
                     </div>
                     <div className="text-section">
                         <h4>Jackpot: {Jackpot} $LORDS</h4>
@@ -79,12 +95,12 @@ export const TopBarComponent = () => {
                 </div>
                 <div className="right-section">
                     <div className="text-section">
-                        
-                        {inGame === 2? <h4>Revenants Alive: {numberOfRevenants}/2000</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
+
+                        {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/2000</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
                         <h4>Reinforcement: {reinforcementNumber}</h4>
                     </div>
-                    
-                    {isloggedIn ? <h3> <img src="LOGO_WHITE.png" className="chain-logo"></img>0x9485...213</h3> : <button>Log in now</button>}
+
+                    {isloggedIn ? <h3> <img src="LOGO_WHITE.png" className="chain-logo"></img>{truncateString(userAddress, 5)}</h3> : <button>Log in now</button>}
                 </div>
             </div>
         </div>

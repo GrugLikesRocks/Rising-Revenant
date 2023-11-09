@@ -10,7 +10,7 @@ import { useEntityQuery } from "@latticexyz/react";
 
 import { useDojo } from "../../hooks/useDojo";
 
-import { ReinforceOutpostProps } from "../../dojo/types";
+import { ConfirmEventOutpost, ReinforceOutpostProps } from "../../dojo/types";
 import { setComponentQuick } from "../../dojo/testCalls";
 import { decimalToHexadecimal } from "../../utils";
 import { GAME_CONFIG } from "../../phaser/constants";
@@ -57,6 +57,37 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
     };
 
     reinforce_outpost(reinforceOutpostProps);
+  }
+
+  const confirmEvent = async (id : number) => {
+
+    const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(clientGameData.current_game_id));
+
+    const confirmEventProps: ConfirmEventOutpost = {
+      account: account,
+      game_id: clientGameData.current_game_id,
+      event_id: gameTrackerData.event_count,
+      outpost_id: id,
+    };
+
+    await confirm_event_outpost(confirmEventProps);
+}
+
+  const confirmAll = async () => {
+    for (let index = 0; index < selectedOutposts.length; index++) {
+      const element = selectedOutposts[index];
+
+      console.error("this si gettint call")
+
+      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+      const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+
+      if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
+      {
+        await confirmEvent(clientOutpostData.id);
+      }
+
+    }
   }
 
   return (
@@ -117,7 +148,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
           </div>
         </div>
         <div className="buy-section">
-          <div className="button-style-profile">Buy Reinforcements</div>
+          <div className="button-style-profile">Buy Reinforcements (Disabled)</div>
+
+          <ClickWrapper className="button-style-profile" onMouseDown={() => {confirmAll()}}>Destory All</ClickWrapper>
         </div>
       </div>
     </div>

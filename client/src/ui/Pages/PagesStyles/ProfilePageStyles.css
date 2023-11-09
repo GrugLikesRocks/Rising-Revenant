@@ -83,8 +83,13 @@
 }
 
 .buy-section {
-  width: 100%;
+  width: 85%;
   height: 15%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 }
 
 .table-container {

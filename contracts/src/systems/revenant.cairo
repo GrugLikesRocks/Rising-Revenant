@@ -54,9 +54,9 @@ mod revenant_actions {
                 status: RevenantStatus::started
             };
 
-            let reinforcement = Reinforcement { game_id, owner: player, balance: 0 };
+           // let reinforcement = Reinforcement { game_id, owner: player, balance: 0 };
 
-            set!(world, (revenant, game_data, reinforcement));
+            set!(world, (revenant, game_data));
 
             let outpost_id = create_outpost(world, game_id);
             (entity_id, outpost_id)

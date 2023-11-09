@@ -90,7 +90,6 @@ export const DebugPage = () => {
       const revData = getComponentValueStrict(contractComponents.Revenant, element);
       const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
       const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-      console.log("game entity at id ", element, clientOutpostData[index]);
       
       console.log(revData);
       console.log(outpostData);

@@ -88,24 +88,10 @@ export const MainMenuContainer = () => {
   const clientArray = useEntityQuery([Has(clientComponents.ClientGameData)]);
 
 
-  const outpostAliveQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
-  const totalOutposts = useEntityQuery([Has(contractComponents.Outpost)]);
+  // const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
+  // const totalOutposts = useEntityQuery([Has(contractComponents.Outpost)]);
 
 
-
-
-
-  useEffect(() => {
-
-    if (outpostAliveQuery.length >= totalOutposts.length - 1) {
-      console.log("winner");
-      console.log("winner");
-      console.log("winner");
-      console.log("winner");
-      setCurrentMenuState(MenuState.WINNER);
-    }
-
-  }, [outpostAliveQuery]);
 
   // this only needs to be like this for the debug, once the game ships take out the dependency
   useEffect(() => {

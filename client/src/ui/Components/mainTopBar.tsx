@@ -36,7 +36,8 @@ export const TopBarComponent = () => {
     const outpostAliveQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
     const clientGameData = useEntityQuery([Has(clientComponents.ClientGameData)]);
 
-
+    console.log("outpostArray", outpostArray.length);
+    console.log("outpostAliveQuery", outpostAliveQuery.length);
 
     useEffect(() => {
 

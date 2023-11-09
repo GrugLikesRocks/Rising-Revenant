@@ -57,7 +57,6 @@ export const cameraManager = (layer: PhaserLayer) => {
         "tile_index": index,
       }, ["0x1"], "ClientCameraPosition", clientComponents)
 
-
       const direction = getMoveDirection(newCamPos.tile_index, index);  //get the direction it went
 
       if (direction !== null) {  // if the change was by one then normal way   //this is to change to a better way
@@ -153,8 +152,7 @@ export const cameraManager = (layer: PhaserLayer) => {
           // sprite.alpha = 1;
           // sprite.setScale(SCALE);
           let min = 80;
-          let max = 350;
-
+          let max = 700;
 
           if (totDistance < min || clientData.selected) {
             sprite.alpha = 1;

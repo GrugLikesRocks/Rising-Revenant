@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { ClickWrapper } from "./clickWrapper";
+import { ClickWrapper } from "../clickWrapper";
+
 
 export const VideoComponent = ({
   onVideoDone,

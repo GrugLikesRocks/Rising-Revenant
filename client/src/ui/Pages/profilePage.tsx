@@ -15,6 +15,7 @@ import { setComponentQuick } from "../../dojo/testCalls";
 import { decimalToHexadecimal } from "../../utils";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { ClickWrapper } from "../clickWrapper";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 interface ProfilePageProps {
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
 }
@@ -38,9 +39,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
 
   const moveCameraHere = (x: number, y: number) => {
 
-    const clientCameraComp = getComponentValueStrict(clientComponents.ClientCameraPosition, decimalToHexadecimal(GAME_CONFIG));
+    const clientCameraComp = getComponentValueStrict(clientComponents.ClientCameraPosition, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
     
-    setComponentQuick({"x": x, "y": y, "tile_index": clientCameraComp.tile_index},[decimalToHexadecimal(GAME_CONFIG)], "ClientCameraPosition", clientComponents);
+    setComponentQuick({"x": x, "y": y, "tile_index": clientCameraComp.tile_index},[getEntityIdFromKeys([BigInt(GAME_CONFIG)])], "ClientCameraPosition", clientComponents);
             
   }
 

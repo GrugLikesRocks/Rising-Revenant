@@ -1,7 +1,7 @@
 import {
     Has,
     defineSystem,
-    getComponentValueStrict,
+    getComponentValueStrict, getComponentValue,
     getComponentEntities,
     setComponent,
     EntityIndex,
@@ -10,6 +10,7 @@ import {
   import { GAME_CONFIG } from "../constants";
 import { setComponentQuick } from "../../dojo/testCalls";
 import { decimalToHexadecimal } from "../../utils";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 
   export const eventManager = (layer: PhaserLayer) => {
     const {
@@ -25,12 +26,15 @@ import { decimalToHexadecimal } from "../../utils";
   
     defineSystem(world, [Has(WorldEvent)], ({ entity }) => {
 
-      const dataEvent = getComponentValueStrict(WorldEvent, entity);
-      const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+      const dataEvent = getComponentValue(WorldEvent, entity);
+      const clientGameData = getComponentValue(ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
-      if (!dataEvent) {  // this doesnt make sense
+      if (!dataEvent || !clientGameData) {  // this doesnt make sense
         return;
       }
+
+      console.log(dataEvent)
+      console.log("\n\n\n\n\n\n")
 
       const phaserScene = layer.scenes.Main.phaserScene;
 

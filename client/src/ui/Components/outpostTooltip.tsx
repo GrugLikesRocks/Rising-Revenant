@@ -16,16 +16,15 @@ import { ConfirmEventOutpost } from "../../dojo/types";
 
 import { setTooltipArray } from "../../phaser/systems/eventSystems/eventEmitter";
 import { decimalToHexadecimal, truncateString } from "../../utils";
-import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
-import { get } from "http";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 interface OutpostTooltipProps { }
 
 export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
   const [selectedIndexFromArray, setSelectedIndexFromArray] = useState<any>(0);
   const [entityIdSelected, setEntityIdSelected] = useState<any>(0);
-  const [selectedIndex, setSelectedIndex] = useState<any>(0);
+  const [selectedIndex, setSelectedIndex] = useState<any>(1);
 
   const [arrayOfEntities, setArrayOfEntities] = useState<any>([]);
 
@@ -92,7 +91,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
   const revenantData = getComponentValueStrict(contractComponents.Revenant, entityIdSelected);
   const outpostData = getComponentValueStrict(contractComponents.Outpost, entityIdSelected);
 
-  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
   const gameTrackerData = getComponentValueStrict(contractComponents.GameTracker, decimalToHexadecimal(clientGameData.current_game_id));
 
   const ChangeCounter = (number: number) => {

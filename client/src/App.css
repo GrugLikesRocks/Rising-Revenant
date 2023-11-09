@@ -1,5 +1,6 @@
 * {
   overflow: hidden;
+  user-select: none;
 }
 
 
@@ -45,6 +46,27 @@
 .embedded-text-icon
 {
 
+}
+
+ /* Firefox */
+ * {
+  /* scrollbar-width: auto; */
+  scrollbar-color: #dddfdc #1a1e23;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1a1e23;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #dddfdc;
+  border-radius: 16px;
+  border: 0px solid #ffffff;
 }
 
 

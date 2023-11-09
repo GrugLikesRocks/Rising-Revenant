@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { useDojo } from "../hooks/useDojo";
-import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
-import { createComponentStructure, getFullEventGameData, getFullOutpostGameData, getGameEntitiesSpecific, getGameTrackerEntity } from "../dojo/testCalls";
-import { setComponentFromGraphQLEntity } from "@dojoengine/utils";
+import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
+import { createComponentStructure, getFullEventGameData, getFullOutpostGameData, getGameEntitiesSpecific, getGameTrackerEntity, setClientGameComponent } from "../dojo/testCalls";
+import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { decimalToHexadecimal } from "../utils";
 import { CreateGameProps } from "../dojo/types";
+import { getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
+
 
 export const LoadingComponent = ({
     handleLoadingComplete,
 }: {
-    handleLoadingComplete: React.Dispatch<React.SetStateAction<boolean>>;
+    handleLoadingComplete: () => void;
 }) => {
+
     const {
         account: { account },
         networkLayer: {
-            systemCalls: { create_game },
+            systemCalls: { create_game, view_block_count },
             network: { graphSdk, contractComponents, clientComponents },
         },
     } = useDojo();
@@ -51,9 +54,8 @@ export const LoadingComponent = ({
 
             await Promise.all(imagePromises);
 
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            // await new Promise((resolve) => setTimeout(resolve, 5000));
         };
-
 
         const createClientComponent = async (game_id: number, start_block: number, prep_phase_length: number) => {
 
@@ -83,31 +85,19 @@ export const LoadingComponent = ({
             craftedEdgeGT = createComponentStructure(componentSchemaClientClick, keys, componentName);
             setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT)
 
-            const current_block = 40;
-            let phase =3;
+            const current_block = await view_block_count();
 
-            if (start_block + prep_phase_length > current_block) {
+            let phase = 3;
+
+            if (start_block + prep_phase_length > current_block!) {
                 phase = 1;
             }
-            else
-            {
+            else {
                 phase = 2;
             }
 
-            //should pro be an enum but 1 is perp and 2 is game
-            const componentSchemaClientGameData = {
-                "current_game_state": phase,
-                "user_account_address": account.address,
-                "current_game_id": game_id,
-                "current_block_number": current_block,
-            };
-
-            componentName = "ClientGameData";
-
-            craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, keys, componentName);
-            setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
-        }
-
+            await setClientGameComponent(phase, account.address, game_id, current_block!, clientComponents);
+        };
 
         const fetchTheCurrentGame = async () => {
             let last_game_id: any = await getGameTrackerEntity();
@@ -130,31 +120,17 @@ export const LoadingComponent = ({
             setComponentFromGraphQLEntity(contractComponents, craftedEdgeGT);
 
             const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(last_game_id));
-            
-
-            console.log("\n\n\n\n\n")
-
-            console.log(entityEdge)
-
-
-            console.log("\n\n\n\n\n")
-
             await createClientComponent(last_game_id, entityEdge.node.models[0].start_block_number, entityEdge.node.models[0].preparation_phase_interval);
 
             setComponentFromGraphQLEntity(contractComponents, entityEdge);
 
-
-            // await createClientComponent(last_game_id, );  // this will send an error but nothing big
-
-
             await fetchEvents(decimalToHexadecimal(last_game_id), entityEdge.node.models[1].event_count);
+            await getReinforcement();
             return {
                 hexLastGameId: decimalToHexadecimal(last_game_id),
                 revenantCount: entityEdge.node.models[1].revenant_count
             };
-
         };
-
 
         const fetchTheRevenant = async (game_id: string, rev_amount: number) => {
             // const entity = await getOutpostEntitySpecific(graphSdk, game_id, "0x1");
@@ -188,37 +164,46 @@ export const LoadingComponent = ({
 
                 setComponentFromGraphQLEntity(contractComponents, element);
             }
-
-
-            handleLoadingComplete();
         };
 
         const getReinforcement = async () => {
 
-        }
+        };
 
         const fetchEvents = async (game_id: string, event_amount: number) => {
 
             const data = await getFullEventGameData(graphSdk, game_id, event_amount);
-
-            // console.log("\n\n\n\n\n\n")
-            // console.log(data)
 
             for (let index = 0; index < data.length; index++) {
                 const element = data[index];
 
                 setComponentFromGraphQLEntity(contractComponents, element);
             }
-
-            console.log("\n\n\n\n\n\n")
-
-
-        }
+        };
 
         const orderOfOperations = async () => {
             await preloadImages();
             const entity_data = await fetchTheCurrentGame();
             await fetchTheRevenant(entity_data.hexLastGameId, entity_data.revenantCount);
+
+            await checkLoadingComplete();
+        };
+
+        const checkLoadingComplete = async () => {
+
+            const clientGameData = getComponentValue(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+
+            const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
+            const gameTracker = getComponentValue(contractComponents.GameTracker, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
+
+            if (gameData === undefined || gameTracker === undefined || clientGameData === undefined) {
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                console.log("there was an error in the laoding of all assets, going to try again")
+                orderOfOperations();
+            }
+            else {
+                handleLoadingComplete();
+            }
         };
 
         console.log("Loading data...");
@@ -226,6 +211,6 @@ export const LoadingComponent = ({
     }, []);
 
     return <>
-        <h1 style={{position:"absolute", top:"50%", left:"50%", color:"white"}}>LOADING...</h1>
+        <h1 style={{ position: "absolute", top: "50%", left: "50%", color: "white" }}>LOADING...</h1>
     </>;
 };

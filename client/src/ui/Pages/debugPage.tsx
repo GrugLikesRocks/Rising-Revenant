@@ -20,20 +20,17 @@ import {
 import { createSystemCalls } from "../../dojo/createSystemCalls";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getGameTrackerEntity } from "../../dojo/testQueries";
-import { getFullOutpostGameData, getGameEntitiesSpecific, getOutpostEntitySpecific } from "../../dojo/testCalls";
+import { getFullOutpostGameData, getGameEntitiesSpecific, getOutpostEntitySpecific, setClientGameComponent } from "../../dojo/testCalls";
 import {  decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
-interface DebugPageProps {
-  setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
-}
 
-export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
+export const DebugPage = () => {
   const {
     account: { account },
     networkLayer: {
       network: { contractComponents, clientComponents,graphSdk },
-      systemCalls: {  create_revenant, create_event },
+      systemCalls: {  create_revenant, create_event,view_block_count },
 
     },
   } = useDojo();
@@ -116,8 +113,6 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     let comp = getComponentValueStrict(contractComponents.Game, gameArray[0]);
 
-
-
     console.log("game entity", comp);
     comp = getComponentValueStrict(contractComponents.GameEntityCounter, gameEntityCounterArray[0]);
     console.log("game entity counter", comp);
@@ -166,6 +161,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
     console.log("\nend of array of client outpost Data\n\n")
   }
+
   //#endregion 
 
 
@@ -191,7 +187,8 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
   const printAllSavedDataEvents = () => {
     for (let index = 0; index < eventArray.length; index++) {
       const element = eventArray[index];
-     
+
+    
       const eventData = getComponentValueStrict(contractComponents.WorldEvent, element);
       // console.log("game entity at id ", element);
       
@@ -201,7 +198,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
 
   //#endregion
 
-  const gameEntityTracker = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData,  decimalToHexadecimal(GAME_CONFIG)).current_game_id));
+  const gameEntityTracker = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)])).current_game_id));
 
   return (
     <ClickWrapper className="revenant-jurnal-page-container">
@@ -231,7 +228,7 @@ export const DebugPage: React.FC<DebugPageProps> = ({ setMenuState }) => {
             <h3>There are currently {gameArray.length} games (1)</h3>
             <h3>There are currently {gameTrackerArray.length} game tracker (1)</h3>
             <h3>There are currently {gameEntityCounterArray.length} game entity counter (1)</h3>
-            <h3>Current Game id is {getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_id} and should be {getComponentValueStrict(contractComponents.GameTracker, decimalToHexadecimal(GAME_CONFIG)).count}</h3>
+            <h3>Current Game id is {getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)])).current_game_id} and should be {getComponentValueStrict(contractComponents.GameTracker, getEntityIdFromKeys([BigInt(GAME_CONFIG)])).count}</h3>
           </div>
         </div>
 

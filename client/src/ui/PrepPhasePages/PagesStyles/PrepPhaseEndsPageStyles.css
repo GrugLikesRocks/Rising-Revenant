@@ -8,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 
     user-select: none;
 }
@@ -25,4 +26,15 @@
 .hover-effect:hover
 {
     cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+
+    width: 60%;
+    height: 10%;
+
 }

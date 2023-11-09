@@ -6,9 +6,11 @@ import {
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
-import {setEntityGroup, Assets} from "../constants";
+import {setEntityGroup, Assets, GAME_CONFIG} from "../constants";
 
 import { drawPhaserLayer } from "./eventSystems/eventEmitter";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
+import { decimalToHexadecimal } from "../../utils";
 
 export const mapSpawn = (layer: PhaserLayer) => {
   const {
@@ -51,7 +53,8 @@ export const mapSpawn = (layer: PhaserLayer) => {
   });
 
   defineSystem(world, [Has(ClientGameData)], ({ entity }) => {
-    const clientGameData = getComponentValueStrict(ClientGameData, entity);
+
+    const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
 
     if (clientGameData.current_game_state === 1)
     {

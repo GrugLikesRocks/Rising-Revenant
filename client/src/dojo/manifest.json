@@ -858,7 +858,7 @@
     {
       "name": "game_actions",
       "address": "0x12e8bdf2c712c8a45ccd016b58642d14fb2ae39ae7aede435fbbaf8390931da",
-      "class_hash": "0x799243ac9ecde7c77814e0ed8764b6cf8cccf8cccf7445231c45f95a0856a1b",
+      "class_hash": "0xb9128419873f385be7daa55543ba43c8c8dec639285010466cb29f4cdcfdd7",
       "abi": [
         {
           "type": "impl",
@@ -918,6 +918,17 @@
             },
             {
               "type": "function",
+              "name": "get_current_block",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u64"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
               "name": "refresh_status",
               "inputs": [
                 {
@@ -952,7 +963,7 @@
     {
       "name": "revenant_actions",
       "address": "0x4afb8ecb9513d031c5c4dda51b9196031aa5b011a66193c6c39cae2881b7a6c",
-      "class_hash": "0x745fe0dfc7dca45f7d0cbb9c6a90331223e259d6a53e7b8199d8548967e6c69",
+      "class_hash": "0x290f6d93be715d59a45cab33ec89b69fd8372ae550500f7387679c19372f1f1",
       "abi": [
         {
           "type": "impl",

@@ -37,10 +37,12 @@ export const NavbarComponent: React.FC<NavbarProps> = ({ menuState, setMenuState
       <div className={`navbar-icon ${menuState === MenuState.STATS ? "active" : "not-active"}`} onClick={() => handleIconClick(MenuState.STATS)}>
         <img src="Icons/STATISTICS.png" alt="" />
       </div>
-      <div className={`navbar-icon ${menuState === MenuState.SETTINGS ? "active" : "not-active"}`} onClick={() => handleIconClick(MenuState.SETTINGS)}>
+      {/* onClick={() => handleIconClick(MenuState.SETTINGS)} */}
+      <div className={`navbar-icon ${menuState === MenuState.SETTINGS ? "active" : "not-active"}`}  style={{backgroundColor: "grey"}}>
         <img src="Icons/SETTINGS.png" alt="" />
       </div>
-      <div className={`navbar-icon ${menuState === MenuState.TRADES ? "active" : "not-active"}`} onClick={() => handleIconClick(MenuState.TRADES)}>
+      {/* onClick={() => handleIconClick(MenuState.TRADES)} */}
+      <div className={`navbar-icon ${menuState === MenuState.TRADES ? "active" : "not-active"}`}  style={{backgroundColor: "grey"}} >   
         <img src="Icons/TRADES.png" alt="" />
       </div>
       <div className={`navbar-icon ${menuState === MenuState.RULES ? "active" : "not-active"}`} onClick={() => handleIconClick(MenuState.RULES)}>

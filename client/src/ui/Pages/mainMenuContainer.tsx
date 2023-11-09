@@ -25,14 +25,11 @@ import { TradesPage } from './tradesPage';
 import { RevenantJurnalPage } from './revenantJurnalPage';
 import { StatsPage } from './statsPage';
 import { WinnerPage } from './winnerPage';
-import { BuyReinforcementPage } from './buyReinforcementsPage';
-import { PrepPhaseEndsPage } from './preparationPhaseEndsPage';
-import { BuyRevenantPage } from "./summonRevenantPage";
 
 import { DebugPage } from './debugPage';
 import { useDojo } from '../../hooks/useDojo';
-import { setComponentFromGraphQLEntity } from '@dojoengine/utils';
-import { createComponentStructure, getGameEntitiesSpecific, getOutpostEntitySpecific, setComponentQuick } from '../../dojo/testCalls';
+import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from '@dojoengine/utils';
+import { createComponentStructure, getGameEntitiesSpecific, getOutpostEntitySpecific, getUpdatedGameData, setClientGameComponent, setComponentQuick } from '../../dojo/testCalls';
 import { decimalToHexadecimal } from '../../utils';
 import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from '../../phaser/constants';
 import { useWASDKeys } from '../../phaser/systems/eventSystems/keyPressListener';
@@ -46,9 +43,6 @@ export enum MenuState {
   RULES,
   REV_JURNAL,
   WINNER,
-  BUY_REINF,
-  PREP_PHASE_SCENE,
-  BUY_REV,
   Debug
 }
 
@@ -56,13 +50,13 @@ export enum MenuState {
 
 export const MainMenuContainer = () => {
   const [currentMenuState, setCurrentMenuState] = useState(MenuState.NONE);
-  const [gamePhase, setGamePhase] = useState(3);
 
   const keysDown = useWASDKeys();
 
   const {
     account: { account },
     networkLayer: {
+      systemCalls: { view_block_count },
       network: { graphSdk, contractComponents, clientComponents },
     },
   } = useDojo();
@@ -102,17 +96,6 @@ export const MainMenuContainer = () => {
           setCurrentMenuState(MenuState.Debug);
         }
       }
-
-
-      if (event.key === 'r') {
-        setCurrentMenuState(MenuState.BUY_REINF);
-      }
-
-
-      if (event.key === 't') {
-        setGamePhase(getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_state);
-        setCurrentMenuState(MenuState.NONE);
-      }
     };
 
     window.addEventListener('keydown', handleKeyPress);
@@ -125,64 +108,12 @@ export const MainMenuContainer = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       console.log('Running code every 10 seconds');
-      getUpdatedGameData();
+
+      getUpdatedGameData(view_block_count, clientComponents,contractComponents,account.address,graphSdk);
 
     }, 10000);
 
-    const getUpdatedGameData = async () => {
-
-      const clientGameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
-
-      const gameComp = getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(clientGameComp.current_game_id));
-      const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(gameComp.current_game_id));
-
-      const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
-
-      const revenantCount = entityEdge.node.models[1].revenant_count;
-      const outpostCount = entityEdge.node.models[1].outpost_count;
-      const eventCount = entityEdge.node.models[1].event_count;
-
-      if (revenantCount > gameEntityCounter.revenant_count || outpostCount > gameEntityCounter.outpost_count) {
-
-        for (let index = gameEntityCounter.revenant_count + 1; index < revenantCount + 1; index++) {
-
-          const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), decimalToHexadecimal(index));
-
-          const owner = entity.edges[0].node.models[0].owner;
-          const key = +entity.edges[0].node.models.entity_id;
-
-          let owned = false;
-
-          console.log(owner)
-          console.log(account.address)
-          if (owner === account.address) { owned = true; }
-
-          const componentSchemaClientOutpostData = {
-            "id": key,
-            "owned": owned,
-            "event_effected": false,
-            "selected": false,
-            "visible": false
-          };
-
-          const keys = ["0x1", decimalToHexadecimal(index)];
-          const componentName = "ClientOutpostData";
-
-          const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
-          setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
-
-
-          setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
-        }
-      }
-
-      if (eventCount > gameEntityCounter.event_count) {
-        console.log("new event");
-
-      }
-
-      setComponentFromGraphQLEntity(contractComponents, entityEdge);
-    }
+    
 
     return () => clearInterval(intervalId);
   }, []);
@@ -200,7 +131,7 @@ export const MainMenuContainer = () => {
     const update = () => {
       const current_pos = getComponentValue(
         clientComponents.ClientCameraPosition,
-        decimalToHexadecimal(GAME_CONFIG)
+        getEntityIdFromKeys([BigInt(GAME_CONFIG)])
       );
 
       if (!current_pos) {
@@ -244,7 +175,7 @@ export const MainMenuContainer = () => {
       if (newX !== prevX || newY !== prevY) {
 
 
-        setComponentQuick({ "x": newX, "y": newY, "tile_index": current_pos.tile_index }, [decimalToHexadecimal(GAME_CONFIG)], "ClientCameraPosition", clientComponents);
+        setComponentQuick({ "x": newX, "y": newY, "tile_index": current_pos.tile_index }, [getEntityIdFromKeys([BigInt(GAME_CONFIG)])], "ClientCameraPosition", clientComponents);
 
         prevX = newX;
         prevY = newY;
@@ -261,15 +192,12 @@ export const MainMenuContainer = () => {
     };
   }, [keysDown]);
 
-  // setGamePhase(getComponentValueStrict(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG)).current_game_state);
-
   return (
     <>
       <div className="main-page-container-layout">
         <div className='main-page-topbar'>
           <TopBarComponent />
         </div>
-
 
         <div className='main-page-content'>
           {currentMenuState !== MenuState.NONE && (
@@ -281,28 +209,18 @@ export const MainMenuContainer = () => {
               {currentMenuState === MenuState.STATS && <StatsPage setMenuState={setCurrentMenuState} />}
               {currentMenuState === MenuState.REV_JURNAL && <RevenantJurnalPage setMenuState={setCurrentMenuState} />}
               {currentMenuState === MenuState.WINNER && <WinnerPage setMenuState={setCurrentMenuState} />}
-              {currentMenuState === MenuState.BUY_REINF && <BuyReinforcementPage setMenuState={setCurrentMenuState} />}
-              {currentMenuState === MenuState.PREP_PHASE_SCENE && <PrepPhaseEndsPage setMenuState={setCurrentMenuState} />}
-              {currentMenuState === MenuState.BUY_REV && <BuyRevenantPage setMenuState={setCurrentMenuState} />}
-              {currentMenuState === MenuState.Debug && <DebugPage setMenuState={setCurrentMenuState} />}
-
+              {currentMenuState === MenuState.Debug && <DebugPage />}
             </div>
           )}
         </div>
-
-        {gamePhase === 1 && <div className='prep-phase-text'> <h2> Preparation phase ends in <br /> DD: 5 HH: 5 MM: 5 SS: 5</h2></div>};
-
       </div>
 
-      {gamePhase === 2 && <div className='main-page-topbar'>
+      <div className='main-page-topbar'>
         <NavbarComponent menuState={currentMenuState} setMenuState={setCurrentMenuState} onIconClick={handleIconClick} />
-
       </div>
-      }
 
-      {currentMenuState === MenuState.NONE && gamePhase === 2 && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
-      {currentMenuState === MenuState.NONE && gamePhase === 2 && <OutpostTooltipComponent />}
-
+      {currentMenuState === MenuState.NONE && <JurnalEventComponent setMenuState={setCurrentMenuState} />}
+      {currentMenuState === MenuState.NONE && <OutpostTooltipComponent />}
     </>
   );
 }

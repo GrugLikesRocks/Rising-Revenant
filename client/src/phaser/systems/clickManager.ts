@@ -10,11 +10,9 @@ import {
   setComponent
 } from "@latticexyz/recs";
 
-
 import { setTooltipArray } from "./eventSystems/eventEmitter";
-import { GAME_CONFIG, OUTPOST_HEIGHT, OUTPOST_WIDTH, SCALE } from "../constants";
+import { GAME_CONFIG, OUTPOST_HEIGHT, OUTPOST_WIDTH } from "../constants";
 import { setComponentQuick } from "../../dojo/testCalls";
-import { decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 export const clickManager = (layer: PhaserLayer) => {
@@ -35,10 +33,8 @@ export const clickManager = (layer: PhaserLayer) => {
       return;
     }
 
-
-    let clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
-    let clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
-
+    const clickRelativeToMiddlePointX = pointer.x - camera.phaserCamera.width / 2;
+    const clickRelativeToMiddlePointY = pointer.y - camera.phaserCamera.height / 2;
 
     setComponentQuick(
       {
@@ -66,25 +62,22 @@ export const clickManager = (layer: PhaserLayer) => {
 
     let zoomVal:number = 0;
 
-    // camera.zoom$.subscribe((zoom) => {zoomVal = zoom;});
-    // console.log(zoomVal);
+    camera.zoom$.subscribe((zoom) => {zoomVal = zoom;});
+    console.log(zoomVal);
   
     if (positionCenterCam === undefined) { return; }
 
+    let positionX = (positionClick.xFromMiddle/zoomVal) + positionCenterCam.x;
+    let positionY = (positionClick.yFromMiddle/zoomVal) + positionCenterCam.y;
 
-    //zoom is broken
-    // let positionX = (positionClick.xFromMiddle/zoomVal) + positionCenterCam.x;
-    // let positionY = (positionClick.yFromMiddle/zoomVal) + positionCenterCam.y;
+    console.log(positionX, positionY)
 
+    // let positionX = (positionClick.xFromMiddle) + positionCenterCam.x;
+    // let positionY = (positionClick.yFromMiddle) + positionCenterCam.y;
 
-    let positionX = (positionClick.xFromMiddle) + positionCenterCam.x;
-    let positionY = (positionClick.yFromMiddle) + positionCenterCam.y;
+    let foundEntity: EntityIndex[] = []; // store the found entity
 
-
-
-    let foundEntity:   EntityIndex[] = []; // store the found entity
-
-    const clientGameData = getComponentValue(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+    const clientGameData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
     for (const outpostEntityValue of outpostArray) {
 
@@ -93,7 +86,6 @@ export const clickManager = (layer: PhaserLayer) => {
       const outpostData = getComponentValueStrict(Outpost, outpostEntityValue);
 
       // const playerObj = objectPool.get(getEntityIdFromKeys([BigInt(clientGameData.current_game_id ), BigInt(clientOutpostData.id)]), "Sprite");
-
 
       // this is broken
       // playerObj.setComponent({
@@ -121,8 +113,6 @@ export const clickManager = (layer: PhaserLayer) => {
       //     }
       //   },
       // });
-
-
 
 
       //do this for now but need to find a solution

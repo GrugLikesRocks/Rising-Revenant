@@ -67,13 +67,6 @@ export const cameraManager = (layer: PhaserLayer) => {
 
         const data = compareAdjacentIndexes(oldAdjacent, newAdjacent);
 
-        console.log("old adjacent")
-        console.log(oldAdjacent)
-        console.log("new adjacent")
-        console.log(newAdjacent)
-        console.log("data")
-        console.log(data)
-
         for (const index of data.newAdjacent) {
           const entityArray = getEntityArrayAtIndex(index);
           for (const entity of entityArray) {

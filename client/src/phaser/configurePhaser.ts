@@ -67,10 +67,10 @@ export const phaserConfig = {
         mode: Phaser.Scale.NONE,
     }),
     cameraConfig: defineCameraConfig({
-        // pinchSpeed: 0.01,
-        // wheelSpeed: 0,
-        // maxZoom: 2,
-        // minZoom: 0.4,
+        pinchSpeed: 0.01,
+        wheelSpeed: 0,
+        maxZoom: 2,
+        minZoom: 0.4,
     }),
 
     cullingChunkSize: 10000 * 5024,

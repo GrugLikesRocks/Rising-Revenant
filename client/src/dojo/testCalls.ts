@@ -1,8 +1,16 @@
 import { request, gql } from 'graphql-request';
 import { decimalToHexadecimal } from '../utils';
-import { setComponentFromGraphQLEntity } from '@dojoengine/utils';
+import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from '@dojoengine/utils';
+import { GAME_CONFIG } from '../phaser/constants';
 
+import {
+  EntityIndex,
+  Has,
+  getComponentValue,
+  getComponentValueStrict,
+} from "@latticexyz/recs";
 
+// this script is a mess
 
 
 interface DataFormatted {
@@ -60,14 +68,6 @@ function removeModelsByTypename(data: Data, typenamesToRemove: string[]): Data {
 
 
 
-interface Model {
-  __typename: string;
-}
-
-interface Node {
-  keys: string[];
-  models: Model[];
-}
 
 interface Edge {
   node: Node;
@@ -237,8 +237,6 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
 
       const entities: any = await getEventEntity(game_id, decimalToHexadecimal(index));
 
-      console.log("this is the entities in the event call", entities)
-
       const stuff = createComponentStructure({
         "block_number": entities[0].node.models[2].block_number,
         "destroy_count": entities[0].node.models[2].destroy_count,
@@ -246,9 +244,9 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
         "game_id": entities[0].node.models[2].game_id,
         "radius": entities[0].node.models[2].radius,
         "x": entities[0].node.models[2].x,
-        "y":entities[0].node.models[2].y,
+        "y": entities[0].node.models[2].y,
 
-      }, [entities[0].node.keys[0],entities[0].node.keys[1]], "WorldEvent")
+      }, [entities[0].node.keys[0], entities[0].node.keys[1]], "WorldEvent")
 
       console.log(stuff)
 
@@ -261,13 +259,6 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
     throw error;
   }
 };
-
-// function removeModels(inputObject: any): any {
-//   if (inputObject && inputObject.node && inputObject.node.models) {
-//       inputObject.node.models = inputObject.node.models.filter(model => !model.__typename);
-//   }
-//   return inputObject;
-// }
 
 
 
@@ -318,8 +309,97 @@ export async function getEventEntity(game_id: string, entity_id: string) {
 //#endregion
 
 
-
 export function setComponentQuick(schema: any, keys: string[], componentName: string, components: any) {
   const component = createComponentStructure(schema, keys, componentName);
   setComponentFromGraphQLEntity(components, component);
+}
+
+
+
+export const setClientGameComponent = async (phase: number, account: string, game_id: number, current_block: number, clientComponents: any)  =>  {
+
+  const componentSchemaClientGameData = {
+    "current_game_state": phase,
+    "user_account_address": account,
+    "current_game_id": game_id,
+    "current_block_number": current_block,
+  };
+
+  console.log("\n\n\n\n\n\n")
+  console.log(componentSchemaClientGameData);
+
+  const craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, ["0x1"], "ClientGameData");
+  setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
+}
+
+
+
+export const getUpdatedGameData = async (view_block_count: any, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
+
+  const blockCount = await view_block_count();
+  const clientGameComp = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+  const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));
+  const gameComponent = getComponentValueStrict(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));
+
+
+  let phase = 2;
+  if (clientGameComp.game_phase === 1) {
+
+    if (gameComponent.start_block_number + gameComponent.preparation_phase_interval > blockCount!) {
+      phase = 1;
+    }
+    else {
+      phase = 2;
+    }
+  }
+
+  setClientGameComponent(phase, clientGameComp.user_account_address, clientGameComp.current_game_id, blockCount!, clientComponents);
+
+  const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
+
+  const revenantCount = entityEdge.node.models[1].revenant_count;
+  const outpostCount = entityEdge.node.models[1].outpost_count;
+  const eventCount = entityEdge.node.models[1].event_count;
+
+  if (revenantCount > gameEntityCounter.revenant_count || outpostCount > gameEntityCounter.outpost_count) {
+
+    for (let index = gameEntityCounter.revenant_count + 1; index < revenantCount + 1; index++) {
+
+      const entity: any = await getOutpostEntitySpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), decimalToHexadecimal(index));
+
+      const owner = entity.edges[0].node.models[0].owner;
+      const key = +entity.edges[0].node.models[0].entity_id;
+
+      let owned = false;
+
+      if (owner === address) { owned = true; }
+
+      const componentSchemaClientOutpostData = {
+        "id": key,
+        "owned": owned,
+        "event_effected": false,
+        "selected": false,
+        "visible": false
+      };
+
+      const keys = ["0x1", decimalToHexadecimal(index)];
+      const componentName = "ClientOutpostData";
+
+      const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
+      setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
+
+      setComponentFromGraphQLEntity(contractComponents, entity.edges[0]);
+    }
+  }
+
+  if (eventCount > gameEntityCounter.event_count) {
+    console.log("new event");
+
+
+  }
+
+
+
+
+  setComponentFromGraphQLEntity(contractComponents, entityEdge);
 }

@@ -16,7 +16,7 @@ import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
-    { execute, contractComponents, clientComponents }: SetupNetworkResult,
+    { execute, contractComponents, clientComponents, call }: SetupNetworkResult,
     {
         Game,
         GameEntityCounter,
@@ -68,8 +68,6 @@ export function createSystemCalls(
 
     const create_revenant = async ({ account, game_id, name }: CreateRevenantProps) => {
 
-        
-
         try {
             const tx = await execute(account, "revenant_actions", "create", [game_id, name]);
             const receipt = await account.waitForTransaction(
@@ -89,6 +87,17 @@ export function createSystemCalls(
             notify('Failed to create revenant');
         }
     };
+
+    const view_block_count = async () => {
+        try {
+            const tx: any = await call("game_actions", "get_current_block", []);
+            // console.log(tx.result[0])
+            return hexToDecimal(tx.result[0])
+            // return 90;
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const purchase_reinforcement = async ({ account, game_id, count }: PurchaseReinforcementProps) => {
 
@@ -256,6 +265,12 @@ export function createSystemCalls(
         purchase_reinforcement,
         reinforce_outpost,
         create_event,
-        confirm_event_outpost
+        confirm_event_outpost,
+        view_block_count
     };
+}
+
+function hexToDecimal(hexString: string): number {
+    const decimalResult: number = parseInt(hexString, 16);
+    return decimalResult;
 }

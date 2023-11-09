@@ -68,12 +68,12 @@ mod revenant_actions {
             let mut game = get!(world, game_id, Game);
             game.assert_can_create_outpost(world);
 
-            let erc20 = IERC20Dispatcher { contract_address: game.erc_addr };
-            let result = erc20
-                .transfer_from(
-                    sender: player, recipient: get_contract_address(), amount: count.into()
-                );
-            assert(result, 'need approve for erc20');
+            // let erc20 = IERC20Dispatcher { contract_address: game.erc_addr };
+            // let result = erc20
+            //     .transfer_from(
+            //         sender: player, recipient: get_contract_address(), amount: count.into()
+            //     );
+            // assert(result, 'need approve for erc20');
 
             let mut reinforcements = get!(world, (game_id, player), Reinforcement);
             reinforcements.balance += count;

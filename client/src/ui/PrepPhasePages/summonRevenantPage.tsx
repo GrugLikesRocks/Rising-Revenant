@@ -8,7 +8,6 @@ import { useEntityQuery } from "@latticexyz/react";
 
 import "./PagesStyles/BuyingPageStyle.css"
 
-import { MenuState } from "../Pages/mainMenuContainer";
 import { ClickWrapper } from "../clickWrapper";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
@@ -19,14 +18,11 @@ interface BuyRevenantPageProps {
 }
 
 
-const IMAGES = ["./revenants/1.png", "./revenants/2.ong", "./revenants/3.png", "./revenants/4.png", "./revenants/5.png"]
+const IMAGES = ["./revenants/1.png", "./revenants/2.png", "./revenants/3.png", "./revenants/4.png", "./revenants/5.png"]
 
 export const BuyRevenantPage: React.FC<BuyRevenantPageProps> = ({ setMenuState }) => {
     const [revenantNumber, setRevenantNumber] = useState(5);
     const [backgroundImage, setBackgroundImage] = useState("");
-
-
-
 
     const {
         account: { account },

@@ -197,14 +197,20 @@ export const getFullOutpostGameData = async (graphSDK_: any, game_id: string, en
 };
 
 
-export const getReinforcementSpecific = async (graphSDK_: any, game_id: string, owner: string): Promise<DataFormatted> => {
+export const getReinforcementSpecific = async (graphSDK_: any, game_id: string, owner: string) => {
   const {
     data: { entities },
   } = await graphSDK_().getReinforcement({ game_id: game_id, owner: owner })
 
-
-  console.log("this is the entities in the reinforcmetn call", entities)
-  // const { allKeys, gameModels } = getDataFormatted(entities, "Reinforcement")
+  if (entities.edges.length === 0) {
+    return undefined;
+  }
+  else {
+    console.log("\n\n\n\n\n\n")
+    console.log(entities);
+    console.log("\n\n\n\n\n\n")
+  
+  }
 
   return entities;
 }
@@ -316,7 +322,7 @@ export function setComponentQuick(schema: any, keys: string[], componentName: st
 
 
 
-export const setClientGameComponent = async (phase: number, account: string, game_id: number, current_block: number, clientComponents: any)  =>  {
+export const setClientGameComponent = async (phase: number, account: string, game_id: number, current_block: number, clientComponents: any) => {
 
   const componentSchemaClientGameData = {
     "current_game_state": phase,
@@ -332,8 +338,6 @@ export const setClientGameComponent = async (phase: number, account: string, gam
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
 }
 
-
-
 export const getUpdatedGameData = async (view_block_count: any, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
 
   const blockCount = await view_block_count();
@@ -341,16 +345,13 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
   const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));
   const gameComponent = getComponentValueStrict(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));
 
-
   let phase = 2;
-  if (clientGameComp.game_phase === 1) {
 
-    if (gameComponent.start_block_number + gameComponent.preparation_phase_interval > blockCount!) {
-      phase = 1;
-    }
-    else {
-      phase = 2;
-    }
+  if (gameComponent.start_block_number + gameComponent.preparation_phase_interval > blockCount!) {
+    phase = 1;
+  }
+  else {
+    phase = 2;
   }
 
   setClientGameComponent(phase, clientGameComp.user_account_address, clientGameComp.current_game_id, blockCount!, clientComponents);
@@ -392,14 +393,25 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
     }
   }
 
-  if (eventCount > gameEntityCounter.event_count) {
-    console.log("new event");
-
-
+  const balanceGrapqhql = await getReinforcementSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), address);
+  if (balanceGrapqhql !== undefined) {
+    setComponentFromGraphQLEntity(contractComponents, balanceGrapqhql.edges[0]);
   }
 
-
-
+  loadEvents(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id), eventCount, contractComponents);
 
   setComponentFromGraphQLEntity(contractComponents, entityEdge);
+}
+
+
+const loadEvents = async (graphSdk: any, game_id: string, event_amount: number, contractComponents: any) => {
+
+
+  const data = await getFullEventGameData(graphSdk, game_id, event_amount);
+
+  for (let index = 0; index < data.length; index++) {
+    const element = data[index];
+
+    setComponentFromGraphQLEntity(contractComponents, element);
+  }
 }

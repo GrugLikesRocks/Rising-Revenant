@@ -962,8 +962,8 @@
     },
     {
       "name": "revenant_actions",
-      "address": "0x4afb8ecb9513d031c5c4dda51b9196031aa5b011a66193c6c39cae2881b7a6c",
-      "class_hash": "0x290f6d93be715d59a45cab33ec89b69fd8372ae550500f7387679c19372f1f1",
+      "address": null,
+      "class_hash": "0x745fe0dfc7dca45f7d0cbb9c6a90331223e259d6a53e7b8199d8548967e6c69",
       "abi": [
         {
           "type": "impl",
@@ -1091,7 +1091,7 @@
     {
       "name": "world_event_actions",
       "address": "0x307671e27ab1824edc6244142fb035a84e37feb14850d521d99dc994dd9b0fe",
-      "class_hash": "0xb4b37135e4e6b16ecdb1c100edf70e020079713772d0e3f9c77109dba021e3",
+      "class_hash": "0x46afa0d8daac3ee4bb0669afc04c1c2aa7798b1d69071912ee9dad63b5c0dec",
       "abi": [
         {
           "type": "impl",

@@ -62,62 +62,64 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
       const outpostEntities = getComponentEntities(Outpost);
       const outpostArray = Array.from(outpostEntities);
 
-      const gameEntityCounter = getComponentValueStrict(GameEntityCounter, getComponentValueStrict(ClientGameData, GAME_CONFIG).current_game_id as EntityIndex);
+      const gameEntityCounter = getComponentValueStrict(GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
   
       for (const outpostEntityValue of outpostArray) {
+        console.log(outpostEntityValue)
+        // const outpostClientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
+        // const outpostEntityData = getComponentValueStrict(Outpost, outpostEntityValue);
   
-        const outpostClientData = getComponentValueStrict(ClientOutpostData, outpostEntityValue);
-        const outpostEntityData = getComponentValueStrict(Outpost, outpostEntityValue);
-  
-        const playerObj = objectPool.get(outpostEntityValue, "Sprite");
+        // const playerObj = objectPool.get(outpostEntityValue, "Sprite");
         
-        if (outpostEntityData.last_affect_event_id === gameEntityCounter.event_count)
-        {
+        // if (outpostEntityData.last_affect_event_id === gameEntityCounter.event_count)
+        // {
           
-          setComponentQuick(
-            {
-              "id": outpostClientData.id,
-              "owned": outpostClientData.owned,
-              "event_effected": false,
-              "selected": outpostClientData.selected,
-            },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
+        //   setComponentQuick(
+        //     {
+        //       "id": outpostClientData.id,
+        //       "owned": outpostClientData.owned,
+        //       "event_effected": false,
+        //       "selected": outpostClientData.selected,
+        //     },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
         
-          continue;
-        }
+        //   continue;
+        // }
 
-        playerObj.setComponent({
-          id: "texture",
-          once: (sprite: any) => {
+        // playerObj.setComponent({
+        //   id: "texture",
+        //   once: (sprite: any) => {
 
-            const distance = Math.sqrt(
-              (Number(getComponentValueStrict(Outpost, outpostEntityValue).x) - positionX) ** 2 + (Number(getComponentValueStrict(Outpost, outpostEntityValue).y)- positionY) ** 2
-            );
+        //     const distance = Math.sqrt(
+        //       (Number(getComponentValueStrict(Outpost, outpostEntityValue).x) - positionX) ** 2 + (Number(getComponentValueStrict(Outpost, outpostEntityValue).y)- positionY) ** 2
+        //     );
   
-            if (distance <= radius) {
+        //     if (distance <= radius) {
 
-              setComponentQuick(
-                {
-                  "id": outpostClientData.id,
-                  "owned": outpostClientData.owned,
-                  "event_effected": true,
-                  "selected": outpostClientData.selected,
-                },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
+        //       setComponentQuick(
+        //         {
+        //           "id": outpostClientData.id,
+        //           "owned": outpostClientData.owned,
+        //           "event_effected": true,
+        //           "selected": outpostClientData.selected,
+        //         },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
             
-            } 
-            else 
-            {
+        //     } 
+        //     else 
+        //     {
 
-              setComponentQuick(
-                {
-                  "id": outpostClientData.id,
-                  "owned": outpostClientData.owned,
-                  "event_effected": false,
-                  "selected": outpostClientData.selected,
-                },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
+        //       setComponentQuick(
+        //         {
+        //           "id": outpostClientData.id,
+        //           "owned": outpostClientData.owned,
+        //           "event_effected": false,
+        //           "selected": outpostClientData.selected,
+        //         },[decimalToHexadecimal(clientGameData.current_game_id), decimalToHexadecimal(outpostClientData.id)],"ClientOutpostData",clientComponents);
 
-            }
-          },
-        });
+        //     }
+        //   },
+        // });
+
+
       }
     });
   };

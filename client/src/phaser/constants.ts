@@ -25,9 +25,6 @@ export enum Assets {
 export const MAP_WIDTH = 10240;
 export const MAP_HEIGHT = 5164;
 
-export const PREPARATION_PHASE_BLOCK_COUNT = 10;
-export const EVENT_PHASE_BLOCK_COUNT =3;
-
 export const GAME_CONFIG : EntityIndex = 1 as EntityIndex;
 export const SCALE = 0.15;
 
@@ -42,16 +39,6 @@ export function setWidthAndHeight(widht:number, height: number): void {
 
 
 //all the functions below are to either redo or delete as some are not used
-
-let entityGroup: EntityIndex;
-
-export function setEntityGroup(newEntityGroup: EntityIndex): void {
-    entityGroup = newEntityGroup;
-}
-
-export function getEntityGroup(): EntityIndex {
-    return entityGroup;
-}
 
 export const COLOUMNS_NUMBER = 60;
 export const ROWS_NUMBER = 35;

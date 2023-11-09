@@ -56,7 +56,6 @@ query getEntities {
   }
 }
 
-
 query getGameEntity($key: String!) {
   entities(keys: [$key]) {
     edges {
@@ -85,7 +84,6 @@ query getGameEntity($key: String!) {
     }
   }
 }
-
 
 query getOutpostEntity($game_id: String!, $entity_id: String!) {
   entities(keys: [$game_id, $entity_id]) {
@@ -119,7 +117,6 @@ query getOutpostEntity($game_id: String!, $entity_id: String!) {
   }
 }
 
-
 query getOutpostEntityAll($game_id: String!) {
   entities(keys: [$game_id]) {
     edges {
@@ -148,7 +145,6 @@ query getOutpostEntityAll($game_id: String!) {
   }
 }
 
-
 query getGameTracker($config_id: String!) {
   entities(keys: [$config_id]) {
     edges {
@@ -156,7 +152,7 @@ query getGameTracker($config_id: String!) {
         keys
         models {
           ... on GameTracker {
-          entity_id
+            entity_id
             count
           }
         }
@@ -173,6 +169,8 @@ query getReinforcement($game_id: String!, $owner: String!) {
         models {
           __typename
           ... on Reinforcement {
+            game_id
+            owner
             balance
           }
         }

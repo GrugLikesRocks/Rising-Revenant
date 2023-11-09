@@ -1063,7 +1063,7 @@ export type GetReinforcementQueryVariables = Exact<{
 }>;
 
 
-export type GetReinforcementQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement', balance?: any | null } | { __typename: 'Revenant' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+export type GetReinforcementQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game' } | { __typename: 'GameEntityCounter' } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'Reinforcement', game_id?: any | null, owner?: any | null, balance?: any | null } | { __typename: 'Revenant' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
 export type GetWorldEventEntityQueryVariables = Exact<{
   game_id: Scalars['String']['input'];
@@ -1251,6 +1251,8 @@ export const GetReinforcementDocument = gql`
         models {
           __typename
           ... on Reinforcement {
+            game_id
+            owner
             balance
           }
         }

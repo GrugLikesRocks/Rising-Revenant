@@ -159,8 +159,10 @@ export const LoadingComponent = ({
                 const componentName = "ClientOutpostData";
 
                 const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
-                setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
 
+                console.log(craftedEdgeCOD)
+                
+                setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
 
                 setComponentFromGraphQLEntity(contractComponents, element);
             }

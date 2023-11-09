@@ -38,6 +38,8 @@ export const PhaserLayer = ({ networkLayer }: Props) => {
         drawPhaserLayer.off("toggleVisibility", visibilitySet);
       };
     }, []);
+
+    
     return (
         <div>
           {isVisible ? (

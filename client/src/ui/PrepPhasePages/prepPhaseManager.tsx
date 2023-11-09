@@ -32,6 +32,7 @@ export const PrepPhaseManager = () => {
             } else {
                 setPrepPhaseStage(PrepPhaseStages.DEBUG);
             }
+            console.log("called debu")
           }
         };
     

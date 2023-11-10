@@ -27,7 +27,7 @@ export const PrepPhaseManager = () => {
 
     const [prepPhaseStage, setPrepPhaseStage] = useState<PrepPhaseStages>(PrepPhaseStages.VID);
 
-    const [showBlocks, setShowBlocks] = useState(true);
+    const [showBlocks, setShowBlocks] = useState(false);
     const [blocksLeft, setBlocksLeft] = useState(0);
 
     const {

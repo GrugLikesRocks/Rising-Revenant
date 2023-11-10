@@ -97,7 +97,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         <div className="title-cart-section">
           <h1>
             {" "}
-            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).balance}
+            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count}
           </h1>
           <h3>Reinforcement available</h3>
         </div>

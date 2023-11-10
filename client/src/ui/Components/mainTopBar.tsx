@@ -46,7 +46,7 @@ export const TopBarComponent = () => {
         setInGame(gameClientData.current_game_state);
 
         const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-        const balance = getComponentValue(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
+        const balance = getComponentValue(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
 
         if (gameData === undefined) {
             return;
@@ -61,7 +61,7 @@ export const TopBarComponent = () => {
             setReinforcementNumber(0);
         }
         else {
-            setReinforcementNumber(balance.balance);
+            setReinforcementNumber(balance.reinforcement_count);
         }
 
         setUserAddress(gameClientData.user_account_address);

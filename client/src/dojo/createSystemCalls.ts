@@ -25,7 +25,7 @@ export function createSystemCalls(
         Outpost,
         OutpostPosition,
         Revenant,
-        Reinforcement,
+        PlayerInfo,
         WorldEvent,
         WorldEventTracker,
 
@@ -119,12 +119,12 @@ export function createSystemCalls(
         const reinforcementId = uuid();
         const balanceKey =  getEntityIdFromKeys([BigInt(game_id), BigInt(account.address)]);
 
-        const reinforecementBalance = getComponentValue(Reinforcement, balanceKey)
+        const reinforecementBalance = getComponentValue(PlayerInfo, balanceKey)
 
-        Reinforcement.addOverride(reinforcementId, {
+        PlayerInfo.addOverride(reinforcementId, {
             entity:  balanceKey,
             value: {
-                balance: reinforecementBalance?.balance,
+                reinforcement_count: reinforecementBalance?.reinforcement_count,
             }
         })
 
@@ -142,11 +142,11 @@ export function createSystemCalls(
             notify(`Purchased ${count} reinforcements`);
         } catch (e) {
             console.log(e)
-            Reinforcement.removeOverride(reinforcementId);
+            PlayerInfo.removeOverride(reinforcementId);
         }
         finally
         {
-            Reinforcement.removeOverride(reinforcementId);
+            PlayerInfo.removeOverride(reinforcementId);
         }
     };
 

@@ -39,8 +39,6 @@ const getDataFormatted = (entities: any, typename: string): DataFormatted => {
 }
 
 
-
-
 interface Model {
   __typename: string;
 }
@@ -259,8 +257,6 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
     }
 
     return arrOfEntities;
-
-
 };
 
 

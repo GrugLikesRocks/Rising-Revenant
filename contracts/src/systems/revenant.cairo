@@ -186,7 +186,7 @@ mod revenant_actions {
                 y,
                 entity_id: new_outpost_id,
                 owner: player,
-                name: 'Outpost',
+                name_outpost: 'Outpost',
                 lifes: OUTPOST_INIT_LIFE,
                 status: OutpostStatus::created,
                 last_affect_event_id: 0

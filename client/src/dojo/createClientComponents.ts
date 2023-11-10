@@ -14,7 +14,7 @@ export function createClientComponents({ contractComponents, clientComponents }:
         Outpost: overridableComponent(contractComponents.Outpost),
         OutpostPosition: overridableComponent(contractComponents.OutpostPosition),
         Revenant: overridableComponent(contractComponents.Revenant),
-        Reinforcement: overridableComponent(contractComponents.Reinforcement),
+        PlayerInfo: overridableComponent(contractComponents.PlayerInfo),
         WorldEvent: overridableComponent(contractComponents.WorldEvent),
         WorldEventTracker: overridableComponent(contractComponents.WorldEventTracker),
 

@@ -1,4 +1,5 @@
-<img width="4453" alt="Rising Revenant (2)" src="https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/f6be7bb9-9a49-49c7-b4db-a24dcc46fc55">
+
+![cover RR](https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/9721cd3f-e655-4c5c-b7a4-60631e5b8a5c)
 
 ***An Introduction to Rising Revenant - The Ultimate Defense Game*** 
 
@@ -53,8 +54,7 @@ Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT stan
 **Conclusion**
 
 Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of this adventure?
-
-<img width="6737" alt="Rising Revenant (1)" src="https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/13038196-65ed-4acc-a4d6-a017581e75ae">
+![Cover_WinnerRevenant](https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/0777ee0d-9f8f-4209-b9b5-5f0fbd12e413)
 
 --------------------------------------------
 

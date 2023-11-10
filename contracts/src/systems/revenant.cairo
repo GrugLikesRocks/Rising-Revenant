@@ -68,7 +68,7 @@ mod revenant_actions {
                 game_id,
                 entity_id,
                 owner: player,
-                name: name,
+                name_revenant: name,
                 outpost_count: 1,
                 status: RevenantStatus::started
             };

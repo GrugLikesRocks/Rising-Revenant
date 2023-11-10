@@ -7,7 +7,6 @@ import {
 
 import { Sprites, Assets, Scenes } from "./constants";
 
-
 export const phaserConfig = {
     sceneConfig: {
         [Scenes.Main]: defineSceneConfig({
@@ -16,27 +15,27 @@ export const phaserConfig = {
                 [Assets.CastleHealthySelfAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthySelfAsset,
-                    path: "src/assets/blue.png",
+                    path: "src/assets/Outpost_Icons/Blue_Outpost.png",
                 },
                 [Assets.CastleDamagedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDamagedAsset,
-                    path: "src/assets/red.png",
+                    path: "src/assets/Outpost_Icons/Red_Outpost.png",
                 },
                 [Assets.CastleHealthyEnemyAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthyEnemyAsset,
-                    path: "src/assets/purple.png",
+                    path: "src/assets/Outpost_Icons/Purple_Outpost.png",
                 },
                 [Assets.CastleDestroyedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDestroyedAsset,
-                    path: "src/assets/grey.png",
+                    path: "src/assets/Outpost_Icons/Grey_Outpost.png",
                 },
                 [Assets.CaslteSelectedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CaslteSelectedAsset,
-                    path: "src/assets/white.png",
+                    path: "src/assets/Outpost_Icons/White_Outpost.png",
                 },
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
@@ -67,13 +66,12 @@ export const phaserConfig = {
         zoom: 1,
         mode: Phaser.Scale.NONE,
     }),
-    // cameraConfig: defineCameraConfig({
-    //     pinchSpeed: 0.01,
-    //     wheelSpeed: 0.01,
-    //     maxZoom: 2,
-    //     minZoom: 0.4,
-    // }),
-    // ZOOMING IN AND OUT IS DISABLED FOR NOW 
+    cameraConfig: defineCameraConfig({
+        pinchSpeed: 0.01,
+        wheelSpeed: 0,
+        maxZoom: 2,
+        minZoom: 0.4,
+    }),
 
     cullingChunkSize: 10000 * 5024,
 };

@@ -1,0 +1,95 @@
+.br-page-container,
+.summon-revenant-page-container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  position: relative;
+
+  color: white;
+}
+
+.br-page-container {
+  background-image: url("Page_Bg/STATS_PAGE_BG.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.summon-revenant-page-container {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.main-content {
+  position: absolute;
+
+  left: 5%;
+
+  height: fit-content;
+  width: fit-content;
+
+  padding: 5px 10px;
+
+  gap: 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-header {
+  font-family: Zelda;
+  font-weight: 100;
+
+  margin-bottom: 0px;
+  font-size: 2cqw;
+}
+
+.amount-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  font-family: OL;
+
+  gap: 8%;
+}
+
+.button-style-prep-phase {
+  height: 100%;
+  justify-self: center;
+
+  color: white;
+  box-shadow: none;
+  font-size: 1.5rem;
+
+  width: fit-content;
+
+  border: 2px solid var(--borderColour);
+  padding: 2px 5px;
+}
+
+.button-style-prep-phase:hover {
+  cursor: pointer;
+}
+
+.amount-section h2 {
+  text-align: center;
+}
+
+.footer-text {
+  position: absolute;
+
+  top: 92%;
+  left: 5%;
+
+  color: white;
+  z-index: 5;
+
+  font-size: 1.4rem;
+}

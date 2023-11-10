@@ -8,7 +8,7 @@ trait IGameActions<TContractState> {
         event_interval: u64,
         erc_addr: ContractAddress
     ) -> u32;
-
+    fn get_current_block(self: @TContractState) -> u64;
     fn refresh_status(self: @TContractState, game_id: u32);
 }
 
@@ -75,5 +75,13 @@ mod game_actions {
             game.assert_existed();
             game.refresh_status(world);
         }
+
+        fn get_current_block(self: @ContractState) -> u64 {
+            
+            let start_block_number = get_block_info().unbox().block_number; // blocknumber
+            return start_block_number;
+
+        }
     }
 }
+

@@ -8,7 +8,7 @@ const REVENANT_MAX_COUNT: u32 = 2;
 // each wallet has 3 reinforcements to put as they will 
 const REINFORCEMENT_INIT_COUNT: u32 = 3;
 
-const EVENT_INIT_RADIUS: u32 = 5;
+const EVENT_INIT_RADIUS: u32 = 155;
 
 const MAP_WIDTH: u32 = 10240;
 const MAP_HEIGHT: u32 = 5164;

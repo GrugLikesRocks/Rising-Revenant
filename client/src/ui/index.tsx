@@ -1,18 +1,13 @@
 import { store } from "../store/store";
 import { Wrapper } from "./wrapper";
 
-import { MenuState } from "./components/navbar";
-import { useState, useEffect } from "react";
+import { MainStateManager } from "./fakeIndex";
 
-import { menuEvents, tooltipEvent } from "../phaser/systems/eventSystems/eventEmitter";
-
-import "../App.css";
-
-import { MainMenuComponent } from "./components/mainMenuComponent";
+import { LoadingComponent } from "./loadingComponent";
+import { useState } from "react";
 
 export const UI = () => {
-  const [phaserLayerOpacity, setPhaserLayerOpacity] = useState(1);
-  const [menuState, setMenuState] = useState<MenuState>(MenuState.MAIN);
+  const [loadingComplete, setLoadingState] = useState(false);
 
   const layers = store((state) => {
     return {
@@ -21,39 +16,18 @@ export const UI = () => {
     };
   });
 
-  const SetMenuState = (state: MenuState) => {
-    console.log("called state change for menu", state);
-    setMenuState(state);
-  };
-
-  //opacity control based on menu state
-  useEffect(() => {
-
-    if (menuState !== MenuState.MAP) {
-      setPhaserLayerOpacity(1);
-
-      tooltipEvent.emit("closeTooltip", false);
-    } else {
-      setPhaserLayerOpacity(0);
-    }
-
-    menuEvents.on("setMenuState", SetMenuState);
-
-    return () => {
-      menuEvents.off("setMenuState", SetMenuState);
-    };
-  }, [menuState]);
 
   if (!layers.networkLayer || !layers.phaserLayer) return <></>;
 
+  const handleLoadingComplete = () => {
+    setLoadingState(true);
+  };
+
   return (
     <Wrapper>
-      <div
-        className="phaser-fadeout-background"
-        style={{ opacity: phaserLayerOpacity }}
-      ></div>
-
-      <MainMenuComponent layer={layers.phaserLayer} />
+      {loadingComplete === false && <LoadingComponent handleLoadingComplete={handleLoadingComplete}></LoadingComponent>}
+      {loadingComplete && <MainStateManager />}
     </Wrapper>
   );
 };
+

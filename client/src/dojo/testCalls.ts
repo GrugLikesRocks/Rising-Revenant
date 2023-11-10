@@ -233,8 +233,7 @@ export const getWorldEventEntitySpecific = async (graphSDK_: any, game_id: strin
 
 export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_index: number, start_index: number = 1) => {
 
-  try {
-    let arrOfEntities: any[] = [];
+  let arrOfEntities: any[] = [];
 
     for (let index = start_index; index < end_index + 1; index++) {
       // const {
@@ -243,30 +242,56 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
 
       const entities: any = await getEventEntity(game_id, decimalToHexadecimal(index));
 
+      const fixedType = getWorldEventSection(entities);
+
       const stuff = createComponentStructure({
-        "block_number": entities[0].node.models[2].block_number,
-        "destroy_count": entities[0].node.models[2].destroy_count,
-        "entity_id": entities[0].node.models[2].entity_id,
-        "game_id": entities[0].node.models[2].game_id,
-        "radius": entities[0].node.models[2].radius,
-        "x": entities[0].node.models[2].x,
-        "y": entities[0].node.models[2].y,
+        "block_number": fixedType[0].block_number,
+        "destroy_count": fixedType[0].destroy_count,
+        "entity_id": fixedType[0].entity_id,
+        "game_id":  fixedType[0].game_id,
+        "radius": fixedType[0].radius,
+        "x": fixedType[0].x,
+        "y": fixedType[0].y,
 
       }, [entities[0].node.keys[0], entities[0].node.keys[1]], "WorldEvent")
-
-      console.log(stuff)
 
       arrOfEntities.push(stuff);
     }
 
     return arrOfEntities;
-  } catch (error) {
-    console.error('Error fetching outpost game data:', error);
-    throw error;
-  }
+
+
 };
 
 
+type Node = {
+  keys: string[];
+  models: {
+    __typename: string;
+    game_id?: number;
+    entity_id?: string;
+    x?: number;
+    y?: number;
+    radius?: number;
+    destroy_count?: number;
+    block_number?: number;
+  }[];
+};
+
+function getWorldEventSection(data: { node: Node }[]): { __typename: string; game_id: number; entity_id: string; x: number; y: number; radius: number; destroy_count: number; block_number: number }[] {
+  return data
+    .flatMap((item) => item.node.models.filter((model) => model.__typename === "WorldEvent"))
+    .map(({ __typename, game_id, entity_id, x, y, radius, destroy_count, block_number }) => ({
+      __typename,
+      game_id,
+      entity_id,
+      x,
+      y,
+      radius,
+      destroy_count,
+      block_number,
+    }));
+}
 
 
 export async function getEventEntity(game_id: string, entity_id: string) {

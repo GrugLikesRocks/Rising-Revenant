@@ -33,28 +33,18 @@ export const TopBarComponent = () => {
     } = useDojo();
 
     const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
-    const outpostAliveQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
+    const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
     const clientGameData = useEntityQuery([Has(clientComponents.ClientGameData)]);
 
-    console.log("outpostArray", outpostArray.length);
-    console.log("outpostAliveQuery", outpostAliveQuery.length);
 
-    useEffect(() => {
-
-        if (inGame === 2) {
-            const aliveRevs = outpostArray.length - outpostAliveQuery.length;
-
-            setNumberOfRevenants(aliveRevs);
-        }
-
-    }, [outpostAliveQuery]);
-
-    // const clientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
-    // setInGame(clientData.current_game_state);
-
+    console.log(inGame);
+  
     useEffect(() => {
 
         const gameClientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+
+        setInGame(gameClientData.current_game_state);
+
         const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
         const balance = getComponentValue(contractComponents.Reinforcement, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
 
@@ -66,7 +56,6 @@ export const TopBarComponent = () => {
 
         setNumberOfRevenants(outpostArray.length);
 
-
         if (balance === undefined) {
             console.error("balance is undefined");
             setReinforcementNumber(0);
@@ -77,7 +66,20 @@ export const TopBarComponent = () => {
 
         setUserAddress(gameClientData.user_account_address);
 
+        const clientGameComponent = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+
+        setInGame(clientGameComponent.current_game_state);
+
+        if (inGame === 2) {
+            setNumberOfRevenants(outpostArray.length - outpostDeadQuery.length);
+        }
+        else
+        {
+            setNumberOfRevenants(outpostArray.length);
+        }
+
     }, [outpostArray, clientGameData]);
+
 
     return (
         <div className="top-bar-container-layout">
@@ -97,7 +99,7 @@ export const TopBarComponent = () => {
                 <div className="right-section">
                     <div className="text-section">
 
-                        {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/2000</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
+                        {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/{outpostArray.length}</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
                         <h4>Reinforcement: {reinforcementNumber}</h4>
                     </div>
 

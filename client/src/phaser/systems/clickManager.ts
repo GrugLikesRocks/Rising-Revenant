@@ -81,7 +81,7 @@ export const clickManager = (layer: PhaserLayer) => {
 
     for (const outpostEntityValue of outpostArray) {
 
-      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, outpostEntityValue);
+      // const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, outpostEntityValue);
 
       const outpostData = getComponentValueStrict(Outpost, outpostEntityValue);
 

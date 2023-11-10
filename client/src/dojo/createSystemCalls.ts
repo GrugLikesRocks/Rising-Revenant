@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 import manifest from "../../../contracts/target/dev/manifest.json";
 import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
-import { callOutpostUpdate } from "./testCalls";
+import { callOutpostUpdate, setOutpostClientComponent } from "./testCalls";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -37,7 +37,7 @@ export function createSystemCalls(
 ) {
 
     const notify = (message: string) => toast(message, {
-        position: "top-right",
+        position: "top-left",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -85,6 +85,21 @@ export function createSystemCalls(
             console.log(e)
 
             notify('Failed to create revenant');
+        }
+        finally
+        {
+            const gameEntityCounter = getComponentValueStrict(GameEntityCounter, getEntityIdFromKeys([BigInt(game_id)]));
+            const outpostData = getComponentValueStrict(Outpost, getEntityIdFromKeys([BigInt(game_id), BigInt(gameEntityCounter.outpost_count)]));
+
+            console.log(gameEntityCounter)
+
+            let owned = false;
+
+            if (outpostData.owner === account.address) {
+                owned = true;
+            }
+
+            setOutpostClientComponent(gameEntityCounter.outpost_count,owned,false,false,false,clientComponents);
         }
     };
 

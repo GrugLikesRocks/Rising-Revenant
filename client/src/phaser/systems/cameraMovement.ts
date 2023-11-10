@@ -154,16 +154,21 @@ export const cameraManager = (layer: PhaserLayer) => {
           let min = 80;
           let max = 700;
 
+          sprite.setScale(SCALE);
+
           if (totDistance < min || clientData.selected) {
             sprite.alpha = 1;
-            sprite.setScale(SCALE);
+            // sprite.setScale(SCALE);
           } else if (totDistance > min && totDistance < max) {
             sprite.alpha = 1 - ((totDistance - min) / (max - min));
-            sprite.setScale(SCALE * (1 - ((totDistance - min) / (max - min))));
+            // sprite.setScale(SCALE * (1 - ((totDistance - min) / (max - min))));
           } else {
-            sprite.alpha = 0;
-            sprite.setScale(0);
+            // sprite.alpha = 0;
+            // sprite.setScale(0);
+            sprite.setVisible(false);
           }
+
+
       }});
   }
 }

@@ -36,7 +36,7 @@ mod OutpostStatus {
 #[generate_trait]
 impl OutpostImpl of OutpostTrait {
     fn assert_existed(self: Outpost) {
-        // assert(self.status != OutpostStatus::destroyed, 'Outpost has been destroyed');
         assert(self.status != OutpostStatus::not_created, 'Outpost not exist');
+        assert(self.lifes > 0, 'Outpost has been destroyed');
     }
 }

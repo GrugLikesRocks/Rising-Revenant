@@ -161,6 +161,42 @@ mod tests {
 
     #[test]
     #[available_gas(3000000000)]
+    #[should_panic(expected: ('Outpost has been destroyed', 'ENTRYPOINT_FAILED',))]
+    fn test_cannot_purchase_destoryed_outpost() {
+        // Create initial outposts
+        let (DefaultWorld{world, caller, revenant_action, world_event_action, .. }, game_id) =
+            _init_game();
+        let (revenant_id, outpost_id) = _create_revenant(revenant_action, game_id);
+        // need two more outposts for preventing game end
+        starknet::testing::set_contract_address(starknet::contract_address_const::<0x0001>());
+        let (_, _) = _create_revenant(revenant_action, game_id);
+        starknet::testing::set_contract_address(starknet::contract_address_const::<0x0002>());
+        let (_, _) = _create_revenant(revenant_action, game_id);
+
+        starknet::testing::set_contract_address(caller);
+        _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
+        // Loop until the outpost has been destoryed
+        loop {
+            _add_block_number(EVENT_BLOCK_INTERVAL + 1);
+            let world_event = world_event_action.create(game_id);
+            let destoryed = world_event_action
+                .destroy_outpost(game_id, world_event.entity_id, outpost_id);
+
+            if destoryed {
+                let outpost = get!(world, (game_id, outpost_id), Outpost);
+                if (outpost.lifes == 0) {
+                    break;
+                };
+            };
+        };
+
+        // should panic because this outpost's life count is 0
+        revenant_action.reinforce_outpost(game_id, outpost_id);
+    }
+
+
+    #[test]
+    #[available_gas(3000000000)]
     fn test_game_end() {
         // Create initial outposts
         let (DefaultWorld{world, caller, revenant_action, world_event_action, .. }, game_id) =
@@ -173,17 +209,27 @@ mod tests {
         _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
 
         // Loop world event
+        world_event_action.create(game_id);
         loop {
             _add_block_number(EVENT_BLOCK_INTERVAL + 1);
-            let world_event = world_event_action.create(game_id);
+            let game_counter = get!(world, (game_id), GameEntityCounter);
+            let world_event = get!(world, (game_id, game_counter.event_count), WorldEvent);
             let destoryed = world_event_action
                 .destroy_outpost(game_id, world_event.entity_id, outpost_id);
 
+            let game_counter = get!(world, (game_id), GameEntityCounter);
             if destoryed {
-                let game_counter = get!(world, (game_id), GameEntityCounter);
                 if game_counter.outpost_exists_count == 1 {
                     break;
                 };
+
+                // If the event has an impact, a new event will be automatically generated.
+                assert(
+                    game_counter.event_count.into() == world_event.entity_id + 1,
+                    'new event failed create'
+                );
+            } else {
+                world_event_action.create(game_id);
             };
         };
 

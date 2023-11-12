@@ -37,8 +37,6 @@ export const PrepPhaseManager = () => {
         },
       } = useDojo();
 
-
-
       useEffect(() => {
 
         const getBlocksLeft = async () => {

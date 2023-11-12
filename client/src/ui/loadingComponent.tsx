@@ -5,7 +5,8 @@ import { createComponentStructure, getFullEventGameData, getFullOutpostGameData,
 import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { decimalToHexadecimal } from "../utils";
 import { CreateGameProps } from "../dojo/types";
-import { getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
+import { getComponentValue } from "@latticexyz/recs";
+import { getComponentValueStrict } from "@dojoengine/recs";
 
 
 export const LoadingComponent = ({
@@ -19,13 +20,15 @@ export const LoadingComponent = ({
         networkLayer: {
             systemCalls: { create_game, view_block_count },
             network: { graphSdk, contractComponents, clientComponents },
+            components: {GameEntityCounter}
+            
         },
     } = useDojo();
 
     const createGame = async () => {
         const createGameProps: CreateGameProps = {
             account: account,
-            preparation_phase_interval: 7,
+            preparation_phase_interval: 6,
             event_interval: 10,
             erc_addr: account.address,
         };
@@ -96,7 +99,7 @@ export const LoadingComponent = ({
                 phase = 2;
             }
 
-            await setClientGameComponent(phase, account.address, game_id, current_block!, clientComponents);
+            await setClientGameComponent(phase, game_id, current_block!, clientComponents);
         };
 
         const fetchTheCurrentGame = async () => {
@@ -169,7 +172,7 @@ export const LoadingComponent = ({
         };
 
         const getReinforcement = async () => {
-
+            
         };
 
         const fetchEvents = async (game_id: string, event_amount: number) => {
@@ -193,10 +196,10 @@ export const LoadingComponent = ({
 
         const checkLoadingComplete = async () => {
 
-            const clientGameData = getComponentValue(clientComponents.ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+            const clientGameData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
-            const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
-            const gameTracker = getComponentValue(contractComponents.GameTracker, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
+            const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameData!.current_game_id)]));
+            const gameTracker = getComponentValue(GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData!.current_game_id)]));
 
             if (gameData === undefined || gameTracker === undefined || clientGameData === undefined) {
                 await new Promise((resolve) => setTimeout(resolve, 5000));

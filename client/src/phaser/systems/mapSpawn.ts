@@ -25,6 +25,7 @@ export const mapSpawn = (layer: PhaserLayer) => {
   defineEnterSystem(world, [Has(Game)], ({ entity }) => {
     const mapObj = objectPool.get(entity, "Sprite");
 
+      
     mapObj.setComponent({
       id: "animation",
       once: (sprite:any) => {
@@ -35,21 +36,25 @@ export const mapSpawn = (layer: PhaserLayer) => {
 
       },
     });
+
   });
 
-  defineSystem(world, [Has(ClientGameData)], ({ entity }) => {
+  // defineSystem(world, [Has(ClientGameData)], ({ entity }) => {
 
-    const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
+  //   const clientGameData = getComponentValueStrict(ClientGameData, decimalToHexadecimal(GAME_CONFIG));
 
-    console.log("THIS IS THE CURRENT GAME STATE", clientGameData);
+  //   console.error("THIS IS THE CURRENT GAME STATE", clientGameData);
 
-    if (clientGameData.current_game_state === 1)
-    {
-      drawPhaserLayer.emit("toggleVisibility", false);
-    }
-    else
-    {
-      drawPhaserLayer.emit("toggleVisibility", true);
-    }
-  });
+
+  //   drawPhaserLayer.emit("toggleVisibility", true);
+
+  //   // if (clientGameData.current_game_state === 1)
+  //   // {
+  //   //   drawPhaserLayer.emit("toggleVisibility", false);
+  //   // }
+  //   // else
+  //   // {
+  //   //   drawPhaserLayer.emit("toggleVisibility", true);
+  //   // }
+  // });
 };

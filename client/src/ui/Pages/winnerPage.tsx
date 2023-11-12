@@ -6,9 +6,9 @@ import { MenuState } from "../Pages/mainMenuContainer";
 import { ClickWrapper } from "../clickWrapper";
 import { useDojo } from "../../hooks/useDojo";
 
-
-import { HasValue, EntityIndex, getComponentValueStrict, setComponent,Has } from "@latticexyz/recs";
+import { HasValue,  getComponentValueStrict, setComponent,Has } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 
 interface WinnerPageProps {
@@ -34,15 +34,26 @@ export const WinnerPage: React.FC<WinnerPageProps> = ({ setMenuState }) =>
   const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
   const totalOutposts = useEntityQuery([Has(contractComponents.Outpost)]);
 
+  console.error("outpostDeadQuery", outpostDeadQuery);
+    console.error("totalOutposts", totalOutposts);
+
   useEffect(() => {
 
     const difference: string[] = totalOutposts.filter(item => !outpostDeadQuery.includes(item));
 
-    const outpostComp = getComponentValueStrict(contractComponents.Outpost, difference[0]);
+    const outpostComp = getComponentValueStrict(contractComponents.Outpost, getEntityIdFromKeys([BigInt( difference[0])]));
 
     setWinningAddress(outpostComp.owner);
 
   }, []);
+
+
+
+  const shareOnTwitter = () => {
+    const message = 'I just won!';
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+    window.open(twitterShareUrl, '_blank');
+  };
 
     return (
         <div className="winner-page-container">
@@ -51,11 +62,11 @@ export const WinnerPage: React.FC<WinnerPageProps> = ({ setMenuState }) =>
                     {winningAddress === account.address ?   <h1>YOU ARE THE RISING REVENANT</h1> : <h1>IS THE RISING REVENANT</h1>}
                     <ClickWrapper className="button-style">Claim your jackpot</ClickWrapper>
                 </div>
-                {/* i really dont like this*/}
-                <div className="share-text">
+
+                {winningAddress === account.address && <div className="share-text" onMouseDown={() => {shareOnTwitter()}}>
                     <h2>Share on</h2>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"></img>
-                </div>
+                </div>}
         </div>
     )
 }

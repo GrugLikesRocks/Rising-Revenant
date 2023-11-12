@@ -8,7 +8,7 @@ import { ClickWrapper } from "../clickWrapper";
 
 import { useDojo } from "../../hooks/useDojo";
 
-import { HasValue, EntityIndex, getComponentValueStrict, setComponent } from "@latticexyz/recs";
+import { HasValue,  getComponentValueStrict, setComponent } from "@latticexyz/recs";
 
 import { useEntityQuery } from "@latticexyz/react";
 
@@ -40,14 +40,14 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
   let selectedOutposts = useEntityQuery([HasValue(clientComponents.ClientOutpostData, { selected: true })]);
 
-  const setArray = (array: EntityIndex[]) => {
+  const setArray = (array: any[]) => {
 
     // this loop does not convince me
     for (let index = 0; index < selectedOutposts.length; index++) {
 
       const element = selectedOutposts[index];
       const clientCompData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-      setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected, selected: false, owned: clientCompData.owned })
+      setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected,visible : clientCompData.visible, selected: false, owned: clientCompData.owned })
     }
 
     if (array.length === 0) { setArrayOfEntities([]); return; }
@@ -72,14 +72,14 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
       const element = selectedOutposts[index];
       
       const clientCompData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-      setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected, selected: false, owned: clientCompData.owned })
+      setComponent(clientComponents.ClientOutpostData, element, { id: clientCompData.id, event_effected: clientCompData.event_effected, visible : clientCompData.visible,selected: false, owned: clientCompData.owned })
     }
 
     if (arrayOfEntities.length === 0) { return; }
 
     const outpostClientData = getComponentValueStrict(clientComponents.ClientOutpostData, entityIdSelected);
 
-    setComponent(clientComponents.ClientOutpostData, entityIdSelected, { id: outpostClientData.id, event_effected: outpostClientData.event_effected, selected: true, owned: outpostClientData.owned })
+    setComponent(clientComponents.ClientOutpostData, entityIdSelected, { id: outpostClientData.id, event_effected: outpostClientData.event_effected, visible: outpostClientData.visible,selected: true, owned: outpostClientData.owned })
 
   }, [entityIdSelected])
 
@@ -98,7 +98,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
     const outpostClientData = getComponentValueStrict(clientComponents.ClientOutpostData, entityIdSelected);
 
     // just realised this works now for some reason setComponent is what should be use
-    setComponent(clientComponents.ClientOutpostData, entityIdSelected, { id: outpostClientData.id, event_effected: outpostClientData.event_effected, selected: false, owned: outpostClientData.owned })
+    setComponent(clientComponents.ClientOutpostData, entityIdSelected, { id: outpostClientData.id, event_effected: outpostClientData.event_effected,visible : outpostClientData.visible, selected: false, owned: outpostClientData.owned })
 
     setSelectedIndex(1);
 
@@ -129,7 +129,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
   const confirmEvent = async () => {
 
-      const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(clientGameData.current_game_id));
+      const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
 
       const confirmEventProps: ConfirmEventOutpost = {
         account: account,

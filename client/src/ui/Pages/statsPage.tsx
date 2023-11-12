@@ -15,7 +15,6 @@ export const StatsPage: React.FC<StatsPageProps> = ({ setMenuState }) => {
         setMenuState(MenuState.NONE);
     };
 
-
     const sortList = () => { };
 
     const refreshList = () => { };

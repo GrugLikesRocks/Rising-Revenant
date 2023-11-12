@@ -1,10 +1,8 @@
 //libs
 import React, { useState, useEffect } from 'react';
 import {
-  EntityIndex,
   Has,
   getComponentValue,
-  getComponentValueStrict,
   HasValue
 } from "@latticexyz/recs";
 import { store } from '../../store/store';
@@ -29,10 +27,11 @@ import { StatsPage } from './statsPage';
 import { WinnerPage } from './winnerPage';
 
 import { DebugPage } from './debugPage';
+
 import { useDojo } from '../../hooks/useDojo';
-import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from '@dojoengine/utils';
-import { createComponentStructure, getGameEntitiesSpecific, getOutpostEntitySpecific, getUpdatedGameData, setClientGameComponent, setComponentQuick } from '../../dojo/testCalls';
-import { decimalToHexadecimal } from '../../utils';
+
+import { getEntityIdFromKeys } from '@dojoengine/utils';
+import {  getUpdatedGameData,  setComponentQuick } from '../../dojo/testCalls';
 import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from '../../phaser/constants';
 import { useWASDKeys } from '../../phaser/systems/eventSystems/keyPressListener';
 
@@ -71,6 +70,8 @@ export const MainMenuContainer = () => {
       phaserLayer: state.phaserLayer,
     };
   });
+
+    
 
   const {
     scenes: {
@@ -219,36 +220,6 @@ export const MainMenuContainer = () => {
       zoomSubscription.unsubscribe();
     };
   }, [keysDown]);
-
-  useEffect(() => {
-
-    // const gameClientData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
-    // //block_number
-    // const gameTrackerComp = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-
-    // if (gameTrackerComp.event_count === 0)
-    // {
-    //   setShowEventButton(true)
-    // }
-    // else
-    // {
-
-    //   const lastWorldEvent = getComponentValue(contractComponents.WorldEvent, getEntityIdFromKeys([ BigInt(gameClientData.current_game_id), BigInt(gameTrackerComp.event_count)]));
-
-    //   if (lastWorldEvent === undefined)
-    //   {
-
-    //   }
-    //   else
-    //   {
-    //     setShowEventButton(false);
-    //   }
-
-    //   const currentBlock = gameClientData.current_block;
-
-    // }
-
-  }, [clientArray]);
 
   return (
     <>

@@ -1,26 +1,19 @@
-import React, { useState } from "react";
-
 import { useEntityQuery } from "@latticexyz/react";
 
 import "./PagesStyles/DebugPageStyles.css";
-
-import { MenuState } from "../Pages/mainMenuContainer";
 import { ClickWrapper } from "../clickWrapper";
-
 import { useDojo } from "../../hooks/useDojo";
 
 import { CreateRevenantProps, CreateEventProps } from "../../dojo/types";
 
 import {
-  EntityIndex,
   Has,
-  getComponentValue,
   getComponentValueStrict,
+  getComponentValue
 } from "@latticexyz/recs";
-import { createSystemCalls } from "../../dojo/createSystemCalls";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getGameTrackerEntity } from "../../dojo/testQueries";
-import { getFullOutpostGameData, getGameEntitiesSpecific, getOutpostEntitySpecific, setClientGameComponent } from "../../dojo/testCalls";
+import { getFullOutpostGameData, getGameEntitiesSpecific } from "../../dojo/testCalls";
 import {  decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
@@ -110,13 +103,14 @@ export const DebugPage = () => {
     console.log(gameEntityCounterArray[0]);
     console.log(gameTrackerArray[0]);
 
-    let comp = getComponentValueStrict(contractComponents.Game, gameArray[0]);
+    const compG = getComponentValueStrict(contractComponents.Game, gameArray[0]);
+    console.log("game entity", compG);
+    
+    const compGEC = getComponentValueStrict(contractComponents.GameEntityCounter, gameEntityCounterArray[0]);
+    console.log("game entity counter", compGEC);
 
-    console.log("game entity", comp);
-    comp = getComponentValueStrict(contractComponents.GameEntityCounter, gameEntityCounterArray[0]);
-    console.log("game entity counter", comp);
-    comp = getComponentValueStrict(contractComponents.GameTracker, gameTrackerArray[0]);
-    console.log("game tracker", comp);
+    const compGT = getComponentValueStrict(contractComponents.GameTracker, gameTrackerArray[0]);
+    console.log("game tracker", compGT);
   }
 
   const queryCheckGameData = async () => {
@@ -144,12 +138,12 @@ export const DebugPage = () => {
     console.log(clientGameArray[0]);
     console.log(clientCameraArray[0]);
 
-    let comp = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]);
-    console.log("client game entity", comp);
-    comp = getComponentValueStrict(clientComponents.ClientClickPosition, clientClickArray[0]);
-    console.log("click entity counter", comp);
-    comp = getComponentValueStrict(clientComponents.ClientCameraPosition, clientCameraArray[0]);
-    console.log("camera tracker", comp);
+    const compCGD = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]);
+    console.log("client game entity", compCGD);
+    const compCCL = getComponentValueStrict(clientComponents.ClientClickPosition, clientClickArray[0]);
+    console.log("click entity counter", compCCL);
+    const compCCP = getComponentValueStrict(clientComponents.ClientCameraPosition, clientCameraArray[0]);
+    console.log("camera tracker", compCCP);
 
     console.log("\n\nstart of array of client outpost Data")
     for (let index = 0; index < clientOutpostArray.length; index++) {
@@ -187,9 +181,7 @@ export const DebugPage = () => {
     for (let index = 0; index < eventArray.length; index++) {
       const element = eventArray[index];
 
-    
       const eventData = getComponentValueStrict(contractComponents.WorldEvent, element);
-      // console.log("game entity at id ", element);
       
       console.log(eventData);
     }
@@ -197,7 +189,8 @@ export const DebugPage = () => {
 
   //#endregion
 
-  const gameEntityTracker = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)])).current_game_id));
+  const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+  const gameEntityTracker = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
 
   return (
     <ClickWrapper className="revenant-jurnal-page-container">

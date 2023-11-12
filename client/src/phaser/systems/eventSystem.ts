@@ -9,7 +9,6 @@ import {
   import { PhaserLayer } from "..";
   import { GAME_CONFIG } from "../constants";
 import { setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
-import { decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
   export const eventManager = (layer: PhaserLayer) => {
@@ -25,6 +24,8 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
     } = layer;
   
     defineSystem(world, [Has(WorldEvent)], ({ entity }) => {
+
+        
 
       const dataEvent = getComponentValue(WorldEvent, entity);
       const clientGameData = getComponentValue(ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));

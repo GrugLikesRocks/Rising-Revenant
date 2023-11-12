@@ -21,6 +21,9 @@ export const spawnOutposts = (layer: PhaserLayer) => {
 
   defineSystem(world, [Has(Outpost), Has(ClientOutpostData)], ({ entity }) => {
 
+
+      
+
     const outpostDojoData = getComponentValueStrict(Outpost, entity);
     const outpostClientData = getComponentValue(ClientOutpostData, entity);
 

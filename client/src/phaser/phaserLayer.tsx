@@ -48,5 +48,5 @@ export const PhaserLayer = ({ networkLayer }: Props) => {
             <div className="phaser-layer-substitute" />
           )}
         </div>
-      );
+        );
 };

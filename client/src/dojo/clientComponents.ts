@@ -66,7 +66,6 @@ export function defineClientComponents(world: World) {
 		  world,
 		  {
 			current_game_state : RecsType.Number,
-			user_account_address : RecsType.String,
 			current_game_id : RecsType.Number,
 			current_block_number : RecsType.Number,
 		  },

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import "./ComponentsStyles/TopBarStyles.css";
 
 import {
-    EntityIndex,
     Has,
     getComponentValue,
     getComponentValueStrict,
@@ -14,6 +13,7 @@ import { useDojo } from "../../hooks/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { truncateString } from "../../utils";
+import { ClickWrapper } from "../clickWrapper";
 
 
 export const TopBarComponent = () => {
@@ -26,7 +26,11 @@ export const TopBarComponent = () => {
     const [reinforcementNumber, setReinforcementNumber] = useState(0);
     const [userAddress, setUserAddress] = useState("");
 
+    const [showTooltip, setShowTooltip] = useState(false); 
+
+
     const {
+        account: { account },
         networkLayer: {
             network: { contractComponents, clientComponents },
         },
@@ -35,40 +39,32 @@ export const TopBarComponent = () => {
     const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
     const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
     const clientGameData = useEntityQuery([Has(clientComponents.ClientGameData)]);
-
-
-    console.log(inGame);
   
     useEffect(() => {
 
-        const gameClientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+        const gameClientData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
         setInGame(gameClientData.current_game_state);
 
         const gameData = getComponentValue(contractComponents.Game, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-        const balance = getComponentValue(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(gameClientData.user_account_address)]));
+        const balance = getComponentValue(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(gameClientData.current_game_id), BigInt(account.address)]));
 
         if (gameData === undefined) {
             return;
         }
         setJackpot(gameData.prize);
-        setInGame(gameData.current_game_state);
+        setInGame(gameClientData.current_game_state);
 
         setNumberOfRevenants(outpostArray.length);
 
         if (balance === undefined) {
-            console.error("balance is undefined");
             setReinforcementNumber(0);
         }
         else {
             setReinforcementNumber(balance.reinforcement_count);
         }
 
-        setUserAddress(gameClientData.user_account_address);
-
-        const clientGameComponent = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
-
-        setInGame(clientGameComponent.current_game_state);
+        setUserAddress(account.address);
 
         if (inGame === 2) {
             setNumberOfRevenants(outpostArray.length - outpostDeadQuery.length);
@@ -79,7 +75,6 @@ export const TopBarComponent = () => {
         }
 
     }, [outpostArray, clientGameData]);
-
 
     return (
         <div className="top-bar-container-layout">
@@ -96,15 +91,19 @@ export const TopBarComponent = () => {
                 <div className="name-section">
                     <div className="game-title">Rising Revenant</div>
                 </div>
-                <div className="right-section">
+                <ClickWrapper className="right-section">
                     <div className="text-section">
 
-                        {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/{outpostArray.length}</h4> : <h4>Revenants Summoned: {outpostArray.length || "####"}/2000</h4>}
+                        {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/{outpostArray.length}</h4> : <h4>Revenants Summoned: {outpostArray.length || "0"}/2000</h4>}
                         <h4>Reinforcement: {reinforcementNumber}</h4>
                     </div>
 
-                    {isloggedIn ? <h3> <img src="LOGO_WHITE.png" className="chain-logo"></img>{truncateString(userAddress, 5)}</h3> : <button>Log in now</button>}
-                </div>
+                    {isloggedIn ? 
+                        <h3 onMouseDown={() => {}}> <img src="LOGO_WHITE.png" className="chain-logo" ></img>{truncateString(userAddress, 5)} 
+                            
+                    </h3> : <button>Log in now</button>}
+                    
+                </ClickWrapper>
             </div>
         </div>
     );

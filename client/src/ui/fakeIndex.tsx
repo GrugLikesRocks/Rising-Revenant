@@ -6,12 +6,11 @@ import { getComponentValueStrict } from "@latticexyz/recs";
 import { MainMenuContainer } from "./Pages/mainMenuContainer";
 import { PrepPhaseManager } from "./PrepPhasePages/prepPhaseManager";
 
-import { decimalToHexadecimal } from "../utils";
 import { GAME_CONFIG } from "../phaser/constants";
-import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
-import { createComponentStructure, getUpdatedGameData, setComponentQuick } from "../dojo/testCalls";
+import { getEntityIdFromKeys } from "@dojoengine/utils";
+import { getUpdatedGameData } from "../dojo/testCalls";
 import { useDojo } from "../hooks/useDojo";
-
+import { drawPhaserLayer } from "../phaser/systems/eventSystems/eventEmitter";
 export const MainStateManager = () => {
 
     const [gamePhase, setGamePhase] = useState(1);
@@ -19,7 +18,7 @@ export const MainStateManager = () => {
     const {
         account: { account },
         networkLayer: {
-            network: { graphSdk,contractComponents, clientComponents },
+            network: { graphSdk, contractComponents, clientComponents },
             systemCalls: { view_block_count }
         },
     } = useDojo();
@@ -33,23 +32,28 @@ export const MainStateManager = () => {
     useEffect(() => {
 
         const checkGamePhase = async () => {
-            
-           await getUpdatedGameData(view_block_count, clientComponents,contractComponents,account.address,graphSdk);
+
+            await getUpdatedGameData(view_block_count, clientComponents, contractComponents, account.address, graphSdk);
 
             const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
             setGamePhase(clientGameData.current_game_state);
+
+            if (clientGameData.current_game_state === 1) {
+                drawPhaserLayer.emit("toggleVisibility", false);
+            }
+            else {
+                drawPhaserLayer.emit("toggleVisibility", true);
+            }
         }
 
-        const intervalId = setInterval(() => { 
+        const intervalId = setInterval(() => {
 
             checkGamePhase();
 
         }, 10000);
 
         return () => clearInterval(intervalId);
-    }, [gamePhase]);
-
-
+    }, [gamePhase, account]);
 
     return (
         <Wrapper>

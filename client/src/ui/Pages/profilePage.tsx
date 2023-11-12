@@ -12,7 +12,6 @@ import { useDojo } from "../../hooks/useDojo";
 
 import { ConfirmEventOutpost, ReinforceOutpostProps } from "../../dojo/types";
 import { setComponentQuick } from "../../dojo/testCalls";
-import { decimalToHexadecimal } from "../../utils";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { ClickWrapper } from "../clickWrapper";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
@@ -38,7 +37,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
     },
   } = useDojo();
 
-  const selectedOutposts = useEntityQuery([Has(clientComponents.ClientOutpostData, { owner: account.address })]);
+  const selectedOutposts = useEntityQuery([HasValue(clientComponents.ClientOutpostData, { owned: true })]);
   const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
   const moveCameraHere = (x: number, y: number) => {
@@ -61,7 +60,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
 
   const confirmEvent = async (id : number) => {
 
-    const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, decimalToHexadecimal(clientGameData.current_game_id));
+    const gameTrackerData = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameData.current_game_id)]));
 
     const confirmEventProps: ConfirmEventOutpost = {
       account: account,
@@ -76,8 +75,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
   const confirmAll = async () => {
     for (let index = 0; index < selectedOutposts.length; index++) {
       const element = selectedOutposts[index];
-
-      console.error("this si gettint call")
 
       const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
       const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
@@ -97,7 +94,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         <div className="title-cart-section">
           <h1>
             {" "}
-            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count}
+            {/* <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count} */}
           </h1>
           <h3>Reinforcement available</h3>
         </div>

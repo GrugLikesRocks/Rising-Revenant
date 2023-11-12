@@ -66,11 +66,17 @@ After cloning the project:
 
 ``` cd client && katana --disable-fee ```
 
-2. **Terminal 2 - Contracts:**
+2. **Terminal 2 - Contract build:**
 
 ``` cd client && sozo build && sozo migrate && torii --world  0x592af97e4f312df28125de662c6fb2f0831fab10281ecc0ac2c5c707e86792 ```
 
-3. **Terminal 3 - Client:**
+3. **Terminal 3 - Burner accounts:**
+
+``` bash ./contracts/scripts/default_auth.sh ```
+or (depends on OS)
+``` sh ./contracts/scripts/default_auth.sh ```
+
+4. **Terminal 4 - Client Front end:**
 
 ``` cd client && yarn && yarn dev ```
 

@@ -31,7 +31,7 @@ import { DebugPage } from './debugPage';
 import { useDojo } from '../../hooks/useDojo';
 
 import { getEntityIdFromKeys } from '@dojoengine/utils';
-import {  getUpdatedGameData,  setComponentQuick } from '../../dojo/testCalls';
+import {   setComponentQuick } from '../../dojo/testCalls';
 import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from '../../phaser/constants';
 import { useWASDKeys } from '../../phaser/systems/eventSystems/keyPressListener';
 
@@ -101,15 +101,6 @@ export const MainMenuContainer = () => {
     }
 
   }, [outpostDeadQuery]);
-  useEffect(() => {
-
-    if (totalOutposts.length - outpostDeadQuery.length <= 1 )
-    {
-      setCurrentMenuState(MenuState.WINNER);
-    }
-
-  }, [outpostDeadQuery]);
-
 
   // this only needs to be like this for the debug, once the game ships take out the dependency
   useEffect(() => {
@@ -134,18 +125,6 @@ export const MainMenuContainer = () => {
     };
   }, [currentMenuState]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log('Running code every 10 seconds');
-
-      getUpdatedGameData(view_block_count, clientComponents,contractComponents,account.address,graphSdk);
-
-    }, 10000);
-
-    
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     let animationFrameId: number;

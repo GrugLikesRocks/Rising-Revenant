@@ -1,5 +1,3 @@
-
-
 query getGameEntity($key: String!) {
   entities(keys: [$key]) {
     edges {
@@ -127,6 +125,8 @@ query getReinforcement($game_id: String!, $owner: String!) {
     }
   }
 }
+
+
 
 query getWorldEventEntity($game_id: String!, $entity_id: String!) {
   entities(keys: [$game_id, $entity_id]) {

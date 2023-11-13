@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { GAME_CONFIG, MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
-import { createComponentStructure, getFullEventGameData, getFullOutpostGameData, getGameEntitiesSpecific, getGameTrackerEntity, setClientGameComponent } from "../dojo/testCalls";
+import { createComponentStructure, getFullEventGameData, getFullOutpostGameData, getGameEntitiesSpecific, getGameTrackerEntity, getReinforcementSpecific, setClientGameComponent } from "../dojo/testCalls";
 import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/utils";
 import { decimalToHexadecimal } from "../utils";
 import { CreateGameProps } from "../dojo/types";
@@ -28,7 +28,7 @@ export const LoadingComponent = ({
     const createGame = async () => {
         const createGameProps: CreateGameProps = {
             account: account,
-            preparation_phase_interval: 6,
+            preparation_phase_interval: 15,
             event_interval: 10,
             erc_addr: account.address,
         };
@@ -37,6 +37,8 @@ export const LoadingComponent = ({
     };
 
     useEffect(() => {
+
+        //ofcourse this is a mess
 
         const preloadImages = async () => {
             const imageUrls = [
@@ -128,7 +130,7 @@ export const LoadingComponent = ({
             setComponentFromGraphQLEntity(contractComponents, entityEdge);
 
             await fetchEvents(decimalToHexadecimal(last_game_id), entityEdge.node.models[1].event_count);
-            await getReinforcement();
+            await getReinforcement(decimalToHexadecimal(last_game_id));
             return {
                 hexLastGameId: decimalToHexadecimal(last_game_id),
                 revenantCount: entityEdge.node.models[1].revenant_count
@@ -171,8 +173,12 @@ export const LoadingComponent = ({
             }
         };
 
-        const getReinforcement = async () => {
-            
+        const getReinforcement = async (game_id: string) => {
+            const balanceGrapqhql = await getReinforcementSpecific(graphSdk, game_id, account.address);
+  
+            if (balanceGrapqhql !== undefined) {
+                setComponentFromGraphQLEntity(contractComponents, balanceGrapqhql.edges[0]);
+            }
         };
 
         const fetchEvents = async (game_id: string, event_amount: number) => {

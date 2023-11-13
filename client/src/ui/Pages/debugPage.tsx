@@ -13,7 +13,7 @@ import {
 } from "@latticexyz/recs";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getGameTrackerEntity } from "../../dojo/testQueries";
-import { getFullOutpostGameData, getGameEntitiesSpecific } from "../../dojo/testCalls";
+import {  getFullOutpostGameData, getGameEntitiesSpecific } from "../../dojo/testCalls";
 import {  decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
@@ -125,6 +125,11 @@ export const DebugPage = () => {
     console.log("\n\n\n\n");
   }  
 
+  const getReinfaorceValuesGameWide = () => 
+  {
+
+  }
+
   //#endregion
 
 
@@ -201,7 +206,9 @@ export const DebugPage = () => {
           <div className="button-style-debug">This is a button</div>
           <div className="content-holder">
             <h3>The current address is {account.address}</h3>
-            {/* <h3>The current balance is {getComponentValueStrict(contractComponents.Reinforcement, )}</h3> */}
+            {/* <h3>The current balance is {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]).current_game_id), BigInt(account.address)]))}</h3> */}
+
+            <button onMouseDown={() => {getReinfaorceValuesGameWide()}}>Get All Reinforces Values in game</button>
           </div>
         </div>
 

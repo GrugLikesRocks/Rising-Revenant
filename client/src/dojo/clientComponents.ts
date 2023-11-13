@@ -67,7 +67,7 @@ export function defineClientComponents(world: World) {
 		  {
 			current_game_state : RecsType.Number,
 			current_game_id : RecsType.Number,
-			current_block_number : RecsType.Number,
+			current_block_number : RecsType.Number
 		  },
 		  {
 			metadata: {

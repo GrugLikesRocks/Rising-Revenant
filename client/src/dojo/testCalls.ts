@@ -344,7 +344,7 @@ export const setClientGameComponent = async (phase: number,  game_id: number, cu
   const componentSchemaClientGameData = {
     "current_game_state": phase,
     "current_game_id": game_id,
-    "current_block_number": current_block,
+    "current_block_number": current_block
   };
 
   // console.log("\n\n\n\n\n\n")
@@ -370,6 +370,45 @@ export const setOutpostClientComponent = async (id: number, owned: boolean, even
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
 }
 
+
+
+export const fetchAllReinforcesinGameAmount = async (game_id: string): Promise<number> => {
+  
+
+  // let amountOfReinforcementsExtractedInGame = 0;
+  // let addressQueried: string[] = [];
+
+  // for (let index = 0; index < outpostArray.length; index++) {
+  //     const element = outpostArray[index];
+  //     const outpost = getComponentValueStrict(contractComponents.Outpost, element);
+
+  //     amountOfReinforcementsExtractedInGame = amountOfReinforcementsExtractedInGame + outpost.lifes;
+
+  //     if (!addressQueried.includes(outpost.owner)) {
+  //         const amountOfReinforcementInAccountQL = await getReinforcementSpecific(graphSdk, decimalToHexadecimal(clientGameData.current_game_id), account.address);
+  //         console.error(amountOfReinforcementInAccountQL);
+  //         if (amountOfReinforcementInAccountQL === undefined)
+  //         {
+  //             continue;
+  //         }
+
+  //         const amountOfReinforcementInAccountExtracted = amountOfReinforcementInAccountQL.edges[0].node.models[0].reinforcement_count;
+              
+  //         addressQueried.push(account.address.toString());
+
+  //         amountOfReinforcementsExtractedInGame = amountOfReinforcementsExtractedInGame + amountOfReinforcementInAccountExtracted;
+  //     }
+  // }
+  // console.error("total amount of reinforces taken from the game data is ",amountOfReinforcementsExtractedInGame )
+  // setReinforcementsInGame(amountOfReinforcementsExtractedInGame);
+  
+  
+  
+  return 0
+};
+
+
+
 export const getUpdatedGameData = async (view_block_count: any, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
 
   const blockCount = await view_block_count();
@@ -386,7 +425,7 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
     phase = 2;
   }
 
-  setClientGameComponent(phase, clientGameComp.current_game_id, blockCount!, clientComponents);
+  setClientGameComponent(phase, clientGameComp.current_game_id, blockCount!,clientComponents);
 
   const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
 
@@ -451,3 +490,4 @@ const loadEvents = async (graphSdk: any, game_id: string, event_amount: number, 
     setComponentFromGraphQLEntity(contractComponents, element);
   }
 }
+

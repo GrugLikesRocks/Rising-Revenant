@@ -12,8 +12,9 @@ import { useEntityQuery } from "@latticexyz/react";
 import { useDojo } from "../../hooks/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
-import { truncateString } from "../../utils";
+import { decimalToHexadecimal, truncateString } from "../../utils";
 import { ClickWrapper } from "../clickWrapper";
+import { getReinforcementSpecific } from "../../dojo/testCalls";
 
 
 export const TopBarComponent = () => {
@@ -23,23 +24,29 @@ export const TopBarComponent = () => {
     const [numberOfRevenants, setNumberOfRevenants] = useState(0);
     const [Jackpot, setJackpot] = useState(2000);
 
-    const [reinforcementNumber, setReinforcementNumber] = useState(0);
+    const [playerReinforcementNumber, setPlayerReinforcementNumber] = useState(0);
     const [userAddress, setUserAddress] = useState("");
 
     const [showTooltip, setShowTooltip] = useState(false); 
+
+    const [reinforcementsInGame, setReinforcementsInGame] = useState(0)
 
 
     const {
         account: { account },
         networkLayer: {
-            network: { contractComponents, clientComponents },
+            network: { contractComponents, clientComponents,graphSdk },
+            systemCalls: {view_block_count}
         },
     } = useDojo();
 
     const outpostArray = useEntityQuery([Has(contractComponents.Outpost)]);
     const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
     const clientGameData = useEntityQuery([Has(clientComponents.ClientGameData)]);
-  
+
+    const entityCounterArr = useEntityQuery([Has(contractComponents.GameEntityCounter)]);
+    
+
     useEffect(() => {
 
         const gameClientData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
@@ -58,10 +65,10 @@ export const TopBarComponent = () => {
         setNumberOfRevenants(outpostArray.length);
 
         if (balance === undefined) {
-            setReinforcementNumber(0);
+            setPlayerReinforcementNumber(0);
         }
         else {
-            setReinforcementNumber(balance.reinforcement_count);
+            setPlayerReinforcementNumber(balance.reinforcement_count);
         }
 
         setUserAddress(account.address);
@@ -76,6 +83,19 @@ export const TopBarComponent = () => {
 
     }, [outpostArray, clientGameData]);
 
+    
+    useEffect(() => {
+        
+        if (entityCounterArr.length !== 0)
+        {
+            const reinforcementInGame = getComponentValueStrict(contractComponents.GameEntityCounter, entityCounterArr[0])
+
+            setReinforcementsInGame(reinforcementInGame.reinforcement_count);
+        }
+        
+    }, [entityCounterArr]);
+    
+  
     return (
         <div className="top-bar-container-layout">
             <div style={{ width: "100%", height: "30%" }}></div>
@@ -95,7 +115,7 @@ export const TopBarComponent = () => {
                     <div className="text-section">
 
                         {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/{outpostArray.length}</h4> : <h4>Revenants Summoned: {outpostArray.length || "0"}/2000</h4>}
-                        <h4>Reinforcement: {reinforcementNumber}</h4>
+                        <h4>Reinforcement: {reinforcementsInGame}</h4>
                     </div>
 
                     {isloggedIn ? 

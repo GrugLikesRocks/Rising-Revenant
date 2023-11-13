@@ -52,6 +52,7 @@ mod revenant_actions {
             game.assert_can_create_outpost(world);
 
             let mut player_info = get!(world, (game_id, player), PlayerInfo);
+            
             if (!player_info.inited) {
                 player_info.inited = true;
                 player_info.reinforcement_count = REINFORCEMENT_INIT_COUNT;

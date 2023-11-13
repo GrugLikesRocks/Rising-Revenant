@@ -33,7 +33,13 @@ export const PreFakeIndex = () => {
   }, []);
 
   const handleLoadingComplete = () => {
+
+    console.log("\n\n\n\n\n\n\n\n\n")
+    console.error(account.address)
     setLoadingState(true);
+
+    console.error(account.address)
+    console.log("\n\n\n\n\n\n\n\n\n")
   };
 
 
@@ -41,7 +47,7 @@ export const PreFakeIndex = () => {
     <div>
       {canLoad === true ? (
         <>
-          {loadingComplete === false && <LoadingComponent handleLoadingComplete={handleLoadingComplete} />}
+          {loadingComplete === false && <LoadingComponent handleLoadingComplete={handleLoadingComplete}  account={account} />}
           {loadingComplete && <MainStateManager />}
         </>
       ) :   <ClickWrapper> <button style={{position:"absolute", top:"50%", left:"50%", width:"fit-content"}} onClick={create}>Create Burner</button> </ClickWrapper>}

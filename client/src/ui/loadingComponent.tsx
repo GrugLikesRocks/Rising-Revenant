@@ -9,19 +9,21 @@ import { getComponentValue } from "@latticexyz/recs";
 import { getComponentValueStrict } from "@dojoengine/recs";
 
 
+
+
 export const LoadingComponent = ({
     handleLoadingComplete,
+    account,
 }: {
     handleLoadingComplete: () => void;
+    account: any
 }) => {
 
     const {
-        account: { account },
         networkLayer: {
             systemCalls: { create_game, view_block_count },
             network: { graphSdk, contractComponents, clientComponents },
             components: {GameEntityCounter}
-            
         },
     } = useDojo();
 
@@ -29,7 +31,7 @@ export const LoadingComponent = ({
         const createGameProps: CreateGameProps = {
             account: account,
             preparation_phase_interval: 15,
-            event_interval: 10,
+            event_interval: 5,
             erc_addr: account.address,
         };
 
@@ -59,7 +61,7 @@ export const LoadingComponent = ({
 
             await Promise.all(imagePromises);
 
-            // await new Promise((resolve) => setTimeout(resolve, 5000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         };
 
         const createClientComponent = async (game_id: number, start_block: number, prep_phase_length: number) => {
@@ -108,7 +110,7 @@ export const LoadingComponent = ({
             let last_game_id: any = await getGameTrackerEntity();
 
             if (last_game_id === 0 || last_game_id === undefined) {
-                console.log("creating game");
+                // console.log("creating game");
                 await createGame();
 
                 await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -165,7 +167,7 @@ export const LoadingComponent = ({
 
                 const craftedEdgeCOD = createComponentStructure(componentSchemaClientOutpostData, keys, componentName);
 
-                console.log(craftedEdgeCOD)
+                // console.log(craftedEdgeCOD)
                 
                 setComponentFromGraphQLEntity(clientComponents, craftedEdgeCOD);
 
@@ -209,15 +211,18 @@ export const LoadingComponent = ({
 
             if (gameData === undefined || gameTracker === undefined || clientGameData === undefined) {
                 await new Promise((resolve) => setTimeout(resolve, 5000));
-                console.log("there was an error in the laoding of all assets, going to try again")
+                // console.log("there was an error in the laoding of all assets, going to try again")
                 orderOfOperations();
             }
             else {
+                console.log()
                 handleLoadingComplete();
             }
         };
 
         console.log("Loading data...");
+        console.log(account.address)
+        // console.log(address)
         orderOfOperations();
     }, []);
 

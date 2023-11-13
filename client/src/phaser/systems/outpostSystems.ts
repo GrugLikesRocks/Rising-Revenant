@@ -14,8 +14,10 @@ export const spawnOutposts = (layer: PhaserLayer) => {
     scenes: {
       Main: { objectPool },
     },
+    
     networkLayer: {
       components: { Outpost, ClientOutpostData },
+      
     },
   } = layer;
 

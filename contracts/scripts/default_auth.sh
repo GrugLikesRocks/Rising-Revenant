@@ -23,7 +23,7 @@ echo revenant actions : $REVENANT_ACTIONS_ADDRESS
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
-COMPONENTS=("Game" "GameTracker"  "GameEntityCounter" "WorldEvent" "Revenant" "PlayerInfo" "Outpost" "OutpostPosition" )
+COMPONENTS=("Game" "GameTracker"  "GameEntityCounter" "WorldEvent" "Revenant" "PlayerInfo" "Outpost" "OutpostPosition" "WorldEventTracker" )
 
 for component in ${COMPONENTS[@]}; do
     sozo auth writer $component $REVENANT_ACTIONS_ADDRESS  --world $WORLD_ADDRESS --rpc-url $RPC_URL

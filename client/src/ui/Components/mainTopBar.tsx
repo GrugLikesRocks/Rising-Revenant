@@ -27,8 +27,6 @@ export const TopBarComponent = () => {
     const [playerReinforcementNumber, setPlayerReinforcementNumber] = useState(0);
     const [userAddress, setUserAddress] = useState("");
 
-    const [showTooltip, setShowTooltip] = useState(false); 
-
     const [reinforcementsInGame, setReinforcementsInGame] = useState(0)
 
 
@@ -36,7 +34,7 @@ export const TopBarComponent = () => {
         account: { account },
         networkLayer: {
             network: { contractComponents, clientComponents,graphSdk },
-            systemCalls: {view_block_count}
+            systemCalls: {}
         },
     } = useDojo();
 
@@ -90,7 +88,7 @@ export const TopBarComponent = () => {
         {
             const reinforcementInGame = getComponentValueStrict(contractComponents.GameEntityCounter, entityCounterArr[0])
 
-            setReinforcementsInGame(reinforcementInGame.reinforcement_count);
+            setReinforcementsInGame(reinforcementInGame.reinforcement_count + reinforcementInGame.remain_life_count);
         }
         
     }, [entityCounterArr]);

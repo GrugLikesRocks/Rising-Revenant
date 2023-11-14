@@ -38,6 +38,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
   } = useDojo();
 
   const selectedOutposts = useEntityQuery([HasValue(clientComponents.ClientOutpostData, { owned: true })]);
+  const allOutpostinEventAdminBot = useEntityQuery([HasValue(clientComponents.ClientOutpostData, { event_effected: true })]);
   const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
   const moveCameraHere = (x: number, y: number) => {
@@ -73,17 +74,34 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
 }
 
   const confirmAll = async () => {
-    for (let index = 0; index < selectedOutposts.length; index++) {
-      const element = selectedOutposts[index];
 
-      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-      const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
-
-      if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
-      {
-        await confirmEvent(clientOutpostData.id);
+    if (clientGameData.current_game_admin)
+    {
+      for (let index = 0; index < allOutpostinEventAdminBot.length; index++) {
+        const element = selectedOutposts[index];
+  
+        const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+        const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+  
+        if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
+        {
+          await confirmEvent(clientOutpostData.id);
+        }
       }
-
+    }
+    else
+    {
+      for (let index = 0; index < selectedOutposts.length; index++) {
+        const element = selectedOutposts[index];
+  
+        const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+        const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+  
+        if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
+        {
+          await confirmEvent(clientOutpostData.id);
+        }
+      }
     }
   }
 

@@ -14,7 +14,6 @@ export const WaitForTransactionPage: React.FC<WaitForTransactionPageProps> = ({ 
 
     const [ellipsisCount, setEllipsisCount] = useState(0);
 
-
     const goNextPage = () => {
         setMenuState(PrepPhaseStages.BUY_REIN);
     };
@@ -34,6 +33,7 @@ export const WaitForTransactionPage: React.FC<WaitForTransactionPageProps> = ({ 
     }, []);
 
     useEffect(() => {
+
         const timeoutId = setTimeout(() => {
             goNextPage();
         }, 10000);

@@ -16,9 +16,13 @@ import { getGameTrackerEntity } from "../../dojo/testQueries";
 import {  getFullOutpostGameData, getGameEntitiesSpecific } from "../../dojo/testCalls";
 import {  decimalToHexadecimal } from "../../utils";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
+import { useEffect, useState } from "react";
 
 
 export const DebugPage = () => {
+
+  const [isAdmin, setIsAdmin] = useState(false)
+
   const {
     account: { account },
     networkLayer: {
@@ -160,6 +164,34 @@ export const DebugPage = () => {
     console.log("\nend of array of client outpost Data\n\n")
   }
 
+  useEffect(() => {
+
+    console.error("This si checking for the current amdin")
+    
+    if (clientGameArray.length === 0)
+    {
+      return;
+    }
+
+    const ff = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]).current_game_admin
+
+    console.log("\n\n\n\n\n\n\n\n\n\n");
+    console.error(ff)
+    console.log("\n\n\n\n\n\n\n\n\n\n");
+
+    if (ff)
+    {
+      setIsAdmin(true)
+    }
+    else
+    {
+      setIsAdmin(false);
+    }
+  
+    
+  }, [clientGameArray])
+  
+
   //#endregion 
 
 
@@ -199,7 +231,10 @@ export const DebugPage = () => {
 
   return (
     <ClickWrapper className="revenant-jurnal-page-container">
-      <h1 style={{ color: "white" }}>Debug Menu</h1>
+
+      {isAdmin ?   
+      <h1 style={{ color: "white" }}>Debug Menu Admin</h1>  :   
+      <h1 style={{ color: "white" }}>Debug Menu </h1>}
       <div className="buttons-holder">
 
         <div className="data-container">
@@ -207,7 +242,6 @@ export const DebugPage = () => {
           <div className="content-holder">
             <h3>The current address is {account.address}</h3>
             {/* <h3>The current balance is {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]).current_game_id), BigInt(account.address)]))}</h3> */}
-
             <button onMouseDown={() => {getReinfaorceValuesGameWide()}}>Get All Reinforces Values in game</button>
           </div>
         </div>
@@ -242,7 +276,8 @@ export const DebugPage = () => {
         </div>
 
         <div className="data-container">
-          <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div>
+          {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>}
+          
           <div className="content-holder">
             <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
             <button onMouseDown={() => {printAllSavedDataEvents()}}>Print Data saved</button>

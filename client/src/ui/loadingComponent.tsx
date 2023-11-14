@@ -6,10 +6,6 @@ import { getEntityIdFromKeys, setComponentFromGraphQLEntity } from "@dojoengine/
 import { decimalToHexadecimal } from "../utils";
 import { CreateGameProps } from "../dojo/types";
 import { getComponentValue } from "@latticexyz/recs";
-import { getComponentValueStrict } from "@dojoengine/recs";
-
-
-
 
 export const LoadingComponent = ({
     handleLoadingComplete,
@@ -103,7 +99,7 @@ export const LoadingComponent = ({
                 phase = 2;
             }
 
-            await setClientGameComponent(phase, game_id, current_block!, clientComponents);
+            await setClientGameComponent(phase, game_id, current_block!, clientComponents,contractComponents, account.address);
         };
 
         const fetchTheCurrentGame = async () => {

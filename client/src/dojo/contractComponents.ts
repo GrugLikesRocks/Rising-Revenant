@@ -9,6 +9,7 @@ export function defineContractComponents(world: World) {
         world,
         {
           game_id: RecsType.Number,
+          admin: RecsType.String,
           start_block_number: RecsType.Number,
           prize: RecsType.Number,
           preparation_phase_interval: RecsType.Number,
@@ -33,6 +34,7 @@ export function defineContractComponents(world: World) {
           outpost_count: RecsType.Number,
           event_count: RecsType.Number,
           outpost_exists_count: RecsType.Number,
+          remain_life_count: RecsType.Number,
           reinforcement_count: RecsType.Number,
           trade_count: RecsType.Number,
         },

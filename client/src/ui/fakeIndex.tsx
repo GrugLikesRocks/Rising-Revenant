@@ -55,6 +55,8 @@ export const MainStateManager = () => {
         return () => clearInterval(intervalId);
     }, [gamePhase, account]);
 
+    
+
     return (
         <Wrapper>
             {gamePhase === 1 && <PrepPhaseManager />}

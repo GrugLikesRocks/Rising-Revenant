@@ -339,16 +339,32 @@ export function setComponentQuick(schema: any, keys: string[], componentName: st
   setComponentFromGraphQLEntity(components, component);
 }
 
-export const setClientGameComponent = async (phase: number,  game_id: number, current_block: number, clientComponents: any) => {
+export const setClientGameComponent = async (phase: number,  game_id: number, current_block: number, clientComponents: any, contractComponents: any, account: string) => {
+
+
+  const firstOutpost = getComponentValue(contractComponents.Outpost, getEntityIdFromKeys([BigInt(game_id), BigInt(1)]))
+
+  let current_game_admin = false;
+
+  if (firstOutpost !== undefined)
+  { 
+    if (firstOutpost.owner ===account)
+      {current_game_admin = true}
+   
+  }
+
+
+  console.log("\n\n\n\n\n\n\n\n\n\n");
+  console.error(firstOutpost)
+  console.error(current_game_admin)
+  console.log("\n\n\n\n\n\n\n\n\n\n");
 
   const componentSchemaClientGameData = {
     "current_game_state": phase,
     "current_game_id": game_id,
-    "current_block_number": current_block
+    "current_block_number": current_block,
+    "current_game_admin": current_game_admin,
   };
-
-  // console.log("\n\n\n\n\n\n")
-  // console.log(componentSchemaClientGameData);
 
   const craftedEdgeGT = createComponentStructure(componentSchemaClientGameData, ["0x1"], "ClientGameData");
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
@@ -425,7 +441,7 @@ export const getUpdatedGameData = async (view_block_count: any, clientComponents
     phase = 2;
   }
 
-  setClientGameComponent(phase, clientGameComp.current_game_id, blockCount!,clientComponents);
+  setClientGameComponent(phase, clientGameComp.current_game_id, blockCount!,clientComponents,contractComponents, address);
 
   const entityEdge: any = await getGameEntitiesSpecific(graphSdk, decimalToHexadecimal(clientGameComp.current_game_id));
 

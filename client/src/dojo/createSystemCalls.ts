@@ -116,20 +116,41 @@ export function createSystemCalls(
 
     const purchase_reinforcement = async ({ account, game_id, count }: PurchaseReinforcementProps) => {
 
-        const reinforcementId = uuid();
-        const balanceKey =  getEntityIdFromKeys([BigInt(game_id), BigInt(account.address)]);
+        // const reinforcementId = uuid();
+        // const balanceKey =  getEntityIdFromKeys([BigInt(game_id), BigInt(account.address)]);
 
-        const reinforecementBalance = getComponentValue(PlayerInfo, balanceKey)
+        // const reinforecementBalance = getComponentValue(PlayerInfo, balanceKey)
 
-        PlayerInfo.addOverride(reinforcementId, {
-            entity:  balanceKey,
-            value: {
-                reinforcement_count: reinforecementBalance?.reinforcement_count,
-            }
-        })
+        // PlayerInfo.addOverride(reinforcementId, {
+        //     entity:  balanceKey,
+        //     value: {
+        //         reinforcement_count: reinforecementBalance?.reinforcement_count,
+        //     }
+        // })
+
+        // try {
+        //     const tx = await execute(account, "revenant_actions", "purchase_reinforcement", [game_id, count]);
+        //     const receipt = await account.waitForTransaction(
+        //         tx.transaction_hash,
+        //         { retryInterval: 100 }
+        //     )
+
+        //     setComponentsFromEvents(contractComponents,
+        //         getEvents(receipt)
+        //     );
+
+        //     notify(`Purchased ${count} reinforcements`);
+        // } catch (e) {
+        //     console.log(e)
+        //     PlayerInfo.removeOverride(reinforcementId);
+        // }
+        // finally
+        // {
+        //     PlayerInfo.removeOverride(reinforcementId);
+        // }
 
         try {
-            const tx = await execute(account, "revenant_actions", "purchase_reinforcement", [game_id, count]);
+            const tx = await execute(account, "revenant_actions", "claim", [game_id]);
             const receipt = await account.waitForTransaction(
                 tx.transaction_hash,
                 { retryInterval: 100 }
@@ -142,12 +163,8 @@ export function createSystemCalls(
             notify(`Purchased ${count} reinforcements`);
         } catch (e) {
             console.log(e)
-            PlayerInfo.removeOverride(reinforcementId);
         }
-        finally
-        {
-            PlayerInfo.removeOverride(reinforcementId);
-        }
+      
     };
 
     const reinforce_outpost = async ({ account, game_id, outpost_id }: ReinforceOutpostProps) => {
@@ -175,7 +192,6 @@ export function createSystemCalls(
     };
 
     const create_event = async ({ account, game_id }: CreateEventProps) => {
-        
         
         try {
             const tx = await execute(account, "world_event_actions", "create", [game_id]);

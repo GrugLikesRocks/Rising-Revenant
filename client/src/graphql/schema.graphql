@@ -7,6 +7,7 @@ query getGameEntity($key: String!) {
           __typename
           ... on Game {
             game_id
+            admin
             start_block_number
             prize
             preparation_phase_interval
@@ -20,6 +21,7 @@ query getGameEntity($key: String!) {
             outpost_count
             event_count
             outpost_exists_count
+            remain_life_count
             reinforcement_count
             trade_count
           }

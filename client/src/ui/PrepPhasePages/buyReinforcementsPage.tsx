@@ -27,15 +27,12 @@
 //     const [reinforcementNumber, setReinforcementNumber] = useState(2);
 //     const [priceOfReinforcements, setPriceOfReinforcements] = useState(5);
 
-
-
 //     const {
 //         account: { account },
 //         networkLayer: {
 //             systemCalls: { purchase_reinforcement },
 //         },
 //     } = useDojo()
-
 
 //     const buyReinforcements = async (num: number) => {
 
@@ -68,28 +65,33 @@
 //     )
 // }
 
-
 import React, { useEffect, useState } from "react";
 import { PrepPhaseStages } from "./prepPhaseManager";
 
-import "./PagesStyles/BuyingPageStyle.css"
+import "./PagesStyles/BuyingPageStyle.css";
 
 import { PurchaseReinforcementProps } from "../../dojo/types";
 import { ClickWrapper } from "../clickWrapper";
 import { useDojo } from "../../hooks/useDojo";
 import { useEntityQuery } from "@latticexyz/react";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-import { HasValue, Has, getComponentValueStrict, getComponentValue } from "@latticexyz/recs";
+import {
+  HasValue,
+  Has,
+  getComponentValueStrict,
+  getComponentValue,
+} from "@latticexyz/recs";
 
 interface BuyReinforcementsPageProps {
-    setMenuState: React.Dispatch<PrepPhaseStages>;
+  setMenuState: React.Dispatch<PrepPhaseStages>;
 }
 
 const max = 3;
 
-const notify = (message: string) => toast(message, {
+const notify = (message: string) =>
+  toast(message, {
     position: "top-left",
     autoClose: 5000,
     hideProgressBar: false,
@@ -98,78 +100,101 @@ const notify = (message: string) => toast(message, {
     draggable: true,
     progress: undefined,
     theme: "dark",
-});
+  });
 
-export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({ setMenuState }) => {
-    const [reinforcementNumber, setReinforcementNumber] = useState(2);
-    const [priceOfReinforcements, setPriceOfReinforcements] = useState(5);
+export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({
+  setMenuState,
+}) => {
+  const [reinforcementNumber, setReinforcementNumber] = useState(2);
+  const [priceOfReinforcements, setPriceOfReinforcements] = useState(5);
 
-    const [currentPlayerBalance, setCurrentPlayerBalance] = useState(3);
+  const [currentPlayerBalance, setCurrentPlayerBalance] = useState(0);
 
-    const {
-        account: { account },
-        networkLayer: {
-            network: { contractComponents },
-            systemCalls: { purchase_reinforcement },
-        },
-    } = useDojo()
+  const {
+    account: { account },
+    networkLayer: {
+      network: { contractComponents },
+      systemCalls: { purchase_reinforcement },
+    },
+  } = useDojo();
 
-    const ownBalance = useEntityQuery([HasValue(contractComponents.PlayerInfo, { owner: account.address })]);
-    // const balance = getComponentValue(contractComponents.PlayerInfo, ownBalance[0]);
+  const ownBalance = useEntityQuery([
+    HasValue(contractComponents.PlayerInfo, { owner: account.address }),
+  ]);
+  const balance = getComponentValue(contractComponents.PlayerInfo, ownBalance[0]);
 
-    const buyReinforcements = async (num: number) => {
 
-        const purchaseReinforcementProps: PurchaseReinforcementProps = {
-            account: account,
-            game_id: 1,
-            count: num,
-        }
+  useEffect(() => {
+    
 
-        await purchase_reinforcement(purchaseReinforcementProps);
+    if (ownBalance.length > 0)
+    {
+        const balance = getComponentValue(contractComponents.PlayerInfo, ownBalance[0]).reinforcement_count;
 
-        setMenuState(PrepPhaseStages.WAIT_PHASE_OVER)
+        setCurrentPlayerBalance(balance)
     }
 
+  }, [ownBalance])
+  
 
-    // useEffect(() => {
-    //     console.error("balance", ownBalance);
-    //     if (ownBalance.length === 0) {
-    //         return;
-    //     }
-    //     else
-    //     {
-    //         setCurrentPlayerBalance(getComponentValueStrict(contractComponents.PlayerInfo, ownBalance[0]).reinforcement_count);
-    //     }
-    // }, [ownBalance]);
+  const buyReinforcements = async (num: number) => {
+    const purchaseReinforcementProps: PurchaseReinforcementProps = {
+      account: account,
+      game_id: 1,
+      count: num,
+    };
 
-    useEffect(() => {
-        console.log(currentPlayerBalance)
-        console.log(reinforcementNumber)
+    await purchase_reinforcement(purchaseReinforcementProps);
 
-        if (currentPlayerBalance === undefined) {
-            return;
-        }
+    setMenuState(PrepPhaseStages.WAIT_PHASE_OVER);
+  };
 
-        if (currentPlayerBalance === max) {
-            return;
-        }
+  useEffect(() => {
+    console.log(currentPlayerBalance);
+    console.log(reinforcementNumber);
 
-        if (reinforcementNumber > max - currentPlayerBalance) {
-            setReinforcementNumber(max - currentPlayerBalance);
-        }
+    if (currentPlayerBalance === undefined) {
+      return;
+    }
 
-        if (reinforcementNumber < 1) {
-            setReinforcementNumber(1);
-        }
+    if (currentPlayerBalance === max) {
+      return;
+    }
 
-    }, [reinforcementNumber, currentPlayerBalance]);
-   
-    return (
-        <div className="br-page-container">
-            <ClickWrapper className="main-content">
-                <h2 className="main-content-header">REINFORCE YOUR OUTPOST</h2>
-                <div className="amount-section">
-                <div className="button-style" onMouseDown={() => { setReinforcementNumber(reinforcementNumber -1) }} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> - </div>
+    if (reinforcementNumber > max - currentPlayerBalance) {
+      setReinforcementNumber(max - currentPlayerBalance);
+    }
+
+    if (reinforcementNumber < 1) {
+      setReinforcementNumber(1);
+    }
+  }, [reinforcementNumber, currentPlayerBalance]);
+
+  return (
+    <div className="br-page-container">
+      <ClickWrapper className="main-content">
+        <h2 className="main-content-header">REINFORCE YOUR OUTPOST</h2>
+        <div className="amount-section">
+          {currentPlayerBalance > 0 ? (
+            <div
+              className="button-style-prep-phase"
+              onMouseDown={() => setMenuState(PrepPhaseStages.WAIT_PHASE_OVER)}
+            >
+              Have already claimed your reinforcements, click to continue
+            </div>
+          ) : (
+            <div
+              className="button-style-prep-phase"
+              onMouseDown={() => {
+                buyReinforcements(3);
+                setMenuState(PrepPhaseStages.WAIT_PHASE_OVER);
+              }}
+            >
+              claim your free reinforces to continue!!
+            </div>
+          )}
+        </div>
+        {/* <div className="button-style" onMouseDown={() => { setReinforcementNumber(reinforcementNumber -1) }} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> - </div>
                      <h2>{reinforcementNumber}</h2>
                      <div className="button-style" onMouseDown={() => {  setReinforcementNumber(reinforcementNumber +1) }} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> + </div>
                 </div>
@@ -196,15 +221,14 @@ export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({ set
                             </div>
                         )}  
                         </>
-                    } 
+                    }  */}
 
-                
-                {/* <div className="button-style" onMouseDown={() => { buyReinforcements(reinforcementNumber) }}> Reinforce (Tot: {priceOfReinforcements * reinforcementNumber} $LORDS)</div> */}
-                
-                
-            </ClickWrapper>
+        {/* <div className="button-style" onMouseDown={() => { buyReinforcements(reinforcementNumber) }}> Reinforce (Tot: {priceOfReinforcements * reinforcementNumber} $LORDS)</div> */}
+      </ClickWrapper>
 
-            <div className="footer-text">1 Reinforcement = {priceOfReinforcements} $LORDS</div>
-        </div>
-    )
-}
+      <div className="footer-text">
+        1 Reinforcement = {priceOfReinforcements} $LORDS
+      </div>
+    </div>
+  );
+};

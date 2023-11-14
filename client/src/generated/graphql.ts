@@ -28,6 +28,7 @@ export type Scalars = {
 
 export type Game = {
   __typename?: 'Game';
+  admin?: Maybe<Scalars['ContractAddress']['output']>;
   entity?: Maybe<World__Entity>;
   erc_addr?: Maybe<Scalars['ContractAddress']['output']>;
   event_interval?: Maybe<Scalars['u64']['output']>;
@@ -58,6 +59,7 @@ export type GameEntityCounter = {
   outpost_count?: Maybe<Scalars['u32']['output']>;
   outpost_exists_count?: Maybe<Scalars['u32']['output']>;
   reinforcement_count?: Maybe<Scalars['u32']['output']>;
+  remain_life_count?: Maybe<Scalars['u32']['output']>;
   revenant_count?: Maybe<Scalars['u32']['output']>;
   trade_count?: Maybe<Scalars['u32']['output']>;
 };
@@ -85,6 +87,7 @@ export enum GameEntityCounterOrderField {
   OutpostCount = 'OUTPOST_COUNT',
   OutpostExistsCount = 'OUTPOST_EXISTS_COUNT',
   ReinforcementCount = 'REINFORCEMENT_COUNT',
+  RemainLifeCount = 'REMAIN_LIFE_COUNT',
   RevenantCount = 'REVENANT_COUNT',
   TradeCount = 'TRADE_COUNT'
 }
@@ -125,6 +128,13 @@ export type GameEntityCounterWhereInput = {
   reinforcement_countLT?: InputMaybe<Scalars['u32']['input']>;
   reinforcement_countLTE?: InputMaybe<Scalars['u32']['input']>;
   reinforcement_countNEQ?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_count?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countEQ?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countGT?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countGTE?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countLT?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countLTE?: InputMaybe<Scalars['u32']['input']>;
+  remain_life_countNEQ?: InputMaybe<Scalars['u32']['input']>;
   revenant_count?: InputMaybe<Scalars['u32']['input']>;
   revenant_countEQ?: InputMaybe<Scalars['u32']['input']>;
   revenant_countGT?: InputMaybe<Scalars['u32']['input']>;
@@ -147,6 +157,7 @@ export type GameOrder = {
 };
 
 export enum GameOrderField {
+  Admin = 'ADMIN',
   ErcAddr = 'ERC_ADDR',
   EventInterval = 'EVENT_INTERVAL',
   GameId = 'GAME_ID',
@@ -203,6 +214,13 @@ export type GameTrackerWhereInput = {
 };
 
 export type GameWhereInput = {
+  admin?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminGT?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminGTE?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminLT?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminLTE?: InputMaybe<Scalars['ContractAddress']['input']>;
+  adminNEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
   erc_addr?: InputMaybe<Scalars['ContractAddress']['input']>;
   erc_addrEQ?: InputMaybe<Scalars['ContractAddress']['input']>;
   erc_addrGT?: InputMaybe<Scalars['ContractAddress']['input']>;
@@ -1261,7 +1279,7 @@ export type GetGameEntityQueryVariables = Exact<{
 }>;
 
 
-export type GetGameEntityQuery = { __typename?: 'World__Query', entities?: { __typename?: 'World__EntityConnection', edges?: Array<{ __typename?: 'World__EntityEdge', node?: { __typename?: 'World__Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', game_id?: any | null, start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter', game_id?: any | null, revenant_count?: any | null, outpost_count?: any | null, event_count?: any | null, outpost_exists_count?: any | null, reinforcement_count?: any | null, trade_count?: any | null } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'PlayerInfo' } | { __typename: 'ReinforcementBalance' } | { __typename: 'Revenant' } | { __typename: 'Trade' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
+export type GetGameEntityQuery = { __typename?: 'World__Query', entities?: { __typename?: 'World__EntityConnection', edges?: Array<{ __typename?: 'World__EntityEdge', node?: { __typename?: 'World__Entity', keys?: Array<string | null> | null, models?: Array<{ __typename: 'Game', game_id?: any | null, admin?: any | null, start_block_number?: any | null, prize?: any | null, preparation_phase_interval?: any | null, event_interval?: any | null, erc_addr?: any | null, status?: any | null } | { __typename: 'GameEntityCounter', game_id?: any | null, revenant_count?: any | null, outpost_count?: any | null, event_count?: any | null, outpost_exists_count?: any | null, remain_life_count?: any | null, reinforcement_count?: any | null, trade_count?: any | null } | { __typename: 'GameTracker' } | { __typename: 'Outpost' } | { __typename: 'OutpostPosition' } | { __typename: 'PlayerInfo' } | { __typename: 'ReinforcementBalance' } | { __typename: 'Revenant' } | { __typename: 'Trade' } | { __typename: 'WorldEvent' } | { __typename: 'WorldEventTracker' } | null> | null } | null } | null> | null } | null };
 
 export type GetOutpostEntityQueryVariables = Exact<{
   game_id: Scalars['String']['input'];
@@ -1312,6 +1330,7 @@ export const GetGameEntityDocument = gql`
           __typename
           ... on Game {
             game_id
+            admin
             start_block_number
             prize
             preparation_phase_interval
@@ -1325,6 +1344,7 @@ export const GetGameEntityDocument = gql`
             outpost_count
             event_count
             outpost_exists_count
+            remain_life_count
             reinforcement_count
             trade_count
           }

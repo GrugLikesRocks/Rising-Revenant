@@ -32,6 +32,14 @@ export const PreFakeIndex = () => {
 
   }, []);
 
+
+  useEffect(() => {
+
+    console.error("change of address" , account.address)
+
+  }, [account]);
+
+
   const handleLoadingComplete = () => {
 
     console.log("\n\n\n\n\n\n\n\n\n")

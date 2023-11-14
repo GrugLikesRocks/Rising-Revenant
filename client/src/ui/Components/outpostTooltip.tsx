@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import "./ComponentsStyles/OutpostTooltipStyles.css";
 
-import { MenuState } from "../Pages/mainMenuContainer";
-
 import { ClickWrapper } from "../clickWrapper";
 
 import { useDojo } from "../../hooks/useDojo";
@@ -15,7 +13,7 @@ import { useEntityQuery } from "@latticexyz/react";
 import { ConfirmEventOutpost } from "../../dojo/types";
 
 import { setTooltipArray } from "../../phaser/systems/eventSystems/eventEmitter";
-import { decimalToHexadecimal, truncateString } from "../../utils";
+import {  truncateString } from "../../utils";
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
@@ -176,7 +174,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
               return (
                 <div>
                   <span style={{ color: 'orange' }}>In Event</span>
-                  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper>
+                   {revenantData.owner === account.address ?  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper> : <div></div>}
                 </div>
               );
             case 3:
@@ -189,7 +187,7 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
 
       <div className="revenant-data-container">
         <h1>REVENANT DATA</h1>
-        <h3>Owner: {truncateString(revenantData.owner, 5)}</h3>
+        {revenantData.owner === account.address ?   <h3>Owner: You</h3> : <h3>Owner: {truncateString(revenantData.owner, 5)}</h3>}
         <h3>Name: {`Revenant ${outpostClientData.id}`}</h3>
         <h3>ID: {outpostClientData.id}</h3>
       </div>

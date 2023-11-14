@@ -1,8 +1,7 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import { ClientComponents } from "./createClientComponents";
-import { getEntityIdFromKeys, getEvents, hexToAscii, setComponentsFromEvents} from "@dojoengine/utils";
-import { uuid } from "@latticexyz/utils";
-import { getComponentValue, getComponentValueStrict, Components, Schema,setComponent } from "@latticexyz/recs";
+import { getEntityIdFromKeys, getEvents,  setComponentsFromEvents} from "@dojoengine/utils";
+import {  getComponentValueStrict } from "@latticexyz/recs";
 
 
 
@@ -10,29 +9,16 @@ import { CreateGameProps, CreateRevenantProps, ConfirmEventOutpost, CreateEventP
 
 import { toast } from 'react-toastify';
 
-import manifest from "../../../contracts/target/dev/manifest.json";
-import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
-import { callOutpostUpdate, setOutpostClientComponent } from "./testCalls";
+import { setOutpostClientComponent } from "./testCalls";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
-    { execute, contractComponents, clientComponents, call ,graphSdk}: SetupNetworkResult,
+    { execute, contractComponents, clientComponents, call }: SetupNetworkResult,
     {
-        Game,
         GameEntityCounter,
-        GameTracker,
-        Outpost,
-        OutpostPosition,
-        Revenant,
-        PlayerInfo,
-        WorldEvent,
-        WorldEventTracker,
-
-        ClientCameraPosition,
-        ClientClickPosition,
-        ClientOutpostData,
-        ClientGameData,
+        
+        Outpost
     }: ClientComponents
 ) {
 

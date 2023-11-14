@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./ComponentsStyles/TopBarStyles.css";
 
@@ -12,9 +12,8 @@ import { useEntityQuery } from "@latticexyz/react";
 import { useDojo } from "../../hooks/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
-import { decimalToHexadecimal, truncateString } from "../../utils";
+import {  truncateString } from "../../utils";
 import { ClickWrapper } from "../clickWrapper";
-import { getReinforcementSpecific } from "../../dojo/testCalls";
 
 
 export const TopBarComponent = () => {

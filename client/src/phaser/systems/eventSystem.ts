@@ -3,20 +3,15 @@ import {
     defineSystem,
     getComponentValueStrict, getComponentValue,
     getComponentEntities,
-    setComponent,
-    EntityIndex,
   } from "@latticexyz/recs";
   import { PhaserLayer } from "..";
   import { GAME_CONFIG } from "../constants";
-import { setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
+import {  setOutpostClientComponent } from "../../dojo/testCalls";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
   export const eventManager = (layer: PhaserLayer) => {
     const {
       world,
-      scenes: {
-        Main: { objectPool },
-      },
       networkLayer: {
         network: { clientComponents },
         components: { Outpost, WorldEvent, ClientOutpostData , GameEntityCounter, ClientGameData},

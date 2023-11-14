@@ -6,20 +6,18 @@ import {
   defineSystem,
   Has,
   getComponentEntities,
-  getComponentValue,
-  setComponent
+  getComponentValue
 } from "@latticexyz/recs";
 
 import { setTooltipArray } from "./eventSystems/eventEmitter";
-import { GAME_CONFIG, OUTPOST_HEIGHT, OUTPOST_WIDTH } from "../constants";
+import {  OUTPOST_HEIGHT, OUTPOST_WIDTH } from "../constants";
 import { setComponentQuick } from "../../dojo/testCalls";
-import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 export const clickManager = (layer: PhaserLayer) => {
   const {
     world,
     scenes: {
-      Main: { camera, input, objectPool },
+      Main: { camera, input },
     },
 
     networkLayer: {
@@ -77,7 +75,7 @@ export const clickManager = (layer: PhaserLayer) => {
 
     let foundEntity: EntityIndex[] = []; // store the found entity
 
-    const clientGameData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
+    // const clientGameData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
     for (const outpostEntityValue of outpostArray) {
 

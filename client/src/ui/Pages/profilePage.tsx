@@ -4,7 +4,7 @@ import "./PagesStyles/ProfilePageStyles.css";
 
 import { MenuState } from "../Pages/mainMenuContainer";
 
-import { HasValue, Has, getComponentValueStrict } from "@latticexyz/recs";
+import { HasValue,  getComponentValueStrict } from "@latticexyz/recs";
 
 import { useEntityQuery } from "@latticexyz/react";
 
@@ -112,7 +112,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         <div className="title-cart-section">
           <h1>
             {" "}
-            {/* <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count} */}
+            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count}
           </h1>
           <h3>Reinforcement available</h3>
         </div>
@@ -164,7 +164,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         </div>
         <div className="buy-section">
           <div className="button-style-profile">Buy Reinforcements (Disabled)</div>
-
           <ClickWrapper className="button-style-profile" onMouseDown={() => {confirmAll()}}>Destory All</ClickWrapper>
         </div>
       </div>

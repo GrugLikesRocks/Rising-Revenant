@@ -8,9 +8,9 @@ import { CreateRevenantProps, CreateEventProps } from "../../dojo/types";
 
 import {
   Has,
-  getComponentValueStrict,
-  getComponentValue
+  getComponentValueStrict
 } from "@latticexyz/recs";
+
 import { GAME_CONFIG } from "../../phaser/constants";
 import { getGameTrackerEntity } from "../../dojo/testQueries";
 import {  getFullOutpostGameData, getGameEntitiesSpecific } from "../../dojo/testCalls";
@@ -27,7 +27,7 @@ export const DebugPage = () => {
     account: { account },
     networkLayer: {
       network: { contractComponents, clientComponents,graphSdk },
-      systemCalls: {  create_revenant, create_event,view_block_count },
+      systemCalls: {  create_revenant, create_event },
 
     },
   } = useDojo();
@@ -277,7 +277,6 @@ export const DebugPage = () => {
 
         <div className="data-container">
           {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>}
-          
           <div className="content-holder">
             <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
             <button onMouseDown={() => {printAllSavedDataEvents()}}>Print Data saved</button>

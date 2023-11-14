@@ -6,7 +6,7 @@ import { MenuState } from "../Pages/mainMenuContainer";
 import { ClickWrapper } from "../clickWrapper";
 import { useDojo } from "../../hooks/useDojo";
 
-import { HasValue,  getComponentValueStrict, setComponent,Has } from "@latticexyz/recs";
+import { HasValue,  getComponentValueStrict, Has } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
@@ -26,7 +26,7 @@ export const WinnerPage: React.FC<WinnerPageProps> = ({ setMenuState }) =>
     const {
         account : { account },
         networkLayer: {
-            network: { contractComponents, clientComponents },
+            network: { contractComponents },
         },
     } = useDojo();
 

@@ -1,5 +1,5 @@
 //libs
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import {
   Has,
   getComponentValue,
@@ -7,7 +7,6 @@ import {
 } from "@latticexyz/recs";
 import { store } from '../../store/store';
 import { useEntityQuery } from "@latticexyz/react";
-
 
 // styles
 import "./PagesStyles/MainMenuContainerStyles.css"
@@ -56,10 +55,8 @@ export const MainMenuContainer = () => {
   const keysDown = useWASDKeys();
 
   const {
-    account: { account },
     networkLayer: {
-      systemCalls: { view_block_count },
-      network: { graphSdk, contractComponents, clientComponents },
+      network: {  contractComponents, clientComponents },
     },
   } = useDojo();
 
@@ -86,12 +83,8 @@ export const MainMenuContainer = () => {
     setCurrentMenuState(newMenuState);
   };
 
-  const clientArray = useEntityQuery([Has(clientComponents.ClientGameData)]);
-
-
   const outpostDeadQuery = useEntityQuery([HasValue(contractComponents.Outpost, { lifes: 0 })]);
   const totalOutposts = useEntityQuery([Has(contractComponents.Outpost)]);
-
 
   useEffect(() => {
 

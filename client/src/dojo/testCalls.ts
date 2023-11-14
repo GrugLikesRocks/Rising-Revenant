@@ -7,7 +7,6 @@ import {
   getComponentValue,
   getComponentValueStrict,
 } from "@latticexyz/recs";
-import { Console } from 'console';
 
 // this script is a mess
 
@@ -386,42 +385,6 @@ export const setOutpostClientComponent = async (id: number, owned: boolean, even
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
 }
 
-
-
-export const fetchAllReinforcesinGameAmount = async (game_id: string): Promise<number> => {
-  
-
-  // let amountOfReinforcementsExtractedInGame = 0;
-  // let addressQueried: string[] = [];
-
-  // for (let index = 0; index < outpostArray.length; index++) {
-  //     const element = outpostArray[index];
-  //     const outpost = getComponentValueStrict(contractComponents.Outpost, element);
-
-  //     amountOfReinforcementsExtractedInGame = amountOfReinforcementsExtractedInGame + outpost.lifes;
-
-  //     if (!addressQueried.includes(outpost.owner)) {
-  //         const amountOfReinforcementInAccountQL = await getReinforcementSpecific(graphSdk, decimalToHexadecimal(clientGameData.current_game_id), account.address);
-  //         console.error(amountOfReinforcementInAccountQL);
-  //         if (amountOfReinforcementInAccountQL === undefined)
-  //         {
-  //             continue;
-  //         }
-
-  //         const amountOfReinforcementInAccountExtracted = amountOfReinforcementInAccountQL.edges[0].node.models[0].reinforcement_count;
-              
-  //         addressQueried.push(account.address.toString());
-
-  //         amountOfReinforcementsExtractedInGame = amountOfReinforcementsExtractedInGame + amountOfReinforcementInAccountExtracted;
-  //     }
-  // }
-  // console.error("total amount of reinforces taken from the game data is ",amountOfReinforcementsExtractedInGame )
-  // setReinforcementsInGame(amountOfReinforcementsExtractedInGame);
-  
-  
-  
-  return 0
-};
 
 
 

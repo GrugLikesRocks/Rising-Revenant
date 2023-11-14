@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PrepPhaseStages } from "./prepPhaseManager";
 import { getComponentValueStrict } from "@latticexyz/recs";
-import { decimalToHexadecimal } from "../../utils";
 
 import "./PagesStyles/PrepPhaseEndsPageStyles.css";
 import "./PagesStyles/BuyingPageStyle.css";

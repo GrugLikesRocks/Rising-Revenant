@@ -79,8 +79,6 @@ import { toast } from "react-toastify";
 
 import {
   HasValue,
-  Has,
-  getComponentValueStrict,
   getComponentValue,
 } from "@latticexyz/recs";
 
@@ -121,7 +119,7 @@ export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({
   const ownBalance = useEntityQuery([
     HasValue(contractComponents.PlayerInfo, { owner: account.address }),
   ]);
-  const balance = getComponentValue(contractComponents.PlayerInfo, ownBalance[0]);
+//   const balance = getComponentValue(contractComponents.PlayerInfo, ownBalance[0]);
 
 
   useEffect(() => {
@@ -194,36 +192,7 @@ export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({
             </div>
           )}
         </div>
-        {/* <div className="button-style" onMouseDown={() => { setReinforcementNumber(reinforcementNumber -1) }} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> - </div>
-                     <h2>{reinforcementNumber}</h2>
-                     <div className="button-style" onMouseDown={() => {  setReinforcementNumber(reinforcementNumber +1) }} style={{ aspectRatio: "1/1", width: "8%", textAlign: "center" }}> + </div>
-                </div>
 
-                    {currentPlayerBalance === -1 || ownBalance.length === 0 ? <h2>{reinforcementNumber}</h2> :
-                    
-                        <>
-                           {currentPlayerBalance <= max && currentPlayerBalance !== max && (<div className="button-style-prep-phase" onMouseDown={() => buyReinforcements(reinforcementNumber)}>  Buy {reinforcementNumber} Reinforcements (Free $LORDS) </div> )}
-                        {currentPlayerBalance > 0 && currentPlayerBalance !== max && (
-                            <div  className="button-style-prep-phase"
-                                onMouseDown={() => setMenuState(PrepPhaseStages.WAIT_PHASE_OVER)}
-                            >
-                                Click to continue <br />(Can Still buy {max - currentPlayerBalance} reinforcements)
-                            </div>
-                        )}
-                        {currentPlayerBalance === max && (
-                            <div
-                                className="button-style-prep-phase"
-                                onMouseDown={() => setMenuState(PrepPhaseStages.WAIT_PHASE_OVER)}
-                            >
-                                Maximum number of reinforcements have<br />been summoned for this demo
-                                <br />
-                                Click to continue
-                            </div>
-                        )}  
-                        </>
-                    }  */}
-
-        {/* <div className="button-style" onMouseDown={() => { buyReinforcements(reinforcementNumber) }}> Reinforce (Tot: {priceOfReinforcements * reinforcementNumber} $LORDS)</div> */}
       </ClickWrapper>
 
       <div className="footer-text">

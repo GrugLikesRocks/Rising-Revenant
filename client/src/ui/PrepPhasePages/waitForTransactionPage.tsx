@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 
 import { PrepPhaseStages } from "./prepPhaseManager";
 import { ClickWrapper } from "../clickWrapper";
-import { useDojo } from "../../hooks/useDojo";
-
 
 interface WaitForTransactionPageProps {
     setMenuState: React.Dispatch<PrepPhaseStages>;

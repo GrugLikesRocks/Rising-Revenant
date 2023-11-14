@@ -1,5 +1,5 @@
 
-import { COLOUMNS_NUMBER, GAME_CONFIG, SCALE, compareAdjacentIndexes, getAdjacentIndexes, getAdjacentIndexesAllDirections, getEntityArrayAtIndex, getMoveDirection, getTileIndex } from "../constants";
+import { COLOUMNS_NUMBER,  SCALE, compareAdjacentIndexes,  getAdjacentIndexesAllDirections, getEntityArrayAtIndex, getMoveDirection, getTileIndex } from "../constants";
 
 import { PhaserLayer } from "..";
 
@@ -8,17 +8,11 @@ import {
   defineSystem,
   Has,
   getComponentValue,
-  getComponentEntities,
   getComponentValueStrict,
-  setComponent,
   EntityIndex,
-  HasValue,
   getEntitiesWithValue,
 } from "@latticexyz/recs";
-import { createComponentStructure,setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
-import { setComponentFromGraphQLEntity } from "@dojoengine/utils";
-import { decimalToHexadecimal } from "../../utils";
-
+import { setComponentQuick, setOutpostClientComponent } from "../../dojo/testCalls";
 
 export const cameraManager = (layer: PhaserLayer) => {
   const {
@@ -28,7 +22,7 @@ export const cameraManager = (layer: PhaserLayer) => {
     },
     networkLayer: {
       network: { clientComponents},
-      components: { ClientCameraPosition, Outpost, ClientOutpostData,ClientGameData },
+      components: { ClientCameraPosition,  ClientOutpostData,ClientGameData },
     },
   } = layer;
 

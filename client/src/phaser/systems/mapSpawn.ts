@@ -1,15 +1,10 @@
 import {
   Has,
-  defineEnterSystem,
-  defineSystem,
-  getComponentValueStrict,
+  defineEnterSystem
 } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 
-import { Assets, GAME_CONFIG} from "../constants";
-
-import { drawPhaserLayer } from "./eventSystems/eventEmitter";
-import { decimalToHexadecimal } from "../../utils";
+import { Assets} from "../constants";
 
 export const mapSpawn = (layer: PhaserLayer) => {
   const {
@@ -18,7 +13,7 @@ export const mapSpawn = (layer: PhaserLayer) => {
       Main: { objectPool, camera },
     },
     networkLayer: {
-      components: { Game, ClientGameData },
+      components: { Game },
     },
   } = layer;
 

@@ -32,7 +32,7 @@ export const TopBarComponent = () => {
     const {
         account: { account },
         networkLayer: {
-            network: { contractComponents, clientComponents,graphSdk },
+            network: { contractComponents, clientComponents },
             systemCalls: {}
         },
     } = useDojo();

@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./PagesStyles/TradesPageStyles.css"
 
 export const TradesPage = () => 

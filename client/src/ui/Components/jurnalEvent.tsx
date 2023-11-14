@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   EntityIndex,
   Has,
-  getComponentValue,
+  
   getComponentValueStrict,
 } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";

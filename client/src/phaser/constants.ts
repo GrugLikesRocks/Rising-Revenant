@@ -1,4 +1,4 @@
-import { EntityIndex, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex } from "@latticexyz/recs";
 
 export enum Scenes {
     Main = "Main",

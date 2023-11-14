@@ -1,5 +1,5 @@
 import { Wrapper } from "./wrapper";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import { getComponentValueStrict } from "@latticexyz/recs";
 

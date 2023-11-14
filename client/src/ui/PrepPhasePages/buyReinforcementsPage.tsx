@@ -75,7 +75,7 @@ import { ClickWrapper } from "../clickWrapper";
 import { useDojo } from "../../hooks/useDojo";
 import { useEntityQuery } from "@latticexyz/react";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 import {
   HasValue,
@@ -88,17 +88,17 @@ interface BuyReinforcementsPageProps {
 
 const max = 3;
 
-const notify = (message: string) =>
-  toast(message, {
-    position: "top-left",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
+// const notify = (message: string) =>
+//   toast(message, {
+//     position: "top-left",
+//     autoClose: 5000,
+//     hideProgressBar: false,
+//     closeOnClick: true,
+//     pauseOnHover: true,
+//     draggable: true,
+//     progress: undefined,
+//     theme: "dark",
+//   });
 
 export const BuyReinforcementPage: React.FC<BuyReinforcementsPageProps> = ({
   setMenuState,

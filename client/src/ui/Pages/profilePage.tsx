@@ -4,7 +4,7 @@ import "./PagesStyles/ProfilePageStyles.css";
 
 import { MenuState } from "../Pages/mainMenuContainer";
 
-import { HasValue,  getComponentValueStrict } from "@latticexyz/recs";
+import { HasValue, getComponentValueStrict } from "@latticexyz/recs";
 
 import { useEntityQuery } from "@latticexyz/react";
 

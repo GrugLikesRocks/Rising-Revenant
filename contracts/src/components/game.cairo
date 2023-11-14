@@ -1,10 +1,11 @@
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
-use starknet::ContractAddress;
+use starknet::{ContractAddress, get_caller_address};
 
 #[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct Game {
     #[key]
     game_id: u32, // increment
+    admin: ContractAddress,
     start_block_number: u64,
     prize: u32,
     preparation_phase_interval: u64,
@@ -34,6 +35,7 @@ struct GameEntityCounter {
     outpost_count: u32,
     event_count: u32,
     outpost_exists_count: u32,
+    remain_life_count: u32,
     reinforcement_count: u32,
     trade_count: u32,
 }
@@ -73,6 +75,10 @@ impl GameImpl of GameTrait {
 
     fn assert_existed(self: Game) {
         assert(self.status != GameStatus::not_created, 'Game not exist');
+    }
+
+    fn assert_can_create_event(self: Game, world: IWorldDispatcher) {
+        assert(self.admin == get_caller_address(), 'only admin can create event');
     }
 }
 

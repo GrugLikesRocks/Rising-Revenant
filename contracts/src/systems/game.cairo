@@ -19,7 +19,7 @@ mod game_actions {
     };
     use realmsrisingrevenant::components::reinforcement::{ReinforcementBalance, target_price};
     use realmsrisingrevenant::constants::GAME_CONFIG;
-    use starknet::{ContractAddress, get_block_info, get_block_timestamp};
+    use starknet::{ContractAddress, get_block_info, get_block_timestamp, get_caller_address};
     use super::IGameActions;
 
     #[external(v0)]
@@ -37,9 +37,11 @@ mod game_actions {
             let start_block_number = get_block_info().unbox().block_number; // blocknumber
             let prize = 0; // total prize
             let status = GameStatus::preparing; // game status
+            let admin = get_caller_address();
 
             let game = Game {
                 game_id,
+                admin,
                 start_block_number,
                 prize,
                 preparation_phase_interval,
@@ -53,6 +55,7 @@ mod game_actions {
                 outpost_count: 0,
                 event_count: 0,
                 outpost_exists_count: 0,
+                remain_life_count: 0,
                 reinforcement_count: 0,
                 trade_count: 0,
             };
@@ -77,10 +80,8 @@ mod game_actions {
         }
 
         fn get_current_block(self: @ContractState) -> u64 {
-            
             let start_block_number = get_block_info().unbox().block_number; // blocknumber
             return start_block_number;
-
         }
     }
 }

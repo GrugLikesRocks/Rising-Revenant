@@ -33,6 +33,7 @@ mod world_event_actions {
             // check game is active
             let mut game = get!(world, game_id, Game);
             game.assert_is_playing(world);
+            game.assert_can_create_event(world);
 
             let mut game_data = get!(world, game_id, GameEntityCounter);
             game_data.event_count += 1;
@@ -87,6 +88,7 @@ mod world_event_actions {
             outpost.lifes -= 1;
             outpost.last_affect_event_id = world_event.entity_id;
             world_event.destroy_count += 1;
+            game_data.remain_life_count -= 1;
 
             let event_tracker = WorldEventTracker {
                 game_id, event_id: world_event.entity_id, outpost_id: outpost.entity_id
@@ -146,5 +148,35 @@ mod world_event_actions {
 
             WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0, block_number }
         }
+    }
+}
+
+
+#[cfg(test)]
+mod world_tests {
+    use realmsrisingrevenant::systems::world_event::{
+        IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
+    };
+
+    use realmsrisingrevenant::tests::test_utils::{
+        DefaultWorld, EVENT_BLOCK_INTERVAL, PREPARE_PHRASE_INTERVAL, _init_world, _init_game,
+        _create_revenant, _add_block_number,
+    };
+
+    #[test]
+    #[available_gas(3000000000)]
+    #[should_panic(expected: ('only admin can create event', 'ENTRYPOINT_FAILED',))]
+    fn test_create_event_failed() {
+        let (DefaultWorld{world, caller, world_event_action, .. }, game_id) = _init_game();
+        _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
+
+        // should success
+        let world_event = world_event_action.create(game_id);
+        assert(world_event.radius > 0, 'unexpected exception');
+
+        // should panic with msg 'only admin can create event'(defined in GameTrait)
+        _add_block_number(EVENT_BLOCK_INTERVAL + 1);
+        starknet::testing::set_contract_address(starknet::contract_address_const::<0x0001>());
+        let world_event = world_event_action.create(game_id);
     }
 }

@@ -4,6 +4,8 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 trait IRevenantActions<TContractState> {
     fn create(self: @TContractState, game_id: u32, name: felt252) -> (u128, u128);
 
+    fn claim(self: @TContractState, game_id: u32) -> bool;
+
     fn get_current_price(self: @TContractState, game_id: u32, count: u32) -> u128;
 
     fn purchase_reinforcement(self: @TContractState, game_id: u32, count: u32) -> bool;
@@ -52,15 +54,7 @@ mod revenant_actions {
             game.assert_can_create_outpost(world);
 
             let mut player_info = get!(world, (game_id, player), PlayerInfo);
-            
-            if (!player_info.inited) {
-                player_info.inited = true;
-                player_info.reinforcement_count = REINFORCEMENT_INIT_COUNT;
-                game_data.reinforcement_count += REINFORCEMENT_INIT_COUNT;
-            } else {
-                assert(player_info.revenant_count < REVENANT_MAX_COUNT, 'reach revenant limit');
-            }
-
+            assert(player_info.revenant_count < REVENANT_MAX_COUNT, 'reach revenant limit');
             game_data.revenant_count += 1;
 
             let entity_id: u128 = game_data.revenant_count.into();
@@ -78,6 +72,7 @@ mod revenant_actions {
 
             game_data.outpost_count += 1;
             game_data.outpost_exists_count += 1;
+            game_data.remain_life_count += OUTPOST_INIT_LIFE;
 
             let outpost_id: u128 = game_data.outpost_count.into();
 
@@ -86,6 +81,25 @@ mod revenant_actions {
 
             set!(world, (revenant, game_data, player_info, outpost, position));
             (entity_id, outpost_id)
+        }
+
+        fn claim(self: @ContractState, game_id: u32) -> bool {
+            let world = self.world_dispatcher.read();
+            let player = get_caller_address();
+            let (mut game, mut game_data) = get!(world, game_id, (Game, GameEntityCounter));
+            game.assert_existed();
+
+            let mut player_info = get!(world, (game_id, player), PlayerInfo);
+
+            if (!player_info.inited) {
+                player_info.inited = true;
+                player_info.reinforcement_count += REINFORCEMENT_INIT_COUNT;
+                game_data.reinforcement_count += REINFORCEMENT_INIT_COUNT;
+                set!(world, (game_data, player_info));
+                return true;
+            } else {
+                return false;
+            }
         }
 
         fn get_current_price(self: @ContractState, game_id: u32, count: u32) -> u128 {
@@ -115,11 +129,6 @@ mod revenant_actions {
             assert(result, 'need approve for erc20');
 
             let mut player_info = get!(world, (game_id, player), PlayerInfo);
-            if (!player_info.inited) {
-                player_info.inited = true;
-                player_info.reinforcement_count = REINFORCEMENT_INIT_COUNT;
-                game_counter.reinforcement_count += REINFORCEMENT_INIT_COUNT;
-            }
             player_info.reinforcement_count += count;
             reinforcement_balance.count += count;
             game_counter.reinforcement_count += count;
@@ -146,6 +155,7 @@ mod revenant_actions {
             outpost.lifes += 1;
             player_info.reinforcement_count -= 1;
             game_counter.reinforcement_count -= 1;
+            game_counter.remain_life_count += 1;
 
             set!(world, (outpost, player_info, game_counter));
 

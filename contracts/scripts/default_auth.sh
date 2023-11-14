@@ -12,6 +12,8 @@ export WORLD_EVENT_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[
 
 export REVENANT_ACTIONS_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "revenant_actions" ).address')
 
+export TRADE_ACTIONS_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "trade_actions").address')
+
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 
 echo " "
@@ -20,6 +22,8 @@ echo " "
 echo world event actions : $WORLD_EVENT_ADDRESS
 echo " "
 echo revenant actions : $REVENANT_ACTIONS_ADDRESS
+echo " "
+echo trade actions : $TRADE_ACTIONS_ADDRESS
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
@@ -29,6 +33,7 @@ for component in ${COMPONENTS[@]}; do
     sozo auth writer $component $REVENANT_ACTIONS_ADDRESS  --world $WORLD_ADDRESS --rpc-url $RPC_URL
     sozo auth writer $component $WORLD_EVENT_ADDRESS    --world $WORLD_ADDRESS --rpc-url $RPC_URL
     sozo auth writer $component $GAME_ADDRESS   --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component $TRADE_ACTIONS_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Default authorizations have been successfully set."

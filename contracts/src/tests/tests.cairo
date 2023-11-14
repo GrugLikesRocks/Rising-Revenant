@@ -72,6 +72,7 @@ mod tests {
         assert(game_counter.revenant_count == 1, 'wrong revenant count');
         assert(game_counter.outpost_count == 1, 'wrong outpost count');
         assert(game_counter.outpost_exists_count == 1, 'wrong outpost count');
+        assert(game_counter.remain_life_count == OUTPOST_INIT_LIFE, 'wrong remain lifes');
 
         let revenant = get!(world, (game_id, revenant_id), Revenant);
         assert(revenant.outpost_count == 1, 'wrong revenant info');
@@ -108,8 +109,8 @@ mod tests {
 
         let outpost = get!(world, (game_id, outpost_id), (Outpost));
         assert(outpost.lifes == OUTPOST_INIT_LIFE + 1, 'life value is wrong');
-
         let game_counter = get!(world, (game_id), GameEntityCounter);
+        assert(game_counter.remain_life_count == OUTPOST_INIT_LIFE + 1, 'wrong remain lifes');
         assert(
             game_counter.reinforcement_count == expected_purchase_count - 1,
             'wrong reinforcement count'
@@ -206,6 +207,8 @@ mod tests {
             revenant_action, game_id
         ); // need two outpost for checking game end
 
+        let game_counter = get!(world, (game_id), GameEntityCounter);
+        assert(game_counter.remain_life_count == OUTPOST_INIT_LIFE * 2, 'wrong remain lifes');
         _add_block_number(PREPARE_PHRASE_INTERVAL + 1);
 
         // Loop world event
@@ -233,8 +236,9 @@ mod tests {
             };
         };
 
-        let game = get!(world, (game_id), Game);
+        let (game, game_counter) = get!(world, (game_id), (Game, GameEntityCounter));
         assert(game.status == GameStatus::ended, 'wrong game status');
+        assert(game_counter.remain_life_count == OUTPOST_INIT_LIFE, 'wrong remain lifes');
     }
 
     #[test]

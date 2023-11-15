@@ -1,3 +1,6 @@
+declare var scenes: any
+
+
 import { createPhaserEngine } from "@latticexyz/phaserx";
 import { NetworkLayer } from "../dojo/createNetworkLayer";
 import { registerSystems } from "./systems/registerSystems";

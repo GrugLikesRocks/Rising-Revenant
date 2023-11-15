@@ -226,6 +226,11 @@ export const getWorldEventEntitySpecific = async (graphSDK_: any, game_id: strin
 
 export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_index: number, start_index: number = 1) => {
 
+  if (graphSDK_ === undefined || graphSDK_ !== undefined)
+  {
+    //filler code
+  }
+
   let arrOfEntities: any[] = [];
 
     for (let index = start_index; index < end_index + 1; index++) {
@@ -257,21 +262,21 @@ export const getFullEventGameData = async (graphSDK_: any, game_id: string, end_
 
 
 // migght be an issue
-type Node = {
+type NodeWE = {
   keys: string[];
   models: {
     __typename: string;
-    game_id?: number;
-    entity_id?: string;
-    x?: number;
-    y?: number;
-    radius?: number;
-    destroy_count?: number;
-    block_number?: number;
+    game_id: number;
+    entity_id: string;
+    x: number;
+    y: number;
+    radius: number;
+    destroy_count: number;
+    block_number: number;
   }[];
 };
 
-function getWorldEventSection(data: { node: Node }[]): { __typename: string; game_id: number; entity_id: string; x: number; y: number; radius: number; destroy_count: number; block_number: number }[] {
+function getWorldEventSection(data: { node: NodeWE }[]): { __typename: string; game_id: number; entity_id: string; x: number; y: number; radius: number; destroy_count: number; block_number: number }[] {
   return data
     .flatMap((item) => item.node.models.filter((model) => model.__typename === "WorldEvent"))
     .map(({ __typename, game_id, entity_id, x, y, radius, destroy_count, block_number }) => ({

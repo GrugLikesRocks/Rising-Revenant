@@ -276,7 +276,8 @@ export const DebugPage = () => {
         </div>
 
         <div className="data-container">
-          {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>}
+          {/* {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>} */}
+          <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div>
           <div className="content-holder">
             <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
             <button onMouseDown={() => {printAllSavedDataEvents()}}>Print Data saved</button>

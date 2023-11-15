@@ -1,3 +1,6 @@
+declare var Phaser: any
+
+
 import {
     Has,
     defineSystem,

@@ -1,3 +1,4 @@
+
 //libs
 import  { useState, useEffect } from 'react';
 import {
@@ -67,8 +68,6 @@ export const MainMenuContainer = () => {
       phaserLayer: state.phaserLayer,
     };
   });
-
-    
 
   const {
     scenes: {

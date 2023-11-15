@@ -1,3 +1,5 @@
+declare var Phaser: any
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPhaserLayer } from "../phaser";
 import { NetworkLayer } from "../dojo/createNetworkLayer";

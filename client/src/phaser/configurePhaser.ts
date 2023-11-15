@@ -1,3 +1,5 @@
+declare var Phaser: any
+
 import {
   defineSceneConfig,
   AssetType,

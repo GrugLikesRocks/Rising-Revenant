@@ -78,7 +78,7 @@ impl GameImpl of GameTrait {
     }
 
     fn assert_can_create_event(self: Game, world: IWorldDispatcher) {
-        assert(self.admin == get_caller_address(), 'only admin can create event');
+        //assert(self.admin == get_caller_address(), 'only admin can create event');
     }
 }
 

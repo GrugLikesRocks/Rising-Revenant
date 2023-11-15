@@ -15,10 +15,13 @@ export const useDojo = () => {
 
     // todo: allow connection with wallet providers
     const masterAccount = new Account(provider, import.meta.env.VITE_PUBLIC_MASTER_ADDRESS!, import.meta.env.VITE_PUBLIC_MASTER_PRIVATE_KEY!)
+    
+    
     const { create, list, get, account, select, isDeploying } = useBurner(
         {
             masterAccount: masterAccount,
-            accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH!
+            accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH!,
+            nodeUrl: "https://api.cartridge.gg/x/risingrevenant/katana"
         }
     );
 

@@ -9,7 +9,7 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "codegen": "graphql-codegen",
-    "components": "npx @dojoengine/core ../contracts/target/dev/manifest.json src/dojo/contractComponents.ts http://localhost:5050/ 0x592af97e4f312df28125de662c6fb2f0831fab10281ecc0ac2c5c707e86792 "
+    "components": "npx @dojoengine/core ../contracts/target/dev/manifest.json src/dojo/contractComponents.ts https://api.cartridge.gg/x/risingrevenant/katana 0x592af97e4f312df28125de662c6fb2f0831fab10281ecc0ac2c5c707e86792 "
   },
   "dependencies": {
     "@dojoengine/core": "^0.1.29",

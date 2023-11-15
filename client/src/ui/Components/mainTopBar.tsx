@@ -112,7 +112,7 @@ export const TopBarComponent = () => {
                     <div className="text-section">
 
                         {inGame === 2 ? <h4>Revenants Alive: {numberOfRevenants}/{outpostArray.length}</h4> : <h4>Revenants Summoned: {outpostArray.length || "0"}/2000</h4>}
-                        <h4>Reinforcement: {reinforcementsInGame}</h4>
+                        <h4>Reinforcements in game: {reinforcementsInGame}</h4>
                     </div>
 
                     {isloggedIn ? 

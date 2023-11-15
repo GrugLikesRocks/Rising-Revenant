@@ -56,6 +56,7 @@ export const MainMenuContainer = () => {
   const keysDown = useWASDKeys();
 
   const {
+    account: { account },
     networkLayer: {
       network: {  contractComponents, clientComponents },
     },
@@ -202,7 +203,7 @@ export const MainMenuContainer = () => {
         <div className='main-page-content'>
           {currentMenuState !== MenuState.NONE && (
             <div className='page-container'>
-              {currentMenuState === MenuState.PROFILE && <ProfilePage setMenuState={setCurrentMenuState} />}
+              {currentMenuState === MenuState.PROFILE && <ProfilePage setMenuState={setCurrentMenuState} account_add={account.address}/>}
               {currentMenuState === MenuState.RULES && <RulesPage setMenuState={setCurrentMenuState} />}
               {currentMenuState === MenuState.SETTINGS && <SettingsPage setMenuState={setCurrentMenuState} />}
               {currentMenuState === MenuState.TRADES && <TradesPage />}

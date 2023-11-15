@@ -17,6 +17,7 @@ import { useDojo } from "../../hooks/useDojo";
 // import { GAME_CONFIG } from "../../phaser/constants";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { GAME_CONFIG } from "../../phaser/constants";
+import { decimalToHexadecimal } from "../../utils";
 
 
 
@@ -85,7 +86,7 @@ export const JurnalEventComponent: React.FC<JuornalEventProps> = ({ setMenuState
   // console.log(eventArray.length)
 
   const gameTrackerComp = getComponentValue(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-  const eventData = getComponentValueStrict(contractComponents.WorldEvent, getEntityIdFromKeys([BigInt(gameTrackerComp.event_count), BigInt(gameClientData.current_game_id)]));
+  const eventData = getComponentValueStrict(contractComponents.WorldEvent, getEntityIdFromKeys([BigInt(decimalToHexadecimal(gameClientData.current_game_id)),BigInt(gameTrackerComp.event_count)]));
 
   return (
     <div className="jurnal-event-container">
@@ -109,7 +110,7 @@ export const JurnalEventComponent: React.FC<JuornalEventProps> = ({ setMenuState
       </div>
 
       <div className="outpost-hit-data-container">
-        <h3 className="sub-title">Outpost Status</h3>
+        <h3 className="sub-title">Outposts Hit</h3>
         <ClickWrapper className="outpost-hit-list-container">
           {allOutpostEffected.map((outpostData: JournalOutpostDataType) => (
             <h4>

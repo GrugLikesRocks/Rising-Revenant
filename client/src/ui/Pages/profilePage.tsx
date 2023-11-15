@@ -19,9 +19,10 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 interface ProfilePageProps {
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>;
+  account_add: any
 }
 
-export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
+export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState ,account_add}) => {
   const closePage = () => {
     setMenuState(MenuState.NONE);
   };
@@ -112,7 +113,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState }) => {
         <div className="title-cart-section">
           <h1>
             {" "}
-            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account.address)])).reinforcement_count}
+            <img src="LOGO_WHITE.png" className="test-embed" alt=""></img> {getComponentValueStrict(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account_add)])).reinforcement_count}
           </h1>
           <h3>Reinforcement available</h3>
         </div>

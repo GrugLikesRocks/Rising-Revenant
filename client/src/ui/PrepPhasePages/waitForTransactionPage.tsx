@@ -34,8 +34,8 @@ export const WaitForTransactionPage: React.FC<WaitForTransactionPageProps> = ({ 
 
         const timeoutId = setTimeout(() => {
             goNextPage();
-        }, 10000);
-
+        }, 5000);
+        
         return () => clearTimeout(timeoutId);
     }, []);
 

@@ -54,6 +54,7 @@ export const JurnalEventComponent: React.FC<JuornalEventProps> = ({ setMenuState
   const gameClientData = getComponentValue(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
 
   useEffect(() => {
+    
       if (eventArray.length === 0)
       {
         return;

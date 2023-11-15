@@ -15,7 +15,7 @@ interface PrepPhaseEndsPageProps {
 }
 
 export const PrepPhaseEndsPage: React.FC<PrepPhaseEndsPageProps> = ({ setMenuState }) => {
-    const [showBlocks, setShowBlocks] = useState(false);
+    const [showBlocks, setShowBlocks] = useState(true);
     const [blocksLeft, setBlocksLeft] = useState(0);
 
     const {

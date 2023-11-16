@@ -17,32 +17,32 @@ export const phaserConfig = {
                 [Assets.CastleHealthySelfAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthySelfAsset,
-                    path: "../public/assets/Outpost_Icons/Blue_Outpost.png",
+                    path: "assets/Outpost_Icons/Blue_Outpost.png",
                 },
                 [Assets.CastleDamagedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDamagedAsset,
-                    path: "../public/assets/Outpost_Icons/Red_Outpost.png",
+                    path: "assets/Outpost_Icons/Red_Outpost.png",
                 },
                 [Assets.CastleHealthyEnemyAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleHealthyEnemyAsset,
-                    path: "../public/assets/Outpost_Icons/Purple_Outpost.png",
+                    path: "assets/Outpost_Icons/Purple_Outpost.png",
                 },
                 [Assets.CastleDestroyedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CastleDestroyedAsset,
-                    path: "../public/assets/Outpost_Icons/Grey_Outpost.png",
+                    path: "assets/Outpost_Icons/Grey_Outpost.png",
                 },
                 [Assets.CaslteSelectedAsset]: {
                     type: AssetType.Image,
                     key: Assets.CaslteSelectedAsset,
-                    path: "../public/assets/Outpost_Icons/White_Outpost.png",
+                    path: "assets/Outpost_Icons/White_Outpost.png",
                 },
                 [Assets.MapPicture]: {
                     type: AssetType.Image,
                     key: Assets.MapPicture,
-                    path: "../public/assets/rev_map_big.png",
+                    path: "assets/rev_map_big.png",
                 }
             },
             maps: {

@@ -39,23 +39,23 @@ export const LoadingComponent = ({
         //ofcourse this is a mess
 
         const preloadImages = async () => {
-            const imageUrls = [
-                "Page_Bg/SETTINGS_PAGE_BG.png",
-                "Page_Bg/STATS_PAGE_BG.png",
-                "Page_Bg/PROFILE_PAGE_BG.png",
-                "map_Island.png",
-            ];
+            // const imageUrls = [
+            //     "Page_Bg/SETTINGS_PAGE_BG.png",
+            //     "Page_Bg/STATS_PAGE_BG.png",
+            //     "Page_Bg/PROFILE_PAGE_BG.png",
+            //     "map_Island.png",
+            // ];
 
-            const imagePromises = imageUrls.map((url) => {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = resolve;
-                    img.onerror = reject;
-                    img.src = url;
-                });
-            });
+            // const imagePromises = imageUrls.map((url) => {
+            //     return new Promise((resolve, reject) => {
+            //         const img = new Image();
+            //         img.onload = resolve;
+            //         img.onerror = reject;
+            //         img.src = url;
+            //     });
+            // });
 
-            await Promise.all(imagePromises);
+            // await Promise.all(imagePromises);
 
             await new Promise((resolve) => setTimeout(resolve, 1000));
         };

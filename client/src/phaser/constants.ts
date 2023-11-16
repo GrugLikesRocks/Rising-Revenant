@@ -40,8 +40,8 @@ export function setWidthAndHeight(widht:number, height: number): void {
 
 //all the functions below are to either redo or delete as some are not used
 
-export const COLOUMNS_NUMBER = 60;
-export const ROWS_NUMBER = 35;
+export const COLOUMNS_NUMBER = 50;
+export const ROWS_NUMBER = 25;
 
 export const TILE_WIDTH = MAP_WIDTH / COLOUMNS_NUMBER;
 export const TILE_HEIGHT = MAP_HEIGHT / ROWS_NUMBER;

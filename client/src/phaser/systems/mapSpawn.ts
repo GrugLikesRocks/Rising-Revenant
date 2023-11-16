@@ -19,7 +19,8 @@ export const mapSpawn = (layer: PhaserLayer) => {
 
   defineEnterSystem(world, [Has(Game)], ({ entity }) => {
     const mapObj = objectPool.get(entity, "Sprite");
-
+    
+    console.error("eoifhewwuirheuiqwhnqwfubqwufaebfdsbjk")
       
     mapObj.setComponent({
       id: "animation",

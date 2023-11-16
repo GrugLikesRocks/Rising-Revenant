@@ -26,7 +26,7 @@ export const TopBarComponent = () => {
     const [playerReinforcementNumber, setPlayerReinforcementNumber] = useState(0);
     const [userAddress, setUserAddress] = useState("");
 
-    const [reinforcementsInGame, setReinforcementsInGame] = useState(0)
+    const [reinforcementsInGame, setReinforcementsInGame] = useState(0);
 
 
     const {
@@ -78,7 +78,7 @@ export const TopBarComponent = () => {
             setNumberOfRevenants(outpostArray.length);
         }
 
-    }, [outpostArray, clientGameData]);
+    }, [outpostArray, clientGameData, account]);
 
     
     useEffect(() => {
@@ -90,7 +90,7 @@ export const TopBarComponent = () => {
             setReinforcementsInGame(reinforcementInGame.reinforcement_count + reinforcementInGame.remain_life_count);
         }
         
-    }, [entityCounterArr]);
+    }, [entityCounterArr, account]);
     
   
     return (

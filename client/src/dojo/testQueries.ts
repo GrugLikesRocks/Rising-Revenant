@@ -19,7 +19,9 @@ export async function getGameTrackerEntity() {
     }
   `;
 
-  const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql'; 
+  // const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql'; 
+  const endpoint = 'http://127.0.0.1:8080/graphql';
+
 
   try {
     const data: any = await request(endpoint, query);

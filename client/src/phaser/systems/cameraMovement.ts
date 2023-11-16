@@ -145,8 +145,8 @@ export const cameraManager = (layer: PhaserLayer) => {
 
           // sprite.alpha = 1;
           // sprite.setScale(SCALE);
-          let min = 80;
-          let max = 700;
+          let min = 150;
+          let max = 600;
 
           sprite.setScale(SCALE);
 
@@ -161,7 +161,6 @@ export const cameraManager = (layer: PhaserLayer) => {
             // sprite.setScale(0);
             sprite.setVisible(false);
           }
-
 
       }});
   }

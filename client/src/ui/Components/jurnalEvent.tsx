@@ -86,7 +86,9 @@ export const JurnalEventComponent: React.FC<JuornalEventProps> = ({ setMenuState
   // console.log(eventArray.length)
 
   const gameTrackerComp = getComponentValue(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(gameClientData.current_game_id)]));
-  const eventData = getComponentValueStrict(contractComponents.WorldEvent, getEntityIdFromKeys([BigInt(decimalToHexadecimal(gameClientData.current_game_id)),BigInt(gameTrackerComp.event_count)]));
+  const eventData = getComponentValue(contractComponents.WorldEvent, getEntityIdFromKeys([BigInt(decimalToHexadecimal(gameClientData.current_game_id)),BigInt(gameTrackerComp.event_count)]));
+
+  if (eventData === undefined) { return (<></>) }
 
   return (
     <div className="jurnal-event-container">

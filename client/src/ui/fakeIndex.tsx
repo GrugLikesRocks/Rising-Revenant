@@ -32,8 +32,9 @@ export const MainStateManager = () => {
     useEffect(() => {
 
         const checkGamePhase = async () => {
-
-            await getUpdatedGameData(view_block_count, clientComponents, contractComponents, account.address, graphSdk);
+            
+            const current_block = await view_block_count();
+            await getUpdatedGameData(current_block!, clientComponents, contractComponents, account.address, graphSdk);
 
             const clientGameData = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
             setGamePhase(clientGameData.current_game_state);
@@ -54,8 +55,6 @@ export const MainStateManager = () => {
 
         return () => clearInterval(intervalId);
     }, [gamePhase, account]);
-
-    
 
     return (
         <Wrapper>

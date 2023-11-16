@@ -141,8 +141,8 @@ export async function getGameTrackerEntity() {
     }
   `;
 
-  const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
-  // const endpoint = 'http://127.0.0.1:8080/graphql';
+  // const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
+  const endpoint = 'http://127.0.0.1:8080/graphql';
 
   try {
     const data: any = await request(endpoint, query);
@@ -317,8 +317,8 @@ export async function getEventEntity(game_id: string, entity_id: string) {
     }
   }`;
 
-  const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
-  // const endpoint = 'http://127.0.0.1:8080/graphql';
+  // const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
+  const endpoint = 'http://127.0.0.1:8080/graphql';
 
 
   try {
@@ -348,7 +348,6 @@ export function setComponentQuick(schema: any, keys: string[], componentName: st
 
 export const setClientGameComponent = async (phase: number,  game_id: number, current_block: number, clientComponents: any, contractComponents: any, account: string) => {
 
-
   const firstOutpost = getComponentValue(contractComponents.Outpost, getEntityIdFromKeys([BigInt(game_id), BigInt(1)]))
 
   let current_game_admin = false;
@@ -359,12 +358,6 @@ export const setClientGameComponent = async (phase: number,  game_id: number, cu
       {current_game_admin = true}
    
   }
-
-
-  console.log("\n\n\n\n\n\n\n\n\n\n");
-  console.error(firstOutpost)
-  console.error(current_game_admin)
-  console.log("\n\n\n\n\n\n\n\n\n\n");
 
   const componentSchemaClientGameData = {
     "current_game_state": phase,
@@ -393,12 +386,8 @@ export const setOutpostClientComponent = async (id: number, owned: boolean, even
   setComponentFromGraphQLEntity(clientComponents, craftedEdgeGT);
 }
 
+export const getUpdatedGameData = async (blockCount: number, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
 
-
-
-export const getUpdatedGameData = async (view_block_count: any, clientComponents: any, contractComponents: any, address: string, graphSdk: any) => {
-
-  const blockCount = await view_block_count();
   const clientGameComp = getComponentValueStrict(clientComponents.ClientGameData, getEntityIdFromKeys([BigInt(GAME_CONFIG)]));
   const gameEntityCounter = getComponentValueStrict(contractComponents.GameEntityCounter, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));
   const gameComponent = getComponentValueStrict(contractComponents.Game, getEntityIdFromKeys([BigInt(clientGameComp.current_game_id)]));

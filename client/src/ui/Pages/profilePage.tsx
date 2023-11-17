@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./PagesStyles/ProfilePageStyles.css";
 
@@ -75,36 +75,63 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setMenuState ,account_
 }
 
   const confirmAll = async () => {
+    for (let index = 0; index < selectedOutposts.length; index++) {
+      const element = selectedOutposts[index];
 
-    if (clientGameData.current_game_admin)
-    {
-      for (let index = 0; index < allOutpostinEventAdminBot.length; index++) {
-        const element = selectedOutposts[index];
-  
-        const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-        const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
-  
-        if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
-        {
-          await confirmEvent(clientOutpostData.id);
-        }
+      console.error(element)
+
+      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+      const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+      
+      console.log(clientOutpostData)
+      
+
+      if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
+      {
+        
+        await confirmEvent(clientOutpostData.id);
       }
-    }
-    else
-    {
-      for (let index = 0; index < selectedOutposts.length; index++) {
-        const element = selectedOutposts[index];
-  
-        const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
-        const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
-  
-        if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
-        {
-          await confirmEvent(clientOutpostData.id);
-        }
-      }
+    
     }
   }
+
+  const adminKillAll = async () => {
+    for (let index = 0; index < allOutpostinEventAdminBot.length; index++) {
+      const element = selectedOutposts[index];
+
+      console.error(element)
+
+      const clientOutpostData = getComponentValueStrict(clientComponents.ClientOutpostData, element);
+      const outpostData = getComponentValueStrict(contractComponents.Outpost, element);
+      
+      console.log(clientOutpostData)
+      
+
+      if (clientOutpostData.event_effected === true  && outpostData.lifes > 0)
+      {
+        
+        await confirmEvent(clientOutpostData.id);
+      }
+    }
+
+  }
+
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'l') {
+        adminKillAll();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
+
 
   const playerInfo = getComponentValue(contractComponents.PlayerInfo, getEntityIdFromKeys([BigInt(clientGameData.current_game_id), BigInt(account_add)]));
 

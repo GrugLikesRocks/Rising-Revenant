@@ -174,7 +174,8 @@ export const OutpostTooltipComponent: React.FC<OutpostTooltipProps> = ({ }) => {
               return (
                 <div>
                   <span style={{ color: 'orange' }}>In Event</span>
-                   {revenantData.owner === account.address ?  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper> : <div></div>}
+                   {/* {revenantData.owner === account.address ?  <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper> : <div></div>} */}
+                   <ClickWrapper className="outpost-data-event-button" onMouseDown={() => {confirmEvent()}}>Confirm Event</ClickWrapper>
                 </div>
               );
             case 3:

@@ -182,8 +182,8 @@ mod revenant_actions {
             // avoid multiple outpost appearing in the same position
             if prev_outpost.entity_id > 0 {
                 loop {
-                    x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
-                    y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
+                    x = (MAP_WIDTH / 2) - random.next_u32(0, 2000);
+                    y = (MAP_HEIGHT / 2) - random.next_u32(0, 2000);
                     prev_outpost = get!(world, (game_id, x, y), OutpostPosition);
                     if prev_outpost.entity_id == 0 {
                         break;

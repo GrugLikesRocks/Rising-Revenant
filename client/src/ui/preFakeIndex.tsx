@@ -10,7 +10,7 @@ export const PreFakeIndex = () => {
   const [canLoad, setCanLoad] = useState(false);
 
   const {
-    account: { account, create , isDeploying},
+    account: { account, create, isDeploying },
   } = useDojo()
 
   useEffect(() => {
@@ -35,19 +35,15 @@ export const PreFakeIndex = () => {
 
   useEffect(() => {
 
-    console.error("change of address" , account.address)
+    console.error("change of address", account.address)
 
   }, [account]);
 
 
   const handleLoadingComplete = () => {
 
-    console.log("\n\n\n\n\n\n\n\n\n")
-    console.error(account.address)
     setLoadingState(true);
 
-    console.error(account.address)
-    console.log("\n\n\n\n\n\n\n\n\n")
   };
 
 
@@ -55,12 +51,20 @@ export const PreFakeIndex = () => {
     <div>
       {canLoad === true ? (
         <>
-          {loadingComplete === false && <LoadingComponent handleLoadingComplete={handleLoadingComplete}  account={account} />}
+          {loadingComplete === false && <LoadingComponent handleLoadingComplete={handleLoadingComplete} account={account} />}
           {loadingComplete && <MainStateManager />}
         </>
-      ) :   <ClickWrapper> <button style={{position:"absolute", top:"50%", left:"50%", width:"fit-content"}} onClick={create}>Create Burner</button> </ClickWrapper>}
+      ) : <ClickWrapper>
+
+        <div className="button-container-1" style={{position:"absolute", top:"50%", left:"50%", width:"fit-content", fontSize: "20px", transform: "translate(-50%, -50%)"}}>
+          <span className="mas">Click to create a Burner and Join the game</span>
+          <button id='work' type="button" name="Hover" onClick={create} className="buttonCool">Click to create a Burner and Join the game</button>
+        </div>
+
+        {/* <button style={{position:"absolute", top:"50%", left:"50%", width:"fit-content"}} onClick={create}>Create Burner</button>   */}
+      </ClickWrapper>}
     </div>
   );
-  
+
 };
 

@@ -126,7 +126,6 @@ export const DebugPage = () => {
     
     console.log("\n\n");
     printEntitiesofGamedata();
-    console.log("\n\n\n\n");
   }  
 
   const getReinfaorceValuesGameWide = () => 
@@ -175,9 +174,6 @@ export const DebugPage = () => {
 
     const ff = getComponentValueStrict(clientComponents.ClientGameData, clientGameArray[0]).current_game_admin
 
-    console.log("\n\n\n\n\n\n\n\n\n\n");
-    console.error(ff)
-    console.log("\n\n\n\n\n\n\n\n\n\n");
 
     if (ff)
     {
@@ -223,6 +219,23 @@ export const DebugPage = () => {
       console.log(eventData);
     }
   }
+
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'p') {
+        console.error("admin overrride enabled")
+        setIsAdmin(!isAdmin);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
 
   //#endregion
 
@@ -276,8 +289,8 @@ export const DebugPage = () => {
         </div>
 
         <div className="data-container">
-          {/* {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>} */}
-          <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div>
+          {isAdmin ? <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> : <div></div>}
+          {/* <div className="button-style-debug" onMouseDown={() => {createEvent()}}>Start Event</div> */}
           <div className="content-holder">
             <h3>There are currently {eventArray.length} events ({gameEntityTracker.event_count}) </h3>
             <button onMouseDown={() => {printAllSavedDataEvents()}}>Print Data saved</button>

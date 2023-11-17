@@ -141,8 +141,8 @@ export async function getGameTrackerEntity() {
     }
   `;
 
-  const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
-  // const endpoint = 'http://127.0.0.1:8080/graphql';
+  // const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
+  const endpoint = 'http://127.0.0.1:8080/graphql';
 
   try {
     const data: any = await request(endpoint, query);
@@ -317,8 +317,8 @@ export async function getEventEntity(game_id: string, entity_id: string) {
     }
   }`;
 
-  const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
-  // const endpoint = 'http://127.0.0.1:8080/graphql';
+  // const endpoint = 'https://api.cartridge.gg/x/risingrevenant/torii/graphql';
+  const endpoint = 'http://127.0.0.1:8080/graphql';
 
 
   try {

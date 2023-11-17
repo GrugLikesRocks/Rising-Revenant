@@ -118,7 +118,6 @@ export const MainMenuContainer = () => {
     };
   }, [currentMenuState]);
 
-
   useEffect(() => {
     let animationFrameId: number;
 

@@ -15,12 +15,14 @@
 .br-page-container {
   background-image: url("Page_Bg/STATS_PAGE_BG.png");
   background-position: center;
+  /* object-fit: true; */
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .summon-revenant-page-container {
   background-position: center;
+  object-fit: true;
   background-size: cover;
   background-repeat: no-repeat;
 }

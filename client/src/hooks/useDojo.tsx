@@ -21,7 +21,7 @@ export const useDojo = () => {
         {
             masterAccount: masterAccount,
             accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH!,
-            // nodeUrl: "https://api.cartridge.gg/x/risingrevenant/katana"
+            nodeUrl: "https://api.cartridge.gg/x/risingrevenant/katana"
         }
     );
 

@@ -26,8 +26,8 @@ export const LoadingComponent = ({
     const createGame = async () => {
         const createGameProps: CreateGameProps = {
             account: account,
-            preparation_phase_interval: 200,
-            event_interval: 100,
+            preparation_phase_interval: 600,
+            event_interval: 90,
             erc_addr: account.address,
         };
 

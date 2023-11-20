@@ -56,6 +56,49 @@ Each outpost and reinforcement in Rising Revenant adheres to the ERC721 NFT stan
 Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, making it a captivating endeavor for gamers and crypto enthusiasts. Will you rise to the challenge and etch your name in the annals of this adventure?
 ![Cover_WinnerRevenant](https://github.com/GrugLikesRocks/Rising-Revenant/assets/92889945/0777ee0d-9f8f-4209-b9b5-5f0fbd12e413)
 
+***Rising Revenant Game Rules***
+
+**Initial Phase: "The Dawn of Revenants"**
+
+*Summoning the Revenants:* Players begin by invoking Revenants, powerful entities, through a mystical expenditure of $LORDS. Each successful summoning not only brings forth a Revenant but also establishes an Outpost around the game map.
+
+*Building Outposts:* These bastions of power will initially have 1 health. Following a Revenant's summoning, players may fortify these Outposts in the following phase.
+
+*Fortifying Outposts:* Outposts, symbols of your burgeoning empire, can be bolstered up to 20 times in their lifetime. The extent of reinforcements directly influences the Outpost’s defense, manifested in the number of shields it wields:
+1-2 reinforcements: Unshielded
+3-5 reinforcements: 1 Shield
+6-9 reinforcements: 2 Shields
+9-13 reinforcements: 3 Shields
+14-19 reinforcements: 4 Shields
+20 reinforcements: 5 Shields
+
+*The Anticipation Screen:* Post-preparation, players enter a phase of strategic anticipation. Here, the summoning of new Revenants and bolstering of Outposts continues, setting the stage for the impending Main Phase.
+
+**Gameplay Phase: "The Epoch of Confrontation"**
+
+*Commencing the Main Phase:* Following the initial phase, the game escalates into a whirlwind of action, marked by attacks and disorder.
+
+*Diverse Attacks:* Players must confront challenges ranging from cataclysmic natural disasters to the fiery wrath of dragons and the cunning onslaught of goblins.
+
+*Main Phase Limitations:* In this critical phase, the focus shifts from expansion to survival. The creation of new Outposts and reinforcements ceases, though strategic trade with other players will represent the only way to achieve success.
+
+*Endurance of Outposts:* The resilience of an Outpost is key, with its survival odds escalating with every reinforcement. The ultimate ambition? To stand as the last "Rising Revenant."
+
+**Final Rewards**
+*The Ultimate Prize:* The game’s transactions feed into a colossal final jackpot, destined for the sole Revenant who outlasts all others.
+
+*Economic Dynamics of "Rising Revenant"*
+Preparation Phase:
+75% of $LORDS channeled into the final jackpot
+10% allocated to transaction confirmation
+15% as a creator tribute
+
+Main Phase:
+90% of $LORDS flows to the trader
+5% augments the final jackpot
+5% reserved as a lasting reward for the enduring players
+
+These rules are your compass in the world of "Rising Revenant," guiding you through a labyrinth of summoning, defense, and cunning trade to claim the crown of the ultimate survivor.
 --------------------------------------------
 
 ***How to launch the game***

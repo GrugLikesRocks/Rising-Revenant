@@ -85,9 +85,11 @@ Rising Revenant offers an exhilarating mix of strategy, chance, and foresight, m
 *Endurance of Outposts:* The resilience of an Outpost is key, with its survival odds escalating with every reinforcement. The ultimate ambition? To stand as the last "Rising Revenant."
 
 **Final Rewards**
+
 *The Ultimate Prize:* The game’s transactions feed into a colossal final jackpot, destined for the sole Revenant who outlasts all others.
 
 *Economic Dynamics of "Rising Revenant"*
+
 Preparation Phase:
 75% of $LORDS channeled into the final jackpot
 10% allocated to transaction confirmation

@@ -25,10 +25,11 @@ mod trade_actions {
     };
 
     use realmsrisingrevenant::components::reinforcement::{
-        Reinforcement, ReinforcementBalance, ReinforcementBalanceImpl, ReinforcementBalanceTrait
+        ReinforcementBalance, ReinforcementBalanceImpl, ReinforcementBalanceTrait
     };
 
-    use realmsrisingrevenant::components::revenant::{Revenant, RevenantStatus};
+    use realmsrisingrevenant::components::player::PlayerInfo;
+    use realmsrisingrevenant::components::revenant::{Revenant, RevenantStatus,};
 
     use realmsrisingrevenant::components::trade::{Trade, TradeStatus};
 
@@ -43,10 +44,10 @@ mod trade_actions {
             let (mut game, mut game_data) = get!(world, game_id, (Game, GameEntityCounter));
             game.assert_is_playing(world);
 
-            let mut reinforcement = get!(world, (game_id, player), Reinforcement);
-            assert(reinforcement.balance > 0, 'No reinforcement can sell');
+            let mut player_info = get!(world, (game_id, player), PlayerInfo);
+            assert(player_info.reinforcement_count > 0, 'No reinforcement can sell');
 
-            reinforcement.balance -= 1;
+            player_info.reinforcement_count -= 1;
             game_data.trade_count += 1;
 
             let entity_id = game_data.trade_count;
@@ -59,7 +60,7 @@ mod trade_actions {
                 status: TradeStatus::selling,
             };
 
-            set!(world, (reinforcement, game_data, trade));
+            set!(world, (player_info, game_data, trade));
 
             entity_id
         }
@@ -79,10 +80,10 @@ mod trade_actions {
 
             trade.status = TradeStatus::revoked;
 
-            let mut reinforcement = get!(world, (game_id, player), Reinforcement);
-            reinforcement.balance += 1;
+            let mut player_info = get!(world, (game_id, player), PlayerInfo);
+            player_info.reinforcement_count += 1;
 
-            set!(world, (reinforcement, trade));
+            set!(world, (player_info, trade));
         }
 
         fn purchase(self: @ContractState, game_id: u32, player_id: u128, trade_id: u32) {
@@ -107,12 +108,12 @@ mod trade_actions {
                 .transfer_from(sender: player, recipient: trade.seller, amount: trade.price.into());
             assert(result, 'need approve for erc20');
 
-            let mut reinforcement = get!(world, (game_id, player), Reinforcement);
-            reinforcement.balance += 1;
+            let mut player_info = get!(world, (game_id, player), PlayerInfo);
+            player_info.reinforcement_count += 1;
             trade.status = TradeStatus::sold;
             trade.buyer = player;
 
-            set!(world, (reinforcement, trade));
+            set!(world, (player_info, trade));
         }
     }
 }

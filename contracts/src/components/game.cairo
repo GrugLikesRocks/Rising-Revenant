@@ -1,5 +1,5 @@
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
-use starknet::ContractAddress;
+use starknet::{ContractAddress, get_caller_address};
 
 #[derive(Model, Copy, Drop, Print, Serde, SerdeLen)]
 struct Game {
@@ -34,6 +34,7 @@ struct GameEntityCounter {
     outpost_count: u32,
     event_count: u32,
     outpost_exists_count: u32,
+    remain_life_count: u32,
     reinforcement_count: u32,
     trade_count: u32,
 }

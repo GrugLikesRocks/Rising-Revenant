@@ -1,4 +1,5 @@
 use starknet::ContractAddress;
+use realmsrisingrevenant::constants::OUTPOST_MAX_REINFORCEMENT;
 
 #[derive(Model, Copy, Drop, Serde, SerdeLen)]
 struct Outpost {
@@ -7,10 +8,11 @@ struct Outpost {
     #[key]
     entity_id: u128,
     owner: ContractAddress,
-    name: u128,
+    name_outpost: felt252,
     x: u32,
     y: u32,
     lifes: u32,
+    reinforcement_count: u32,
     status: u32,
     last_affect_event_id: u128
 }
@@ -36,7 +38,12 @@ mod OutpostStatus {
 #[generate_trait]
 impl OutpostImpl of OutpostTrait {
     fn assert_existed(self: Outpost) {
-        // assert(self.status != OutpostStatus::destroyed, 'Outpost has been destroyed');
         assert(self.status != OutpostStatus::not_created, 'Outpost not exist');
+        assert(self.lifes > 0, 'Outpost has been destroyed');
+    }
+
+    fn assert_can_reinforcement(self: Outpost) {
+        self.assert_existed();
+        assert(self.reinforcement_count < OUTPOST_MAX_REINFORCEMENT, 'reach reinforce limit');
     }
 }

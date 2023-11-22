@@ -18,7 +18,9 @@ mod world_event_actions {
         Outpost, OutpostPosition, OutpostStatus, OutpostImpl, OutpostTrait
     };
     use realmsrisingrevenant::components::world_event::{WorldEvent, WorldEventTracker};
-    use realmsrisingrevenant::constants::{EVENT_INIT_RADIUS, MAP_HEIGHT, MAP_WIDTH};
+    use realmsrisingrevenant::constants::{
+        EVENT_INIT_RADIUS, MAP_HEIGHT, MAP_WIDTH, AUTO_CREATE_NEW_WORLD_EVENT
+    };
     use realmsrisingrevenant::utils::MAX_U32;
     use realmsrisingrevenant::utils::random::{Random, RandomImpl};
     use realmsrisingrevenant::utils;
@@ -38,38 +40,18 @@ mod world_event_actions {
             game_data.event_count += 1;
 
             let entity_id: u128 = game_data.event_count.into();
-            let seed = starknet::get_tx_info().unbox().transaction_hash;
-
-            let mut random = RandomImpl::new(seed);
-            let x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
-            let y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
-
-            let block_number = starknet::get_block_info().unbox().block_number;
-            // Radius increases when the previous world event does not cause damage.
-            let mut radius: u32 = 0;
-            if entity_id <= 1 {
-                radius = EVENT_INIT_RADIUS;
-            } else {
+            if entity_id > 1 {
+                // check prev event block number
                 let prev_world_event = get!(world, (game_id, entity_id - 1), WorldEvent);
-
+                let block_number = starknet::get_block_info().unbox().block_number;
                 assert(
                     (block_number - prev_world_event.block_number) > game.event_interval,
                     'event occur interval too small'
                 );
-
-                if prev_world_event.destroy_count == 0 && prev_world_event.radius < MAX_U32 {
-                    radius = prev_world_event.radius + 1;
-                } else {
-                    radius = prev_world_event.radius;
-                }
             }
 
-            let world_event = WorldEvent {
-                game_id, entity_id, x, y, radius, destroy_count: 0, block_number
-            };
-
+            let world_event = self._new_world_event(world, game_id, player, entity_id);
             set!(world, (world_event, game_data));
-
             world_event
         }
 
@@ -107,6 +89,7 @@ mod world_event_actions {
             outpost.lifes -= 1;
             outpost.last_affect_event_id = world_event.entity_id;
             world_event.destroy_count += 1;
+            game_data.remain_life_count -= 1;
 
             let event_tracker = WorldEventTracker {
                 game_id, event_id: world_event.entity_id, outpost_id: outpost.entity_id
@@ -114,19 +97,72 @@ mod world_event_actions {
 
             if outpost.lifes == 0 {
                 game_data.outpost_exists_count -= 1;
-
                 if game_data.outpost_exists_count <= 1 {
                     game.status = GameStatus::ended;
-                    set!(world, (outpost, world_event, event_tracker, game_data, game));
-                } else {
-                    set!(world, (outpost, world_event, event_tracker, game_data));
                 }
-            } else {
-                set!(world, (outpost, world_event, event_tracker));
             }
 
+            // Check if it's possible to also generate a new event. Only perform the check when 
+            // the event currently being processed is the latest to avoid creating duplicates.
+            // It's just to facilitate the player and to reduce one instance of calling the creation of a world event.
+            if (AUTO_CREATE_NEW_WORLD_EVENT == 1) {
+                if game.status != GameStatus::ended && game_data.event_count.into() == event_id {
+                    let block_number = starknet::get_block_info().unbox().block_number;
+                    if (block_number - world_event.block_number) > game.event_interval {
+                        let new_world_event = self
+                            ._new_world_event(world, game_id, player, event_id + 1);
+                        game_data.event_count += 1;
+                        set!(world, (new_world_event));
+                    }
+                }
+            }
+
+            set!(world, (outpost, world_event, event_tracker, game_data, game));
             // Emit World Event
             true
         }
     }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn _new_world_event(
+            self: @ContractState,
+            world: IWorldDispatcher,
+            game_id: u32,
+            player: ContractAddress,
+            entity_id: u128,
+        ) -> WorldEvent {
+            let mut radius: u32 = EVENT_INIT_RADIUS;
+            if entity_id > 1 {
+                let prev_world_event = get!(world, (game_id, entity_id - 1), WorldEvent);
+                if prev_world_event.destroy_count == 0 && prev_world_event.radius < MAX_U32 {
+                    radius = prev_world_event.radius + 1;
+                } else {
+                    radius = prev_world_event.radius;
+                }
+            }
+
+            let block_number = starknet::get_block_info().unbox().block_number;
+
+            let seed = starknet::get_tx_info().unbox().transaction_hash;
+            let mut random = RandomImpl::new(seed);
+            let x = (MAP_WIDTH / 2) - random.next_u32(0, 400);
+            let y = (MAP_HEIGHT / 2) - random.next_u32(0, 400);
+
+            WorldEvent { game_id, entity_id, x, y, radius, destroy_count: 0, block_number }
+        }
+    }
+}
+
+
+#[cfg(test)]
+mod world_tests {
+    use realmsrisingrevenant::systems::world_event::{
+        IWorldEventActionsDispatcher, IWorldEventActionsDispatcherTrait
+    };
+
+    use realmsrisingrevenant::tests::test_utils::{
+        DefaultWorld, EVENT_BLOCK_INTERVAL, PREPARE_PHRASE_INTERVAL, _init_world, _init_game,
+        _create_revenant, _add_block_number,
+    };
 }

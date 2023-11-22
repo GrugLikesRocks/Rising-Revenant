@@ -8,7 +8,7 @@ trait IGameActions<TContractState> {
         event_interval: u64,
         erc_addr: ContractAddress
     ) -> u32;
-
+    fn get_current_block(self: @TContractState) -> u64;
     fn refresh_status(self: @TContractState, game_id: u32);
 }
 
@@ -19,7 +19,7 @@ mod game_actions {
     };
     use realmsrisingrevenant::components::reinforcement::{ReinforcementBalance, target_price};
     use realmsrisingrevenant::constants::GAME_CONFIG;
-    use starknet::{ContractAddress, get_block_info, get_block_timestamp};
+    use starknet::{ContractAddress, get_block_info, get_block_timestamp, get_caller_address};
     use super::IGameActions;
 
     #[external(v0)]
@@ -53,6 +53,7 @@ mod game_actions {
                 outpost_count: 0,
                 event_count: 0,
                 outpost_exists_count: 0,
+                remain_life_count: 0,
                 reinforcement_count: 0,
                 trade_count: 0,
             };
@@ -75,5 +76,11 @@ mod game_actions {
             game.assert_existed();
             game.refresh_status(world);
         }
+
+        fn get_current_block(self: @ContractState) -> u64 {
+            let start_block_number = get_block_info().unbox().block_number; // blocknumber
+            return start_block_number;
+        }
     }
 }
+
